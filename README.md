@@ -1,4 +1,4 @@
-# SAR TOPS Mode Simulator 🛰️
+# SAR TOPS Mode Simulator
 
 ## Summary
 
@@ -28,3 +28,4 @@ graph TD
     %% 輸出
     P6 --> Out1[/Focused SAR Image/]
     P6 --> Out2[/Quality Analysis/]
+```
