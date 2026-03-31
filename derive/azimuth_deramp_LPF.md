@@ -125,7 +125,7 @@ $$
 $$
 \psi_m(f_\eta) =
 \frac{4\pi R_0f_0}{c}D_m(f_\eta)
-+ 2\pi\left(
++2\pi\left(
 f_\eta-m\cdot\mathrm{PRF}
 \right)\eta_c
 $$
@@ -168,8 +168,8 @@ $$
 $$
 \psi_m(f_\eta) \approx
 \psi_{0,m}
-+ \psi_{1,m}(f_\eta-f_{\mathrm{ref}})
-+ \psi_{2,m}(f_\eta-f_{\mathrm{ref}})^2
++\psi_{1,m}(f_\eta-f_{\mathrm{ref}})
++\psi_{2,m}(f_\eta-f_{\mathrm{ref}})^2
 $$
 
 其中
@@ -202,8 +202,8 @@ B_r\left(
 \exp\left(
 -j\left[
 \psi_{0,m}
-+ \psi_{1,m}(f_\eta-f_{\mathrm{ref}})
-+ \psi_{2,m}(f_\eta-f_{\mathrm{ref}})^2
++\psi_{1,m}(f_\eta-f_{\mathrm{ref}})
++\psi_{2,m}(f_\eta-f_{\mathrm{ref}})^2
 \right]
 \right)
 $$
@@ -225,8 +225,8 @@ B_r\left(
 \exp\left(
 -j\left[
 \psi_{0,m}
-+ \psi_{1,m}(f_\eta-f_{\mathrm{ref}})
-+ \psi_{2,m}(f_\eta-f_{\mathrm{ref}})^2
++\psi_{1,m}(f_\eta-f_{\mathrm{ref}})
++\psi_{2,m}(f_\eta-f_{\mathrm{ref}})^2
 \right]
 \right)
 $$
@@ -284,8 +284,8 @@ B_r\left(
 \exp\left(
 -j\left[
 \psi_{0,m}
-+ \psi_{1,m}(f_\eta-f_{\mathrm{ref}})
-+ \left(
++\psi_{1,m}(f_\eta-f_{\mathrm{ref}})
++\left(
 \psi_{2,m}-\psi_{2,\mathrm{ref}}
 \right)(f_\eta-f_{\mathrm{ref}})^2
 \right]
@@ -310,8 +310,8 @@ B_r\left(
 \exp\left(
 -j\left[
 \psi_{0,m}
-+ \psi_{1,m}(f_\eta-f_{\mathrm{ref}})
-+ \left(
++\psi_{1,m}(f_\eta-f_{\mathrm{ref}})
++\left(
 \psi_{2,m}-\psi_{2,\mathrm{ref}}
 \right)(f_\eta-f_{\mathrm{ref}})^2
 \right]
@@ -357,8 +357,8 @@ B_r\left(
 \exp\left(
 -j\left[
 \psi_{0,m}
-+ \psi_{1,m}(f_\eta-f_{\mathrm{ref}})
-+ \left(
++\psi_{1,m}(f_\eta-f_{\mathrm{ref}})
++\left(
 \psi_{2,m}-\psi_{2,\mathrm{ref}}
 \right)(f_\eta-f_{\mathrm{ref}})^2
 \right]
@@ -386,8 +386,8 @@ B_r\left(
 \exp\left(
 -j\left[
 \psi_{0,m}
-+ \psi_{1,m}(f_\eta-f_{\mathrm{ref}})
-+ \left(
++\psi_{1,m}(f_\eta-f_{\mathrm{ref}})
++\left(
 \psi_{2,m}-\psi_{2,\mathrm{ref}}
 \right)(f_\eta-f_{\mathrm{ref}})^2
 \right]
@@ -414,8 +414,8 @@ B_r\left(
 \exp\left(
 -j\left[
 \psi_{0,m_0}
-+ \psi_{1,m_0}(f_\eta-f_{\mathrm{ref}})
-+ \left(
++\psi_{1,m_0}(f_\eta-f_{\mathrm{ref}})
++\left(
 \psi_{2,m_0}-\psi_{2,\mathrm{ref}}
 \right)(f_\eta-f_{\mathrm{ref}})^2
 \right]
@@ -486,8 +486,8 @@ B_r\left(
 \exp\left(
 -j\left[
 \psi_{0,m}
-+ \psi_{1,m}(f_\eta-f_{\mathrm{ref}})
-+ \left(
++\psi_{1,m}(f_\eta-f_{\mathrm{ref}})
++\left(
 \psi_{2,m}-\psi_{2,\mathrm{ref}}
 \right)(f_\eta-f_{\mathrm{ref}})^2
 \right]
@@ -522,8 +522,8 @@ B_r\left(
 \exp\left(
 -j\left[
 \psi_{0,m}
-+ \psi_{1,m}(f_\eta-f_{\mathrm{ref}})
-+ \left(
++\psi_{1,m}(f_\eta-f_{\mathrm{ref}})
++\left(
 \psi_{2,m}-\psi_{2,\mathrm{ref}}
 \right)(f_\eta-f_{\mathrm{ref}})^2
 \right]
