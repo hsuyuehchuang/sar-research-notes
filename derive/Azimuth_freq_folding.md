@@ -126,7 +126,7 @@ $$
 
 $$
 S_1(\tau,f_\eta;\omega_s)
-\approx A_2\,\text{sinc}[B_r(\tau-\frac{2R_0}{cD(f_\eta,V_r)})]\,
+\approx A_2 \text{sinc}[B_r(\tau-\frac{2R_0}{cD(f_\eta,V_r)})] 
 \exp\left(\Phi_{az}(f_\eta)\right)
 \underbrace{[\sum_{k=-\infty}^{\infty}W_a(f_\eta-k\cdot\text{PRF};\omega_s)]}_{{\color{red}W_{fold}(f_\eta;\omega_s)}}
 $$
