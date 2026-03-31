@@ -101,16 +101,13 @@ A_1\,
 B_r\left(
 \tau-\frac{2R(\eta)}{c}
 \right)
-\right]
-\cdot
+\right] \cdot
 w_a\left(
 \frac{V_r}{R_0}(\eta-\eta_0)-\omega_s\eta
-\right)
-\cdot
+\right) \cdot
 \exp\left(
 -j\frac{4\pi f_0R(\eta)}{c}
-\right)
-\cdot
+\right) \cdot
 \sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)
 $$
 
@@ -173,14 +170,11 @@ A_1\,
 B_r\left(
 \tau-\frac{2R(\eta)}{c}
 \right)
-\right]
-\cdot
-w_a(\eta;\omega_s)
-\cdot
+\right] \cdot
+w_a(\eta;\omega_s) \cdot
 \exp\left(
 -j\frac{4\pi f_0R(\eta)}{c}
-\right)
-\cdot
+\right) \cdot
 \sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)
 $$
 
@@ -199,10 +193,8 @@ A_1\,
 B_r\left(
 \tau-\frac{2R(\eta)}{c}
 \right)
-\right]
-\cdot
-w_a(\eta;\omega_s)
-\cdot
+\right] \cdot
+w_a(\eta;\omega_s) \cdot
 \exp\left(
 -j\frac{4\pi f_0R(\eta)}{c}
 \right)
@@ -226,10 +218,8 @@ A_2\,
 B_r\left(
 \tau-\frac{2R_0}{cD(f_\eta,V_r)}
 \right)
-\right]
-\cdot
-W_a(f_\eta;\omega_s)
-\cdot
+\right] \cdot
+W_a(f_\eta;\omega_s) \cdot
 \exp\left(
 \Phi_{az}(f_\eta)
 \right)
@@ -261,10 +251,8 @@ A_1\,
 B_r\left(
 \tau-\frac{2R(\eta)}{c}
 \right)
-\right]
-\cdot
-w_a(\eta;\omega_s)
-\cdot
+\right] \cdot
+w_a(\eta;\omega_s) \cdot
 \exp\left(
 -j\frac{4\pi f_0R(\eta)}{c}
 \right)
@@ -277,10 +265,8 @@ A_2\,
 B_r\left(
 \tau-\frac{2R_0}{cD(f_\eta,V_r)}
 \right)
-\right]
-\cdot
-W_a(f_\eta;\omega_s)
-\cdot
+\right] \cdot
+W_a(f_\eta;\omega_s) \cdot
 \exp\left(
 \Phi_{az}(f_\eta)
 \right)
@@ -307,8 +293,7 @@ $$
 
 $$
 S_1(\tau,f_\eta;\omega_s) =
-S_{1,c}(\tau,f_\eta;\omega_s)
-*
+S_{1,c}(\tau,f_\eta;\omega_s) *
 \left[
 \mathrm{PRF}
 \sum_{k=-\infty}^{\infty}
@@ -339,10 +324,8 @@ A_2\,
 B_r\left(
 \tau-\frac{2R_0}{cD(f_\eta-k\cdot\mathrm{PRF},V_r)}
 \right)
-\right]
-\cdot
-W_a(f_\eta-k\cdot\mathrm{PRF};\omega_s)
-\cdot
+\right] \cdot
+W_a(f_\eta-k\cdot\mathrm{PRF};\omega_s) \cdot
 \exp\left(
 \Phi_{az}(f_\eta-k\cdot\mathrm{PRF})
 \right)
@@ -368,12 +351,10 @@ A_2\,
 B_r\left(
 \tau-\frac{2R_0}{cD(f_\eta,V_r)}
 \right)
-\right]
-\cdot
+\right] \cdot
 \exp\left(
 \Phi_{az}(f_\eta)
-\right)
-\cdot
+\right) \cdot
 W_{fold}(f_\eta;\omega_s)
 $$
 
@@ -394,10 +375,8 @@ A_2\,
 B_r\left(
 \tau-\frac{2R_0}{cD(f_\eta-k\cdot\mathrm{PRF},V_r)}
 \right)
-\right]
-\cdot
-W_a(f_\eta-k\cdot\mathrm{PRF};\omega_s)
-\cdot
+\right] \cdot
+W_a(f_\eta-k\cdot\mathrm{PRF};\omega_s) \cdot
 \exp\left(
 \Phi_{az}(f_\eta-k\cdot\mathrm{PRF})
 \right)
@@ -454,14 +433,11 @@ A_1\,
 B_r\left(
 \tau-\frac{2R(\eta)}{c}
 \right)
-\right]
-\cdot
-w_a(\eta;\omega_s)
-\cdot
+\right] \cdot
+w_a(\eta;\omega_s) \cdot
 \exp\left(
 -j\frac{4\pi f_0R(\eta)}{c}
-\right)
-\cdot
+\right) \cdot
 \sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)
 $$
 
@@ -488,10 +464,8 @@ A_2\,
 B_r\left(
 \tau-\frac{2R_0}{cD(f_\eta,V_r)}
 \right)
-\right]
-\cdot
-W_a(f_\eta;\omega_s)
-\cdot
+\right] \cdot
+W_a(f_\eta;\omega_s) \cdot
 \exp\left(
 \Phi_{az}(f_\eta)
 \right)
@@ -530,10 +504,8 @@ A_2\,
 B_r\left(
 \tau-\frac{2R_0}{cD(f_\eta-k\cdot\mathrm{PRF},V_r)}
 \right)
-\right]
-\cdot
-W_a(f_\eta-k\cdot\mathrm{PRF};\omega_s)
-\cdot
+\right] \cdot
+W_a(f_\eta-k\cdot\mathrm{PRF};\omega_s) \cdot
 \exp\left(
 \Phi_{az}(f_\eta-k\cdot\mathrm{PRF})
 \right)
@@ -549,12 +521,10 @@ A_2\,
 B_r\left(
 \tau-\frac{2R_0}{cD(f_\eta,V_r)}
 \right)
-\right]
-\cdot
+\right] \cdot
 \exp\left(
 \Phi_{az}(f_\eta)
-\right)
-\cdot
+\right) \cdot
 W_{fold}(f_\eta;\omega_s)
 $$
 
@@ -611,9 +581,7 @@ E(\theta) \simeq
 \frac{
 \exp\left(
 +jk\frac{L_a}{2}\sin\theta
-\right)
--
-\exp\left(
+\right) - \exp\left(
 -jk\frac{L_a}{2}\sin\theta
 \right)
 }{
@@ -752,8 +720,7 @@ folding 本身由取樣公式決定，但 folded 副本之所以在 TOPS 中常�
 
 $$
 S_{1,c}(\tau,f_\eta;\omega_s) \propto
-W_a(f_\eta;\omega_s)
-\cdot
+W_a(f_\eta;\omega_s) \cdot
 \exp\left(
 -j\pi\frac{(f_\eta-f_{dc})^2}{K_a}
 \right)
@@ -762,8 +729,7 @@ $$
 因此第 $k$ 個 folded 副本可表示為
 
 $$
-W_a(f_\eta-k\cdot\mathrm{PRF};\omega_s)
-\cdot
+W_a(f_\eta-k\cdot\mathrm{PRF};\omega_s) \cdot
 \exp\left(
 -j\pi\frac{(f_\eta-k\cdot\mathrm{PRF}-f_{dc})^2}{K_a}
 \right)
