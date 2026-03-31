@@ -12,7 +12,7 @@ $$
 {\color{red}
 S_3(\tau,f_\eta) \approx
 \sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}}
-A_2\,
+A_2
 \mathrm{sinc}\left[
 B_r\left(
 \tau-\frac{2R_0}{c\,D_m(f_\eta)}
