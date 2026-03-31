@@ -597,7 +597,7 @@ $$
 在遠場條件下，單程場型振幅為孔徑分布的空間傅立葉轉換：
 
 $$
-E(\theta) \propto
+E(\theta) \simeq
 \int_{-L_a/2}^{L_a/2}
 \exp\left(
 +jkx\sin\theta
