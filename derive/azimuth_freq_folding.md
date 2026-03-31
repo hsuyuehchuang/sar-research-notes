@@ -607,7 +607,7 @@ $$
 其中 $k=2\pi/\lambda$。直接積分可得
 
 $$
-E(\theta) \propto
+E(\theta) \simeq
 \frac{
 \exp\left(
 +jk\frac{L_a}{2}\sin\theta
