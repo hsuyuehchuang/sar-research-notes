@@ -1,303 +1,314 @@
-**Azimuth Deramping And LPF Derivation**
+**重點摘要**
 
-**先講結論**
-
-在完成 mosaicking 之後，訊號 $S_2(\tau,f_\eta)$ 雖然已經被展開到 extended azimuth-frequency axis 上，但每一個 replica 仍然帶有二次 chirp phase。這些 replica 在頻域上雖然被排開了，卻還沒有被「拉平」。deramping filter 的作用，就是把每個 replica 共同具有的主要二次相位拿掉，使其能量從原本沿著 chirp law 擴展的樣子，轉成接近集中在較窄 baseband 內的表示。這時後續的 LPF 才能用一個固定頻寬窗，把欲保留的 unfolded 主分量濾出來。
-
-因此，deramping 不是直接消除 aliasing，而是先把可預測的 chirp phase 結構展平；LPF 則利用展平之後的頻譜集中性，將不需要的 replicas 或超出目標 band 的成分切除。
+* mosaicking 之後的訊號 $S_2(\tau,f_\eta)$ 雖然已經把 replicas 展開到 extended azimuth-frequency axis 上，但每個 replica 仍帶有由 $D_m(f_\eta)$ 決定的二次 phase curvature。
+* deramping 的核心不是消除 aliasing，而是拿掉主 replica 的 reference quadratic phase，使其頻域能量由彎曲展寬的 chirp-like 結構，轉成較集中的近 baseband 表示。
+* LPF 之所以有效，不是因為它本身能辨認主 replica，而是因為主 replica 已先被 deramping 拉平並壓縮到狹窄通帶內。
+* 若把第 $m$ 個 replica 的 phase 近似寫成 $\psi_{0,m}+\psi_{1,m}(f_\eta-f_{\mathrm{ref}})+\psi_{2,m}(f_\eta-f_{\mathrm{ref}})^2$，則 deramping 後的殘餘二次項就是 $\psi_{2,m}-\psi_{2,\mathrm{ref}}$。
+* 因此整個處理鏈的關鍵輸出可寫成
+  $$
+  {\color{red}
+  S_3(\tau,f_\eta) =
+  \sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}}
+  A_2\,
+  \mathrm{sinc}\left[
+  B_r\left(
+  \tau-\frac{2R_0}{c\,D_m(f_\eta)}
+  \right)
+  \right]
+  \cdot
+  \mathrm{rect}\left(
+  \frac{f_\eta-m\cdot\mathrm{PRF}-k_s\eta_c}{B_{\max}}
+  \right)
+  \cdot
+  \exp\left(
+  -j\left[
+  \psi_{0,m}
+  +\psi_{1,m}(f_\eta-f_{\mathrm{ref}})
+  +\left(
+  \psi_{2,m}-\psi_{2,\mathrm{ref}}
+  \right)
+  (f_\eta-f_{\mathrm{ref}})^2
+  \right]
+  \right)
+  }
+  $$
+* LPF 後的輸出則是在上式外再乘上通帶窗，因此每一步的輸出訊號都可以寫成 fully expanded closed form，而不能只停在 operator shorthand。
 
 ---
 
-本文件延續 [azimuth_freq_ufr.md](/home/hsuyueh.chuang/Desktop/vscode/github/sar_tops_mode/derive/azimuth_freq_ufr.md) 中的 mosaicked 頻譜 $S_2(\tau,f_\eta)$，進一步推導：
+**問題定義**
 
-- deramping filter 的數學形式
-- deramping 之後的頻譜為什麼會變得可被 LPF 分離
-- 後續 LPF 為什麼能保留欲重建的 unfolded 主頻帶
+本文件要證明的是：
+
+1. 為什麼在 UFR / mosaicking 之後，仍必須再做 deramping 才能有效使用 LPF。
+2. deramping filter 應該抵消哪一個 phase term。
+3. 每一步之後的訊號 $S_2$、$S_3$、$S_4$ 分別變成什麼 fully expanded closed form。
 
 ---
 
-**1. 起點：mosaicked azimuth-frequency signal**
+**推導重點**
 
-由前一份文件可得，mosaicking 後的訊號可寫為
+* 以 [azimuth_freq_ufr.md](/home/hsuyueh.chuang/Desktop/vscode/github/sar_tops_mode/derive/azimuth_freq_ufr.md) 的 mosaicked spectrum 為起點。
+* 將第 $m$ 個 replica 的相位抽出為 $\psi_m(f_\eta)$。
+* 在主 replica 所關注的局部頻帶內，把 $\psi_m(f_\eta)$ 近似成常數項、一次項、二次項。
+* 用 reference quadratic curvature $\psi_{2,\mathrm{ref}}$ 建立 deramping filter。
+* 把 deramping 與 LPF 都乘回原訊號，逐步寫出 $S_3(\tau,f_\eta)$ 與 $S_4(\tau,f_\eta)$ 的 fully expanded closed form。
+
+---
+
+**符號與假設**
+
+* $S_2(\tau,f_\eta)$：mosaicking 後的 azimuth-frequency signal
+* $S_{2,m}(\tau,f_\eta)$：第 $m$ 個 mosaicked replica
+* $S_3(\tau,f_\eta)$：deramping 後的訊號
+* $S_4(\tau,f_\eta)$：LPF 後的訊號
+* $m_0$：欲保留之主 replica 索引
+* $f_{\mathrm{ref}}$：主 replica 的 reference frequency
+* $\psi_m(f_\eta)$：第 $m$ 個 replica exponent 中的實數 phase function
+* $\psi_{0,m},\psi_{1,m},\psi_{2,m}$：$\psi_m(f_\eta)$ 在 $f_{\mathrm{ref}}$ 附近的局部係數
+* $\psi_{2,\mathrm{ref}}$：reference quadratic curvature
+* $H_{\mathrm{de}}(f_\eta)$：deramping filter
+* $H_{\mathrm{LPF}}(f_\eta)$：low-pass filter
+* $D_m(f_\eta)=D\left(f_\eta-m\cdot\mathrm{PRF},V_{\mathrm{eff}}\right)$
+
+假設如下：
+
+* 在主 replica 的局部頻帶內，二階 phase model 足以描述主要 curvature。
+* 用單一 $f_{\mathrm{ref}}$ 與單一 $\psi_{2,\mathrm{ref}}$ 補償主 replica 的 phase curvature。
+* LPF 通帶選擇得足以保留 deramping 後的主 replica，並抑制其他 replicas 的主要能量。
+
+---
+
+**1. 起點：mosaicked signal**
+
+由 [azimuth_freq_ufr.md](/home/hsuyueh.chuang/Desktop/vscode/github/sar_tops_mode/derive/azimuth_freq_ufr.md) 可得
 
 $$ S_2(\tau,f_\eta) = \sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}} S_{2,m}(\tau,f_\eta) $$
 
-其中第 $m$ 個 replica 為
+其中第 $m$ 個 replica 的 fully expanded closed form 為
 
 $$
 S_{2,m}(\tau,f_\eta) =
-A_2
+A_2\,
 \mathrm{sinc}\left[
 B_r\left(
 \tau-\frac{2R_0}{c\,D_m(f_\eta)}
 \right)
 \right]
-$$
-
-$$
 \cdot
 \mathrm{rect}\left(
 \frac{f_\eta-m\cdot\mathrm{PRF}-k_s\eta_c}{B_{\max}}
 \right)
+\cdot
+\exp\left(
+-j\psi_m(f_\eta)
+\right)
 $$
 
+其中 phase function 為
+
 $$
-\cdot
-\exp\left[
--j\frac{4\pi R_0f_0}{c}D_m(f_\eta)
--j2\pi\left(f_\eta-m\cdot\mathrm{PRF}\right)\eta_c
-\right]
+\psi_m(f_\eta) =
+\frac{4\pi R_0f_0}{c}D_m(f_\eta)
++2\pi\left(
+f_\eta-m\cdot\mathrm{PRF}
+\right)\eta_c
 $$
 
 且
 
-$$
-D_m(f_\eta)=D\left(f_\eta-m\cdot\mathrm{PRF},V_{\mathrm{eff}}\right)
-$$
+$$ D_m(f_\eta) = D\left(f_\eta-m\cdot\mathrm{PRF},V_{\mathrm{eff}}\right) $$
 
-上式中真正使 replica 呈現 chirp 結構的，是相位項
+因此本步結束後，總訊號的 fully expanded closed form 為
 
 $$
-\phi_m(f_\eta) =
--\frac{4\pi R_0f_0}{c}D_m(f_\eta)
--2\pi\left(f_\eta-m\cdot\mathrm{PRF}\right)\eta_c
-$$
-
----
-
-**2. 二次相位近似：為什麼它像一個 chirp**
-
-在目標頻帶附近，可將 $D_m(f_\eta)$ 於某一參考頻率 $f_{\mathrm{ref},m}$ 附近做二階展開：
-
-$$
-D_m(f_\eta)
-\approx
-D_m(f_{\mathrm{ref},m})
-+D_m'(f_{\mathrm{ref},m})(f_\eta-f_{\mathrm{ref},m})
-+\frac{1}{2}D_m''(f_{\mathrm{ref},m})(f_\eta-f_{\mathrm{ref},m})^2
-$$
-
-代回相位項後，可得
-
-$$
-\phi_m(f_\eta)
-\approx
-\phi_{0,m}
-+\phi_{1,m}(f_\eta-f_{\mathrm{ref},m})
-+\phi_{2,m}(f_\eta-f_{\mathrm{ref},m})^2
-$$
-
-因此第 $m$ 個 replica 的主要相位可近似為一個二次相位項，也就是 chirp phase：
-
-$$
-\exp\left[j\phi_m(f_\eta)\right]
-\approx
-\exp\left(j\phi_{0,m}\right)
-\cdot
-\exp\left[j\phi_{1,m}(f_\eta-f_{\mathrm{ref},m})\right]
-\cdot
-\exp\left[j\phi_{2,m}(f_\eta-f_{\mathrm{ref},m})^2\right]
-$$
-
-其中：
-
-- 常數項 $\phi_{0,m}$ 只改變整體相位
-- 一次項 $\phi_{1,m}$ 對應 centroid shift 或群延遲
-- 二次項 $\phi_{2,m}$ 才是造成頻譜被展開、傾斜、難以直接用固定頻寬窗截取的主因
-
-所以後續 deramping 的核心目標，就是拿掉這個二次項。
-
----
-
-**3. Deramping filter 的定義**
-
-令參考 deramping filter 為
-
-$$
-H_{\mathrm{de}}(f_\eta) =
-\exp\left[
--j\phi_{2,\mathrm{ref}}(f_\eta-f_{\mathrm{ref}})^2
+S_2(\tau,f_\eta) =
+\sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}}
+A_2\,
+\mathrm{sinc}\left[
+B_r\left(
+\tau-\frac{2R_0}{c\,D_m(f_\eta)}
+\right)
 \right]
+\cdot
+\mathrm{rect}\left(
+\frac{f_\eta-m\cdot\mathrm{PRF}-k_s\eta_c}{B_{\max}}
+\right)
+\cdot
+\exp\left(
+-j\psi_m(f_\eta)
+\right)
 $$
-
-若使用常見的等效 azimuth FM 寫法，也可寫成
-
-$$
-H_{\mathrm{de}}(f_\eta) =
-\exp\left[
-+j\pi\frac{(f_\eta-f_{\mathrm{ref}})^2}{K_{\mathrm{ref}}}
-\right]
-$$
-
-這裡的符號約定是：
-
-- $K_{\mathrm{ref}}$ 為用來 deskew / deramp 的參考 chirp rate
-- $f_{\mathrm{ref}}$ 為 deramping 所使用的 reference center
-
-經 deramping 後，
-
-$$ S_3(\tau,f_\eta) = S_2(\tau,f_\eta)\cdot H_{\mathrm{de}}(f_\eta) $$
-
-亦即
-
-$$ S_3(\tau,f_\eta) = \sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}} S_{2,m}(\tau,f_\eta)\cdot H_{\mathrm{de}}(f_\eta) $$
 
 ---
 
-**4. Deramping 後每個 replica 會變成什麼**
+**2. 局部二次 phase model**
 
-考慮第 $m$ 個 replica 經 deramping 後的相位：
-
-$$
-\phi^{(\mathrm{de})}_m(f_\eta) =
-\phi_m(f_\eta)+\phi_{\mathrm{de}}(f_\eta)
-$$
-
-若 $H_{\mathrm{de}}$ 的二次項設計為近似抵消主要 chirp curvature，則有
+為了建立 deramping filter，將 $\psi_m(f_\eta)$ 在 $f_{\mathrm{ref}}$ 附近做二階近似：
 
 $$
-\phi^{(\mathrm{de})}_m(f_\eta)
-\approx
-\tilde{\phi}_{0,m}
-+\tilde{\phi}_{1,m}(f_\eta-f_{\mathrm{ref}})
-+\tilde{\phi}_{2,m}(f_\eta-f_{\mathrm{ref}})^2
+\psi_m(f_\eta) \approx
+\psi_{0,m}
++\psi_{1,m}(f_\eta-f_{\mathrm{ref}})
++\psi_{2,m}(f_\eta-f_{\mathrm{ref}})^2
 $$
 
 其中
 
-$$
-\tilde{\phi}_{2,m} =
-\phi_{2,m}-\phi_{2,\mathrm{ref}}
-$$
+$$ \psi_{0,m} = \psi_m(f_{\mathrm{ref}}) $$
 
-若參考率選得好，則在欲保留的主 replica 上會有
+$$ \psi_{1,m} = \psi_m'(f_{\mathrm{ref}}) $$
 
-$$
-\tilde{\phi}_{2,m}\approx 0
-$$
+$$ \psi_{2,m} = \frac{\psi_m''(f_{\mathrm{ref}})}{2} $$
 
-因此主 replica 會從原本具有明顯 chirp curvature 的頻譜，變成近似只有常數相位與一次相位的展平表示：
+因此第 $m$ 個 replica 的局部 fully expanded closed form 變為
 
 $$
-S_{3,m}(\tau,f_\eta)
-\approx
-\tilde{A}_m(\tau,f_\eta)
-\cdot
-\exp\left[
-j\tilde{\phi}_{0,m}
-+j\tilde{\phi}_{1,m}(f_\eta-f_{\mathrm{ref}})
+S_{2,m}(\tau,f_\eta) \approx
+A_2\,
+\mathrm{sinc}\left[
+B_r\left(
+\tau-\frac{2R_0}{c\,D_m(f_\eta)}
+\right)
 \right]
-$$
-
-也就是說，頻譜能量不再因為二次相位而沿著較寬的頻率區間展開，而會集中到一個較窄且近似線性的 baseband support。
-
-這就是「為什麼 deramping 之後 LPF 變得可行」的核心。
-
----
-
-**5. 為什麼 LPF 在 deramping 後可以把主頻譜濾出來**
-
-在未 deramp 之前，各 replica 雖然已被 mosaicking 排開，但其內部仍帶有 chirp curvature，因此：
-
-- 單一 replica 的能量分布較分散
-- replica 與 replica 之間的邊界不夠「平」
-- 用固定 cutoff 的 LPF 不容易只保留欲取的主分量
-
-但在 deramping 之後，主 replica 會被映射到較窄的近 baseband 區域，因此可設一個 low-pass filter
-
-$$
-H_{\mathrm{LPF}}(f_\eta) =
+\cdot
 \mathrm{rect}\left(
-\frac{f_\eta-f_{\mathrm{LPF}}}{B_{\mathrm{LPF}}}
+\frac{f_\eta-m\cdot\mathrm{PRF}-k_s\eta_c}{B_{\max}}
+\right)
+\cdot
+\exp\left(
+-j\left[
+\psi_{0,m}
++\psi_{1,m}(f_\eta-f_{\mathrm{ref}})
++\psi_{2,m}(f_\eta-f_{\mathrm{ref}})^2
+\right]
 \right)
 $$
 
-得到
-
-$$ S_4(\tau,f_\eta) = S_3(\tau,f_\eta)\cdot H_{\mathrm{LPF}}(f_\eta) $$
-
-若展平之後的主 replica 大部分能量都落在 $B_{\mathrm{LPF}}$ 內，而其他 replicas 因為：
-
-- 中心位置不同
-- 線性相位不同
-- 殘餘二次相位不同
-
-而落在 LPF 通帶之外，則 LPF 就能有效保留主 replica，抑制不需要的 unfolded blocks。
-
-因此整個邏輯是
+因此本步結束後，總訊號的局部 fully expanded closed form 為
 
 $$
-\text{mosaicking}
-\;\Longrightarrow\;
-\text{replicas explicitly tiled}
-\;\Longrightarrow\;
-\text{deramping removes main quadratic phase}
-\;\Longrightarrow\;
-\text{desired replica becomes compact in baseband}
-\;\Longrightarrow\;
-\text{LPF can isolate it}
+S_2(\tau,f_\eta) \approx
+\sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}}
+A_2\,
+\mathrm{sinc}\left[
+B_r\left(
+\tau-\frac{2R_0}{c\,D_m(f_\eta)}
+\right)
+\right]
+\cdot
+\mathrm{rect}\left(
+\frac{f_\eta-m\cdot\mathrm{PRF}-k_s\eta_c}{B_{\max}}
+\right)
+\cdot
+\exp\left(
+-j\left[
+\psi_{0,m}
++\psi_{1,m}(f_\eta-f_{\mathrm{ref}})
++\psi_{2,m}(f_\eta-f_{\mathrm{ref}})^2
+\right]
+\right)
 $$
+
+這一步的關鍵是：二次 phase curvature 已被顯式抽成 $\psi_{2,m}(f_\eta-f_{\mathrm{ref}})^2$，因此後續 deramping 的抵消目標已清楚可見。
 
 ---
 
-**6. 用解析式看 LPF 為何有效**
+**3. Deramping**
 
-將 $S_3=S_2\cdot H_{\mathrm{de}}$ 代入後，可得
+取 reference quadratic curvature 為
 
-$$ S_4(\tau,f_\eta) = \sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}} S_{2,m}(\tau,f_\eta)\cdot H_{\mathrm{de}}(f_\eta)\cdot H_{\mathrm{LPF}}(f_\eta) $$
+$$ \psi_{2,\mathrm{ref}} = \psi_{2,m_0} $$
 
-若 $m=m_0$ 為欲保留之主 replica，且對此 replica 有
-
-$$
-\phi_{2,m_0}\approx \phi_{2,\mathrm{ref}}
-$$
-
-則
-
-$$ S_{2,m_0}(\tau,f_\eta)\cdot H_{\mathrm{de}}(f_\eta) $$
-
-會近似成一個被壓縮到 baseband 內的分量，因此
-
-$$ S_4(\tau,f_\eta) \approx S_{2,m_0}(\tau,f_\eta)\cdot H_{\mathrm{de}}(f_\eta)\cdot H_{\mathrm{LPF}}(f_\eta) $$
-
-而對 $m\neq m_0$ 的 replicas，由於其中心位置或殘餘 chirp rate 不匹配，即使經過相同 deramping，也往往不能同時被拉平成和主 replica 相同的位置與頻寬，因此會在 LPF 之後被抑制。
-
----
-
-**7. 以實作角度理解**
-
-如果從程式實作角度看：
-
-- mosaicking：把各個 alias blocks 依序鋪展到 extended 頻率軸
-- deramping：對整條展開後的 spectrum 乘上一個 reference quadratic phase
-- LPF：只保留被 deramping 後集中到 central baseband 的那一塊
-
-所以程式上看到的現象通常是：
-
-1. mosaicking 後，signal 變長、頻帶展開
-2. deramping 後，原本斜的 / 展開的頻譜變得比較平、比較集中
-3. LPF 後，只剩下中央主要那一塊 unfolded 頻譜
-
-這正對應數學上
-
-$$ S_2 \;\xrightarrow{\ H_{\mathrm{de}}\ }\; S_3 \;\xrightarrow{\ H_{\mathrm{LPF}}\ }\; S_4 $$
-
----
-
-**8. 可直接放進筆記的最終版本**
-
-若要用最精簡的方式記錄，可直接寫成：
-
-$$ S_3(\tau,f_\eta) = S_2(\tau,f_\eta)\cdot H_{\mathrm{de}}(f_\eta) $$
+則 deramping filter 定義為
 
 $$
 H_{\mathrm{de}}(f_\eta) =
-\exp\left[
-+j\pi\frac{(f_\eta-f_{\mathrm{ref}})^2}{K_{\mathrm{ref}}}
-\right]
+\exp\left(
++j\psi_{2,\mathrm{ref}}(f_\eta-f_{\mathrm{ref}})^2
+\right)
 $$
 
-$$ S_4(\tau,f_\eta) = S_3(\tau,f_\eta)\cdot H_{\mathrm{LPF}}(f_\eta) $$
+若改寫成常見 chirp-rate 記號，則
+
+$$
+H_{\mathrm{de}}(f_\eta) =
+\exp\left(
++j\pi\frac{(f_\eta-f_{\mathrm{ref}})^2}{K_{\mathrm{ref}}}
+\right)
+$$
+
+deramping 後的第 $m$ 個 replica 為
+
+$$
+S_{3,m}(\tau,f_\eta) =
+S_{2,m}(\tau,f_\eta)\cdot H_{\mathrm{de}}(f_\eta)
+$$
+
+把 reference quadratic phase 直接乘回去後，可得第 $m$ 個 replica 的 fully expanded closed form
+
+$$
+S_{3,m}(\tau,f_\eta) \approx
+A_2\,
+\mathrm{sinc}\left[
+B_r\left(
+\tau-\frac{2R_0}{c\,D_m(f_\eta)}
+\right)
+\right]
+\cdot
+\mathrm{rect}\left(
+\frac{f_\eta-m\cdot\mathrm{PRF}-k_s\eta_c}{B_{\max}}
+\right)
+\cdot
+\exp\left(
+-j\left[
+\psi_{0,m}
++\psi_{1,m}(f_\eta-f_{\mathrm{ref}})
++\left(
+\psi_{2,m}-\psi_{2,\mathrm{ref}}
+\right)
+(f_\eta-f_{\mathrm{ref}})^2
+\right]
+\right)
+$$
+
+因此 deramping 後的總訊號 fully expanded closed form 為
+
+$$
+{\color{red}
+S_3(\tau,f_\eta) \approx
+\sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}}
+A_2\,
+\mathrm{sinc}\left[
+B_r\left(
+\tau-\frac{2R_0}{c\,D_m(f_\eta)}
+\right)
+\right]
+\cdot
+\mathrm{rect}\left(
+\frac{f_\eta-m\cdot\mathrm{PRF}-k_s\eta_c}{B_{\max}}
+\right)
+\cdot
+\exp\left(
+-j\left[
+\psi_{0,m}
++\psi_{1,m}(f_\eta-f_{\mathrm{ref}})
++\left(
+\psi_{2,m}-\psi_{2,\mathrm{ref}}
+\right)
+(f_\eta-f_{\mathrm{ref}})^2
+\right]
+\right)
+}
+$$
+
+對主 replica 而言，因為 $\psi_{2,\mathrm{ref}}=\psi_{2,m_0}$，所以其殘餘二次項近似變成零，也就是說主 replica 會由原本帶有明顯 curvature 的表示，轉成近似只剩常數項與一次項的較平坦頻譜。
+
+---
+
+**4. LPF**
+
+LPF 定義為
 
 $$
 H_{\mathrm{LPF}}(f_\eta) =
@@ -306,4 +317,237 @@ H_{\mathrm{LPF}}(f_\eta) =
 \right)
 $$
 
-其中 deramping 的作用是抵消主 replica 的二次 chirp phase，使其在頻域上集中到較窄的 baseband；LPF 則利用這種集中性，把目標 unfolded 主頻譜保留下來。
+LPF 後的第 $m$ 個 replica 為
+
+$$
+S_{4,m}(\tau,f_\eta) =
+S_{3,m}(\tau,f_\eta)\cdot H_{\mathrm{LPF}}(f_\eta)
+$$
+
+把通帶窗直接乘回去後，第 $m$ 個 replica 的 fully expanded closed form 為
+
+$$
+S_{4,m}(\tau,f_\eta) \approx
+A_2\,
+\mathrm{sinc}\left[
+B_r\left(
+\tau-\frac{2R_0}{c\,D_m(f_\eta)}
+\right)
+\right]
+\cdot
+\mathrm{rect}\left(
+\frac{f_\eta-m\cdot\mathrm{PRF}-k_s\eta_c}{B_{\max}}
+\right)
+\cdot
+\exp\left(
+-j\left[
+\psi_{0,m}
++\psi_{1,m}(f_\eta-f_{\mathrm{ref}})
++\left(
+\psi_{2,m}-\psi_{2,\mathrm{ref}}
+\right)
+(f_\eta-f_{\mathrm{ref}})^2
+\right]
+\right)
+\cdot
+\mathrm{rect}\left(
+\frac{f_\eta-f_{\mathrm{LPF}}}{B_{\mathrm{LPF}}}
+\right)
+$$
+
+因此 LPF 後的總訊號 fully expanded closed form 為
+
+$$
+{\color{red}
+S_4(\tau,f_\eta) \approx
+\sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}}
+A_2\,
+\mathrm{sinc}\left[
+B_r\left(
+\tau-\frac{2R_0}{c\,D_m(f_\eta)}
+\right)
+\right]
+\cdot
+\mathrm{rect}\left(
+\frac{f_\eta-m\cdot\mathrm{PRF}-k_s\eta_c}{B_{\max}}
+\right)
+\cdot
+\exp\left(
+-j\left[
+\psi_{0,m}
++\psi_{1,m}(f_\eta-f_{\mathrm{ref}})
++\left(
+\psi_{2,m}-\psi_{2,\mathrm{ref}}
+\right)
+(f_\eta-f_{\mathrm{ref}})^2
+\right]
+\right)
+\cdot
+\mathrm{rect}\left(
+\frac{f_\eta-f_{\mathrm{LPF}}}{B_{\mathrm{LPF}}}
+\right)
+}
+$$
+
+若只保留主 replica $m=m_0$ 的近似，則輸出可再寫成
+
+$$
+S_4(\tau,f_\eta) \approx
+A_2\,
+\mathrm{sinc}\left[
+B_r\left(
+\tau-\frac{2R_0}{c\,D_{m_0}(f_\eta)}
+\right)
+\right]
+\cdot
+\mathrm{rect}\left(
+\frac{f_\eta-m_0\cdot\mathrm{PRF}-k_s\eta_c}{B_{\max}}
+\right)
+\cdot
+\exp\left(
+-j\left[
+\psi_{0,m_0}
++\psi_{1,m_0}(f_\eta-f_{\mathrm{ref}})
++\left(
+\psi_{2,m_0}-\psi_{2,\mathrm{ref}}
+\right)
+(f_\eta-f_{\mathrm{ref}})^2
+\right]
+\right)
+\cdot
+\mathrm{rect}\left(
+\frac{f_\eta-f_{\mathrm{LPF}}}{B_{\mathrm{LPF}}}
+\right)
+$$
+
+也就是說，LPF 能保留主 replica 的條件，是它在 deramping 之後已先被壓縮到狹窄通帶內；若不先 deramp，固定通帶窗就很難只保留單一 replica 而不造成失真。
+
+---
+
+**物理意義**
+
+* mosaicking 只是在 extended azimuth-frequency axis 上把 replicas 攤開，並不會消除每塊 replica 的內部 phase curvature。
+* phase 的二次項 $\psi_{2,m}(f_\eta-f_{\mathrm{ref}})^2$ 是主 replica 難以直接用固定窗截取的核心原因。
+* deramping 的物理作用，是把主 replica 的 reference curvature 拿掉，讓其頻譜變平、變窄。
+* LPF 的物理作用，是在這個已展平的 domain 上只保留目標通帶。
+
+---
+
+**最終結果**
+
+起點訊號：
+
+$$
+S_2(\tau,f_\eta) =
+\sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}}
+A_2\,
+\mathrm{sinc}\left[
+B_r\left(
+\tau-\frac{2R_0}{c\,D_m(f_\eta)}
+\right)
+\right]
+\cdot
+\mathrm{rect}\left(
+\frac{f_\eta-m\cdot\mathrm{PRF}-k_s\eta_c}{B_{\max}}
+\right)
+\cdot
+\exp\left(
+-j\psi_m(f_\eta)
+\right)
+$$
+
+deramping filter：
+
+$$
+H_{\mathrm{de}}(f_\eta) =
+\exp\left(
++j\psi_{2,\mathrm{ref}}(f_\eta-f_{\mathrm{ref}})^2
+\right)
+$$
+
+deramping 後：
+
+$$
+S_3(\tau,f_\eta) \approx
+\sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}}
+A_2\,
+\mathrm{sinc}\left[
+B_r\left(
+\tau-\frac{2R_0}{c\,D_m(f_\eta)}
+\right)
+\right]
+\cdot
+\mathrm{rect}\left(
+\frac{f_\eta-m\cdot\mathrm{PRF}-k_s\eta_c}{B_{\max}}
+\right)
+\cdot
+\exp\left(
+-j\left[
+\psi_{0,m}
++\psi_{1,m}(f_\eta-f_{\mathrm{ref}})
++\left(
+\psi_{2,m}-\psi_{2,\mathrm{ref}}
+\right)
+(f_\eta-f_{\mathrm{ref}})^2
+\right]
+\right)
+$$
+
+LPF：
+
+$$
+H_{\mathrm{LPF}}(f_\eta) =
+\mathrm{rect}\left(
+\frac{f_\eta-f_{\mathrm{LPF}}}{B_{\mathrm{LPF}}}
+\right)
+$$
+
+LPF 後：
+
+$$
+S_4(\tau,f_\eta) \approx
+\sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}}
+A_2\,
+\mathrm{sinc}\left[
+B_r\left(
+\tau-\frac{2R_0}{c\,D_m(f_\eta)}
+\right)
+\right]
+\cdot
+\mathrm{rect}\left(
+\frac{f_\eta-m\cdot\mathrm{PRF}-k_s\eta_c}{B_{\max}}
+\right)
+\cdot
+\exp\left(
+-j\left[
+\psi_{0,m}
++\psi_{1,m}(f_\eta-f_{\mathrm{ref}})
++\left(
+\psi_{2,m}-\psi_{2,\mathrm{ref}}
+\right)
+(f_\eta-f_{\mathrm{ref}})^2
+\right]
+\right)
+\cdot
+\mathrm{rect}\left(
+\frac{f_\eta-f_{\mathrm{LPF}}}{B_{\mathrm{LPF}}}
+\right)
+$$
+
+---
+
+**實作對應**
+
+在程式上通常對應為：
+
+* 先對 mosaicked spectrum 乘上 reference quadratic phase 的共軛補償，這對應 $H_{\mathrm{de}}(f_\eta)$。
+* 再對 deramped spectrum 乘上固定通帶窗，這對應 $H_{\mathrm{LPF}}(f_\eta)$。
+* 實作中雖然常寫成 `signal *= filter`，但理論文件裡不能只停在這種 shorthand，而必須把乘完之後的訊號真正展開寫出來。
+
+---
+
+**限制與適用範圍**
+
+* 本文使用局部二階 phase model，適用於主 replica 附近的有限頻帶；若通帶過寬，三階以上項可能不可忽略。
+* 單一 deramping filter 只會精確匹配單一 reference curvature，因此它是為了分離某一個指定的主 replica，而不是同時展平所有 replicas。
+* LPF 是否有效，取決於 deramping 後主 replica 與其他 replicas 是否真的在 baseband 上可分離。
