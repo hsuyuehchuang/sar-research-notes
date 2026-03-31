@@ -1,18 +1,8 @@
 **重點摘要**
 
-* TOPSAR 掃描率 $\omega_s$ 並不是直接作用在 folded spectrum 上，而是先改變時域照明函數 $w_a(\eta;\omega_s)$，再經傅立葉轉換形成連續頻域包絡 $W_a(f_\eta;\omega_s)$。
+* TOPSAR 的掃描率 $\omega_s$ 不會直接生成 folded spectrum；它先改變慢時間照明函數 $w_a(\eta;\omega_s)$，再經傅立葉轉換形成連續方位包絡 $W_a(f_\eta;\omega_s)$。
 * folded phenomenon 的直接數學來源是慢時間離散取樣，也就是 Dirac comb $\sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)$ 所導致的頻域週期性複製。
-* 因此 TOPSAR 的 folded spectrum 應寫成連續頻譜與取樣 comb 卷積後的結果，而不是把 $\omega_s$ 與 aliasing 混成同一件事。
-* 對 TOPS 而言，最重要的 carried-forward quantity 是
-  $$
-  {\color{red}
-  W_{fold}(f_\eta;\omega_s)
-  =
-  \sum_{k=-\infty}^{\infty}
-  W_a(f_\eta-k\cdot\mathrm{PRF};\omega_s)
-  }
-  $$
-* 因此完整依賴鏈應理解為
+* 因此 TOPSAR folded spectrum 的正確依賴鏈是
   $$
   {\color{red}
   \omega_s
@@ -24,36 +14,45 @@
   W_{fold}(f_\eta;\omega_s)
   }
   $$
+* 最重要的 carried-forward result 是
+  $$
+  {\color{red}
+  W_{fold}(f_\eta;\omega_s)
+  =
+  \sum_{k=-\infty}^{\infty}
+  W_a(f_\eta-k\cdot\mathrm{PRF};\omega_s)
+  }
+  $$
+* 若把連續頻譜 $S_{1,c}$ 與取樣 comb 一起保留，則 folded 後的方位頻譜應寫成
+  $$
+  {\color{red}
+  S_1(\tau,f_\eta;\omega_s)
+  =
+  \mathrm{PRF}
+  \sum_{k=-\infty}^{\infty}
+  S_{1,c}(\tau,f_\eta-k\cdot\mathrm{PRF};\omega_s)
+  }
+  $$
 
 ---
 
 **問題定義**
 
-本文件要證明的是：
+本文件要證明三件事：
 
-1. 為什麼 TOPSAR 的 folded spectrum 必須同時保留 beam steering rate $\omega_s$ 與離散取樣算子。
+1. 為什麼 TOPSAR folded spectrum 不能只寫成一般 aliasing，而必須保留 $\omega_s$。
 2. 為什麼 folded spectrum 的直接數學來源是慢時間取樣，而不是 beam steering 本身。
-3. 為什麼在 TOPSAR 中，$\omega_s$ 仍然必須保留在最終 folded 頻譜表示內。
-4. 如何從完整時域模型一路推導到 folded 頻域表示
-   $$
-   S_1(\tau,f_\eta;\omega_s)
-   $$
-   與
-   $$
-   {\color{red}
-   W_{fold}(f_\eta;\omega_s)
-   }
-   $$
+3. 如何從完整時域模型一路推導到連續頻域包絡 $W_a(f_\eta;\omega_s)$ 與 folded 頻譜 $S_1(\tau,f_\eta;\omega_s)$。
 
 ---
 
 **推導重點**
 
-* 先從完整時域模型出發，同時保留距離項、天線方向圖與慢時間取樣 comb。
-* 再把 TOPSAR beam steering 幾何寫成有效離軸角 $\theta_{eff}(\eta)$，得到 $w_a(\eta;\omega_s)$。
-* 接著忽略 comb，先建立連續方位頻譜 $S_{1,c}(\tau,f_\eta;\omega_s)$ 與連續包絡 $W_a(f_\eta;\omega_s)$。
-* 最後把 comb 乘回來，利用 Poisson sum formula 將時域取樣轉成頻域週期性複製，得到 folded spectrum。
-* Appendix A 說明 $\frac{L_a}{\lambda}\theta$ 的來源，Appendix B 說明 $w_a(\eta;\omega_s)$ 的幾何來源，Appendix C 說明 folded 副本為什麼仍可藉由 chirp phase 結構被還原。
+* 先從完整時域模型出發，同時保留幾何距離項、天線照明項與慢時間取樣 comb。
+* 再把 TOPSAR beam steering 幾何寫成有效離軸角 $\theta_{eff}(\eta)$，將方向圖改寫成 $w_a(\eta;\omega_s)$。
+* 接著忽略 comb，先建立連續方位訊號 $s_{1,c}$ 與其方位頻譜 $S_{1,c}(\tau,f_\eta;\omega_s)$。
+* 然後把取樣 comb 乘回來，用 Poisson sum formula 把時域取樣轉成頻域週期性複製。
+* 最後把結果整理成 folded envelope $W_{fold}(f_\eta;\omega_s)$、完整 folded spectrum，以及其物理判讀。
 
 ---
 
@@ -63,32 +62,33 @@
 * $\eta$：方位向慢時間
 * $f_\eta$：方位向頻率
 * $T_p=1/\mathrm{PRF}$：慢時間取樣週期
-* $R_0$：最近斜距
+* $R_0$：目標最近斜距
 * $\eta_0$：目標最近通過時刻
 * $V_r$：等效方位相對速度
-* $\omega_s$：TOPSAR beam steering 的等效方位掃描角速度
-* $L_a$：方位向天線長度
+* $L_a$：方位向天線孔徑長度
 * $\lambda$：波長
 * $f_0$：載波頻率
 * $B_r$：距離向頻寬
+* $\omega_s$：TOPSAR beam steering 的等效角速度
+* $R(\eta)$：慢時間下的瞬時斜距
 * $w_a(\theta)$：雙程天線方向圖
-* $w_a(\eta;\omega_s)$：以慢時間表示的 TOPSAR 照明函數
-* $W_a(f_\eta;\omega_s)$：$w_a(\eta;\omega_s)$ 的連續方位頻域包絡
-* $W_{fold}(f_\eta;\omega_s)$：離散取樣後 folded 的頻域包絡
-* $D(f_\eta,V_r)$：由 POSP 推導得到的幾何因子
+* $w_a(\eta;\omega_s)$：改寫成慢時間座標後的 TOPSAR 時域照明函數
+* $W_a(f_\eta;\omega_s)$：連續方位頻域包絡
+* $W_{fold}(f_\eta;\omega_s)$：PRF 週期性複製後的 folded 頻域包絡
+* $D(f_\eta,V_r)$：POSP 下的幾何因子
 
-假設：
+假設如下：
 
 * 採用小角度近似 $\sin\theta\approx\theta$
-* 遠場條件成立，天線方向圖可由孔徑分布傅立葉轉換得到
-* 方位向頻域推導採用駐位相位原理
-* folded phenomenon 只討論由固定 PRF 慢時間取樣所導致的週期性複製
+* 採用遠場條件，方向圖可由孔徑分布的空間傅立葉轉換得到
+* 方位頻域推導使用駐位相位原理
+* 本文只討論由固定 PRF 慢時間取樣導致的 folded phenomenon
 
 ---
 
-**1. 完整時域模型：同時保留 $\omega_s$ 與取樣效應**
+**1. 完整時域模型**
 
-設單點目標的完整方位向離散回波為
+設單點目標的離散慢時間回波為
 
 $$
 s_{1,d}(\tau,\eta)
@@ -108,12 +108,10 @@ w_a\left(
 -j\frac{4\pi f_0R(\eta)}{c}
 \right)
 \cdot
-{\color{red}
 \sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)
-}
 $$
 
-其中幾何距離為
+其中幾何斜距為
 
 $$
 R(\eta)
@@ -123,7 +121,7 @@ R_0^2+V_r^2(\eta-\eta_0)^2
 }
 $$
 
-若以 $s_c(\eta)$ 表示連續慢時間訊號，則離散取樣可寫為
+若以 $s_c(\eta)$ 表示對應的連續慢時間訊號，則其離散取樣模型可寫為
 
 $$
 {\color{red}
@@ -134,27 +132,19 @@ s_c(\eta)
 }
 $$
 
-因此
-
-$$
-{\color{red}
-\sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)
-}
-$$
-
-是慢時間取樣算子的數學表示，而不是額外的物理散射項。
-
-本步結束後的輸入訊號已經清楚分解成三部分：
+因此本步的關鍵不是 folded 已經發生，而是訊號模型中已經同時包含：
 
 * 幾何距離項 $R(\eta)$
-* TOPSAR 照明項 $w_a(\eta;\omega_s)$
-* 離散取樣 comb $\sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)$
+* TOPSAR 照明項
+* 取樣 comb $\sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)$
+
+也就是說，folded 來源的算子已經在時域模型中被明確保留。
 
 ---
 
-**2. TOPSAR 照明函數：由 beam steering 幾何得到 $w_a(\eta;\omega_s)$**
+**2. TOPSAR 照明函數**
 
-在小角度近似下，雙程天線方向圖可寫為
+在小角度近似下，雙程方向圖可寫為
 
 $$
 w_a(\theta)
@@ -164,9 +154,9 @@ w_a(\theta)
 \right)
 $$
 
-其中 $\frac{L_a}{\lambda}\theta$ 的來源見 Appendix A。
+其來源見 Appendix A。
 
-在 TOPSAR 中，目標相對掃描波束中心的有效離軸角為
+在 TOPSAR 幾何下，目標相對掃描波束中心的有效離軸角為
 
 $$
 {\color{red}
@@ -176,7 +166,7 @@ $$
 }
 $$
 
-因此 TOPSAR 的時域照明函數可寫為
+將 $\theta=\theta_{eff}(\eta)$ 代入雙程方向圖，可得慢時間照明函數
 
 $$
 {\color{red}
@@ -191,9 +181,7 @@ w_a(\eta;\omega_s)
 }
 $$
 
-這一步的物理意義是：$\omega_s$ 先改變時域照明函數，而不是直接作用在 folded 頻譜上。
-
-因此第 1 步的完整時域模型也可重寫為
+因此第 1 步的訊號也可重寫為
 
 $$
 s_{1,d}(\tau,\eta)
@@ -214,11 +202,13 @@ w_a(\eta;\omega_s)
 \sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)
 $$
 
+這一步的物理意義是：$\omega_s$ 只先改變時域照明，還沒有直接產生 folded spectrum。
+
 ---
 
-**3. 連續方位頻譜：由 $w_a(\eta;\omega_s)$ 導出 $W_a(f_\eta;\omega_s)$**
+**3. 連續方位訊號與連續頻域包絡**
 
-先忽略離散取樣 comb，只考慮其對應的連續訊號：
+為了先把 beam steering 對頻譜的影響與取樣效應分開，先忽略 Dirac comb。對應的連續慢時間訊號為
 
 $$
 s_{1,c}(\tau,\eta)
@@ -237,7 +227,17 @@ w_a(\eta;\omega_s)
 \right)
 $$
 
-對 $\eta$ 做方位向傅立葉轉換，並利用駐位相位原理，可得
+此時連續方位頻域包絡定義為
+
+$$
+W_a(f_\eta;\omega_s)
+=
+\mathcal{F}_{\eta}\left[
+w_a(\eta;\omega_s)
+\right]
+$$
+
+利用駐位相位原理，連續方位頻譜可寫成
 
 $$
 S_{1,c}(\tau,f_\eta;\omega_s)
@@ -275,45 +275,21 @@ $$
 -j2\pi f_\eta\eta_0
 $$
 
-而連續頻域包絡定義為
+因此本步結束後的輸出訊號是：
 
-$$
-W_a(f_\eta;\omega_s)
-=
-\mathcal{F}_{\eta}\left[
-w_a(\eta;\omega_s)
-\right]
-$$
+* 連續慢時間訊號 $s_{1,c}(\tau,\eta)$
+* 連續方位頻譜 $S_{1,c}(\tau,f_\eta;\omega_s)$
 
-因此本步結束後的連續方位頻譜 closed form 為
-
-$$
-S_{1,c}(\tau,f_\eta;\omega_s)
-=
-A_2\,
-\mathrm{sinc}\left[
-B_r\left(
-\tau-\frac{2R_0}{cD(f_\eta,V_r)}
-\right)
-\right]
-\cdot
-W_a(f_\eta;\omega_s)
-\cdot
-\exp\left(
-\Phi_{az}(f_\eta)
-\right)
-$$
-
-這裡必須保留 $\omega_s$，因為它已經被寫進 $w_a(\eta;\omega_s)$，並進一步傳到 $W_a(f_\eta;\omega_s)$。
+這一步最重要的結論是：$\omega_s$ 已經透過 $w_a(\eta;\omega_s)$ 進入 $W_a(f_\eta;\omega_s)$，因此在後續 folded 頻譜中仍必須被保留。
 
 ---
 
-**4. 離散取樣後的 folded 頻譜：由 comb 得到週期性複製**
+**4. 由取樣 comb 得到 folded spectrum**
 
-根據 Poisson sum formula，
+慢時間取樣 comb 的傅立葉轉換為
 
 $$
-\mathcal{F}\left[
+\mathcal{F}_{\eta}\left[
 \sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)
 \right]
 =
@@ -322,7 +298,7 @@ $$
 \delta(f_\eta-k\cdot\mathrm{PRF})
 $$
 
-因此時域相乘等效於頻域卷積，離散後的方位頻譜為
+因此時域相乘在頻域中對應為卷積，離散訊號的方位頻譜為
 
 $$
 S_1(\tau,f_\eta;\omega_s)
@@ -336,15 +312,19 @@ S_{1,c}(\tau,f_\eta;\omega_s)
 \right]
 $$
 
+將卷積與 Dirac impulse train 展開後，可得 folded 頻譜的 compact closed form
+
 $$
+{\color{red}
 S_1(\tau,f_\eta;\omega_s)
 =
 \mathrm{PRF}
 \sum_{k=-\infty}^{\infty}
 S_{1,c}(\tau,f_\eta-k\cdot\mathrm{PRF};\omega_s)
+}
 $$
 
-若將連續頻譜表示代入，則 folded 後的完整 closed form 可寫為
+若把上一步的連續頻譜代入，則完整展開式為
 
 $$
 S_1(\tau,f_\eta;\omega_s)
@@ -365,7 +345,7 @@ W_a(f_\eta-k\cdot\mathrm{PRF};\omega_s)
 \right)
 $$
 
-若只強調 folded 包絡本身，則可將 envelope 部分整理成
+若只抽出 envelope 結構，則 folded 包絡為
 
 $$
 {\color{red}
@@ -376,7 +356,7 @@ W_a(f_\eta-k\cdot\mathrm{PRF};\omega_s)
 }
 $$
 
-在 envelope 與 phase 緩變近似下，也可進一步寫成
+因此在 envelope 緩變近似下，可將 folded 頻譜寫成
 
 $$
 S_1(\tau,f_\eta;\omega_s)
@@ -392,25 +372,19 @@ B_r\left(
 \Phi_{az}(f_\eta)
 \right)
 \cdot
-\underbrace{
-\left[
-\sum_{k=-\infty}^{\infty}
-W_a(f_\eta-k\cdot\mathrm{PRF};\omega_s)
-\right]
-}_{{\color{red}W_{fold}(f_\eta;\omega_s)}}
+W_{fold}(f_\eta;\omega_s)
 $$
 
-這裡最重要的是：
+本步結束後最重要的輸出訊號就是：
 
-* folded 行為本身來自慢時間離散取樣
-* $\omega_s$ 決定的是連續頻域包絡 $W_a$ 的展寬
-* 因此最終 folded 頻譜必須保留 $\omega_s$
+* 完整 folded 頻譜 $S_1(\tau,f_\eta;\omega_s)$
+* folded 包絡 $W_{fold}(f_\eta;\omega_s)$
 
 ---
 
-**5. 物理判讀：為什麼 TOPSAR 特別容易出現 folded spectrum**
+**5. 為什麼 TOPSAR 特別容易出現 folded spectrum**
 
-這裡保留完整依賴鏈：
+這裡的因果順序必須保持清楚：
 
 $$
 {\color{red}
@@ -424,28 +398,25 @@ W_{fold}(f_\eta;\omega_s)
 }
 $$
 
-正確的物理理解是：
+也就是說：
 
 * $\omega_s$ 改變的是 beam steering 下的時域照明
-* 該照明函數經傅立葉轉換後，決定連續頻域包絡 $W_a(f_\eta;\omega_s)$ 的寬度
-* 當這個連續頻譜相對於 PRF 過寬時，離散取樣才會把它折回主頻帶
+* 時域照明函數經傅立葉轉換後，決定連續方位包絡 $W_a(f_\eta;\omega_s)$ 的寬度
+* 當連續頻譜相對於 PRF 過寬時，取樣 comb 才會把其週期性複製回主頻帶
 
-因此 folded phenomenon 的直接數學來源是取樣，但 TOPSAR 的 $\omega_s$ 會把系統推到更容易發生 folded 的條件。
+因此 folded phenomenon 的直接數學來源是取樣，而 TOPSAR 的特殊性在於它透過 $\omega_s$ 改變連續頻譜的寬度，讓 folded 更容易發生。
 
 ---
 
 **物理意義**
 
-* $R(\eta)$：決定幾何距離、相位歷程與距離徙動
-* $w_a(\eta;\omega_s)$：描述 beam steering 下目標被照射的時域包絡
-* $W_a(f_\eta;\omega_s)$：時域照明函數對應的連續方位頻域包絡
+* $R(\eta)$：控制幾何距離、二次相位歷程與方位壓縮基礎
+* $w_a(\eta;\omega_s)$：描述 beam steering 下目標被照射多久、如何被照射
+* $W_a(f_\eta;\omega_s)$：時域照明經傅立葉轉換後的連續方位頻域包絡
 * $\sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)$：慢時間離散取樣算子
 * $W_{fold}(f_\eta;\omega_s)$：連續頻域包絡被 PRF 週期性複製後的 folded 表示
 
-本質上：
-
-* $\omega_s$ 決定連續頻譜是否被展寬
-* PRF 取樣決定展寬後的頻譜是否被折回
+本質上不是「$\omega_s$ 等於 aliasing」，而是「$\omega_s$ 先改變連續頻譜，取樣再把這個頻譜折回」。
 
 ---
 
@@ -472,7 +443,7 @@ w_a(\eta;\omega_s)
 \sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)
 $$
 
-TOPSAR 時域照明函數：
+TOPSAR 照明函數：
 
 $$
 {\color{red}
@@ -552,30 +523,29 @@ $$
 
 **實作對應**
 
-在程式上通常對應為：
+在程式上通常可分成兩個層次：
 
-* 先建立連續或準連續的方位包絡 $W_a(f_\eta;\omega_s)$
-* 再用以 $\mathrm{PRF}$ 為間隔的 shift index $k$ 對它做週期性複製
-* 若程式是把不同 block 依序 append 或 concatenate 到延展頻率軸上，則那是後續 unfolded / mosaicked 表示；它不是 folded 頻譜本身，而是 folded replicas 的重排
+* 理論 folded operator：以 $\mathrm{PRF}$ 為週期，對連續頻譜或連續包絡做 periodic replication
+* 後處理的 unfolded / mosaicked 實作：把不同 replicas 依索引平移後重新排列到延展頻率軸
 
 因此：
 
-* 取樣 comb 對應的是理論上的 periodic replication operator
-* `append` / `concatenate` 對應的是後續重排或 unfolding 實作
+* 取樣 comb 對應的是理論上的週期性複製算子
+* `append`、`concatenate`、`shift by m * PRF` 對應的是 folded replicas 的重排，不是 folding 本身
 
 ---
 
 **限制與適用範圍**
 
-* 本文件把 folded phenomenon 的主要來源鎖定在慢時間取樣，未展開更多與有限 aperture、window truncation、burst slicing 有關的高階效應。
-* 連續頻譜到近似 envelope form 的過程使用了 POSP 與緩變近似，因此更適合用來說明結構，而不是做最終高精度誤差分析。
-* 若沒有可靠的 chirp phase model，folded 副本雖然仍可被寫成週期性複製，但不一定保證後續可逆還原。
+* 本文將 folded phenomenon 的直接來源限定為固定 PRF 的慢時間取樣，未展開 burst slicing、有限 aperture truncation 與加窗效應的高階修正。
+* 連續頻譜表示依賴 POSP 與緩變近似，因此更適合說明結構與因果鏈，而不是做最終高精度誤差分析。
+* folded 副本的「可還原性」不是由 sampling theorem 自動保證，而是依賴原始訊號具有可建模且可逆的 chirp phase structure。
 
 ---
 
 **Appendix A. $\frac{L_a}{\lambda}\theta$ 的來源**
 
-設方位向天線孔徑沿座標 $x\in[-L_a/2,L_a/2]$ 均勻照明，則孔徑分布可寫為
+設方位向孔徑沿座標 $x\in[-L_a/2,L_a/2]$ 均勻照明，則孔徑分布可寫為
 
 $$
 a(x)
@@ -614,6 +584,8 @@ jk\frac{L_a}{2}\sin\theta
 jk\sin\theta
 }
 $$
+
+進一步整理為
 
 $$
 E(\theta)
@@ -678,21 +650,23 @@ G_{1\text{-way}}(\theta)
 \right)
 $$
 
-因此 $\frac{L_a}{\lambda}\theta$ 不是任意寫入的無因次量，而是孔徑長度相對於波長的歸一化空間相位差。
+因此 $\frac{L_a}{\lambda}\theta$ 不是任意湊出的無因次量，而是孔徑長度相對波長的歸一化空間相位差。
 
 ---
 
 **Appendix B. $w_a(\eta;\omega_s)$ 的幾何來源**
 
-$w_a$ 最原始是角度 $\theta$ 的函數，而不是慢時間 $\eta$ 的函數。要把它寫成 $w_a(\eta;\omega_s)$，必須先把目標相對波束中心的有效離軸角表示為慢時間函數。
+$w_a$ 最原始是角度 $\theta$ 的函數。要把它改寫成 $w_a(\eta;\omega_s)$，必須先把目標相對於掃描波束中心的離軸角表示為慢時間函數。
 
-設目標最近通過時刻為 $\eta_0$，最近斜距為 $R_0$，平台沿方位向的等效速度為 $V_r$。則方位向相對位移為
+設目標最近通過時刻為 $\eta_0$，最近斜距為 $R_0$，平台等效方位速度為 $V_r$。則目標的方位向相對位移為
 
 $$
-x(\eta)=V_r(\eta-\eta_0)
+x(\eta)
+=
+V_r(\eta-\eta_0)
 $$
 
-因此目標相對雷達視線的瞬時方位角為
+故目標相對雷達視線的瞬時角度為
 
 $$
 \theta_{tar}(\eta)
@@ -715,7 +689,9 @@ $$
 TOPSAR 中，波束中心隨慢時間掃描。若其等效掃描角速度為 $\omega_s$，則
 
 $$
-\theta_{beam}(\eta)=\omega_s\eta
+\theta_{beam}(\eta)
+=
+\omega_s\eta
 $$
 
 因此目標相對波束中心的有效離軸角為
@@ -730,19 +706,7 @@ $$
 }
 $$
 
-故方向圖項可寫為
-
-$$
-w_a\left(
-\theta_{eff}(\eta)
-\right)
-=
-w_a\left(
-\frac{V_r}{R_0}(\eta-\eta_0)-\omega_s\eta
-\right)
-$$
-
-再代入 Appendix A 中的雙程方向圖近似，即得
+把此結果代回 Appendix A 的雙程方向圖，立即得到
 
 $$
 {\color{red}
@@ -759,11 +723,11 @@ $$
 
 ---
 
-**Appendix C. folded 頻譜可還原性的相位模型**
+**Appendix C. folded 頻譜的可還原性為什麼來自 phase structure**
 
-TOPS 中 folded phenomenon 之所以原理上可還原，關鍵不在於取樣後資訊自動保留，而在於原始方位向訊號具有可建模的 LFM 相位律。
+folding 本身由取樣公式決定，但 folded 副本之所以在 TOPS 中常可被重排與還原，關鍵在於連續訊號具有可建模的 chirp phase structure。
 
-對單點目標，經 POSP 後的連續方位頻譜可近似寫為
+對單點目標，經 POSP 後的連續頻譜可近似寫為
 
 $$
 S_{1,c}(\tau,f_\eta;\omega_s)
@@ -785,7 +749,7 @@ W_a(f_\eta-k\cdot\mathrm{PRF};\omega_s)
 \right)
 $$
 
-若施加對應的逆二次相位，即 deramping / deskew 操作
+若施加對應的逆二次相位，也就是 deramping / deskew 操作
 
 $$
 H_{de}(f_\eta)
@@ -795,7 +759,7 @@ H_{de}(f_\eta)
 \right)
 $$
 
-則 folded 副本可被映射到近似展平的表示。其可逆流程可概念化為
+則副本可被映射到近似展平的表示。概念上可寫成
 
 $$
 {\color{red}
@@ -807,4 +771,9 @@ W_{fold}
 }
 $$
 
-因此 folding 本身由取樣公式刻畫，而可還原性則來自 folded 副本之間共享且可逆的 LFM phase structure。若該相位律不存在，或 $K_a$、$f_{dc}$、$\omega_s$ 無法被穩定估計，則 folded 頻譜將退化為一般不可逆的 aliasing。
+因此：
+
+* folding 由取樣 comb 決定
+* 可還原性由 folded 副本共享的 LFM phase structure 決定
+
+若 $K_a$、$f_{dc}$、$\omega_s$ 或參考相位模型無法被穩定估計，則 folded 頻譜就會退化為一般不可逆的 aliasing。
