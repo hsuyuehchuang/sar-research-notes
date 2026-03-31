@@ -15,7 +15,7 @@ $$
 s_{1,d}(\tau,\eta) =& A_1 \, \text{sinc}[B_r(\tau-\frac{2R(\eta)}{c})]
 \cdot w_a(\frac{V_r}{R_0}(\eta-\eta_0)-\omega_s\eta)
 \exp\{-j\frac{4\pi f_0 R(\eta)}{c}\}
-\boxed{
+{\color{red}
 \sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)
 }
 \end{aligned}
@@ -30,7 +30,7 @@ $$
 決定幾何距離、空間相位與距離徙動。若以 $s_c(\eta)$ 表示連續慢時間訊號，則其離散取樣後可寫為
 
 $$
-\boxed{
+{\color{red}
 s_d(\eta)=s_c(\eta)\sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)
 }
 $$
@@ -38,7 +38,7 @@ $$
 因此
 
 $$
-\boxed{
+{\color{red}
 \sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)
 }
 $$
@@ -143,14 +143,14 @@ $$
 \begin{aligned}
 S_1(\tau,f_\eta;\omega_s)
 &\approx A_2\,\text{sinc}[\dots]\,\exp\{\Phi_{az}(f_\eta)\}
-\underbrace{[\sum_{k=-\infty}^{\infty}W_a(f_\eta-k\cdot\text{PRF};\omega_s)]}_{\boxed{W_{fold}(f_\eta;\omega_s)}}
+\underbrace{[\sum_{k=-\infty}^{\infty}W_a(f_\eta-k\cdot\text{PRF};\omega_s)]}_{{\color{red}W_{fold}(f_\eta;\omega_s)}}
 \end{aligned}
 $$
 
 亦即
 
 $$
-\boxed{
+{\color{red}
 W_{fold}(f_\eta;\omega_s)
 =\sum_{k=-\infty}^{\infty}W_a(f_\eta-k\cdot\text{PRF};\omega_s)
 }
@@ -224,7 +224,7 @@ $$
 在小角度近似 $\sin\theta\approx\theta$ 下，即得
 
 $$
-\boxed{
+{\color{red}
 G_{1\text{-way}}(\theta)\approx
 \mathrm{sinc}(\frac{L_a}{\lambda}\theta)
 }
@@ -233,7 +233,7 @@ $$
 對單站雷達而言，發射與接收方向圖相乘，因此雙程方向圖為
 
 $$
-\boxed{
+{\color{red}
 w_a(\theta)=|G_{1\text{-way}}(\theta)|^2
 \approx
 \mathrm{sinc}^2(\frac{L_a}{\lambda}\theta)
