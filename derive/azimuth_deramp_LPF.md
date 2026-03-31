@@ -23,8 +23,8 @@ B_r\left(
 \exp\left(
 -j\left[
 \psi_{0,m}
-+ \psi_{1,m}(f_\eta-f_{\mathrm{ref}})
-+ \left(
++\psi_{1,m}(f_\eta-f_{\mathrm{ref}})
++\left(
 \psi_{2,m}-\psi_{2,\mathrm{ref}}
 \right)(f_\eta-f_{\mathrm{ref}})^2
 \right]
