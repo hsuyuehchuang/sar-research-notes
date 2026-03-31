@@ -153,6 +153,21 @@ $$
 
 ---
 
+**圖例對照**
+
+<table>
+  <tr>
+    <th>Range Doppler After RC</th>
+    <th>Input Aliased Freq Bound</th>
+  </tr>
+  <tr>
+    <td><img src="./20260331/003_range%20doppler%20after%20rc.png" width="420"></td>
+    <td><img src="./20260331/1.Input_Aliased__Freq_Bound_-500_500_Hz.png" width="420"></td>
+  </tr>
+</table>
+
+---
+
 **Appendix A. $\frac{L_a}{\lambda}\theta$ 的來源**
 
 設方位向天線孔徑沿座標 $x\in[-L_a/2,L_a/2]$ 均勻照明，則其孔徑分布可寫為
