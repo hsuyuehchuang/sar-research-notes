@@ -276,10 +276,7 @@ $$
 
 故 TOPSAR 的方向圖項可寫為
 
-$$
-w_a(\theta_{eff}(\eta))
-=
-w_a(\frac{V_r}{R_0}(\eta-\eta_0)-\omega_s\eta)
+$$w_a(\theta_{eff}(\eta))=w_a(\frac{V_r}{R_0}(\eta-\eta_0)-\omega_s\eta)
 $$
 
 再代入 Appendix A 中的雙程方向圖近似式
