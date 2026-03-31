@@ -1,5 +1,6 @@
 **重點摘要**
 
+
 * TOPSAR 掃描率 $\omega_s$ 則透過天線方向圖 $w_a$ 改變方位向能量分布。
 * 頻譜折疊的直接數學來源是離散取樣；但在 TOPSAR 中，$\omega_s$ 會先展寬連續頻譜 $W_a(f_\eta;\omega_s)$，使其更容易在取樣後形成 folded 頻譜 $W_{fold}(f_\eta;\omega_s)$。
 * 因此最後的 folded 頻譜公式必須保留 $\omega_s$，才能清楚分開兩件事：一是取樣造成頻譜折返，二是波束掃描率決定連續頻譜是否被展寬到足以發生折返。
@@ -150,23 +151,6 @@ $$
 $$
 
 因此，整體邏輯應理解為：TOPS 掃描率 $\omega_s$ 先透過 $w_a(\eta;\omega_s)$ 改變時域照明，再經傅立葉轉換形成連續頻域包絡 $W_a(f_\eta;\omega_s)$；最後，PRF 取樣才把這個連續頻譜週期性複製並折回主頻帶，形成 $W_{fold}(f_\eta;\omega_s)$。換言之，$\omega_s$ 控制的是連續頻譜的展寬，而 folded 行為本身則來自離散取樣。由於 TOPS 方位向訊號本質上是 LFM 訊號，這些 folded 副本具有可預測的相位結構，而不是彼此無關的隨機頻率成分。若沒有 beam steering，系統可退回近似 stripmap 的情形，此時少了 TOPSAR 額外展寬機制，通常較容易避免這類 folded 頻譜；但數學上是否發生折返，仍須由「連續頻寬是否超過取樣所允許的無混疊範圍」來判定。
-
----
-
-**圖例對照**
-
-<table>
-  <tr>
-    <th>Range Doppler After RC</th>
-    <th>Input Aliased Freq Bound</th>
-  </tr>
-  <tr>
-    <td><img src="./20260331/003_range%20doppler%20after%20rc.png" width="420"></td>
-    <td><img src="./20260331/1.Input_Aliased__Freq_Bound_-500_500_Hz.png" width="420"></td>
-  </tr>
-</table>
-
----
 
 **Appendix A. $\frac{L_a}{\lambda}\theta$ 的來源**
 
