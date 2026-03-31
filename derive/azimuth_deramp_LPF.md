@@ -4,35 +4,38 @@
 * deramping 的核心不是消除 aliasing，而是拿掉主 replica 的 reference quadratic phase，使其頻域能量由彎曲展寬的 chirp-like 結構，轉成較集中的近 baseband 表示。
 * LPF 之所以有效，不是因為它本身能辨認主 replica，而是因為主 replica 已先被 deramping 拉平並壓縮到狹窄通帶內。
 * 若把第 $m$ 個 replica 的 phase 近似寫成 $\psi_{0,m}+\psi_{1,m}(f_\eta-f_{\mathrm{ref}})+\psi_{2,m}(f_\eta-f_{\mathrm{ref}})^2$，則 deramping 後的殘餘二次項就是 $\psi_{2,m}-\psi_{2,\mathrm{ref}}$。
-* 因此整個處理鏈的關鍵輸出可寫成
-  $$
-  {\color{red}
-  S_3(\tau,f_\eta) =
-  \sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}}
-  A_2\,
-  \mathrm{sinc}\left[
-  B_r\left(
-  \tau-\frac{2R_0}{c\,D_m(f_\eta)}
-  \right)
-  \right]
-  \cdot
-  \mathrm{rect}\left(
-  \frac{f_\eta-m\cdot\mathrm{PRF}-k_s\eta_c}{B_{\max}}
-  \right)
-  \cdot
-  \exp\left(
-  -j\left[
-  \psi_{0,m}
-  +\psi_{1,m}(f_\eta-f_{\mathrm{ref}})
-  +\left(
-  \psi_{2,m}-\psi_{2,\mathrm{ref}}
-  \right)
-  (f_\eta-f_{\mathrm{ref}})^2
-  \right]
-  \right)
-  }
-  $$
+* 因此整個處理鏈的關鍵輸出，是 deramping 後每個 replica 的二次項都變成 $\psi_{2,m}-\psi_{2,\mathrm{ref}}$。
 * LPF 後的輸出則是在上式外再乘上通帶窗，因此每一步的輸出訊號都可以寫成 fully expanded closed form，而不能只停在 operator shorthand。
+
+摘要中最重要的 carried-forward result 為
+
+$$
+{\color{red}
+S_3(\tau,f_\eta) \approx
+\sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}}
+A_2\,
+\mathrm{sinc}\left[
+B_r\left(
+\tau-\frac{2R_0}{c\,D_m(f_\eta)}
+\right)
+\right]
+\cdot
+\mathrm{rect}\left(
+\frac{f_\eta-m\cdot\mathrm{PRF}-k_s\eta_c}{B_{\max}}
+\right)
+\cdot
+\exp\left(
+-j\left[
+\psi_{0,m}
++\psi_{1,m}(f_\eta-f_{\mathrm{ref}})
++\left(
+\psi_{2,m}-\psi_{2,\mathrm{ref}}
+\right)
+(f_\eta-f_{\mathrm{ref}})^2
+\right]
+\right)
+}
+$$
 
 ---
 
