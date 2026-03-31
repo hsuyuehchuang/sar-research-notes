@@ -99,7 +99,7 @@ $$
 而頻域包絡明確定義為
 
 $$
-W_a(f_\eta;\omega_s)=\mathcal{F}_{\eta}\{w_a(\eta;\omega_s)\}
+W_a(f_\eta;\omega_s)=\mathcal{F}_{\eta}\left[w_a(\eta;\omega_s)\right]
 $$
 
 因此，$W_a$ 並不是額外引入的新量，而是時域波束函數 $w_a(\eta;\omega_s)$ 的頻域對應。由於 $w_a$ 含有 $\omega_s$，連續頻域包絡 $W_a$ 也自然保留 $\omega_s$。這正是 TOPSAR 掃描率影響連續方位頻寬的數學來源。若令 $\omega_s=0$，則系統退回不含 beam steering 的情形，頻譜通常不再出現 TOPSAR 額外展寬；但是否完全沒有頻譜折返，仍取決於該連續頻寬相對於 PRF 的大小，而不是因為 $\omega_s=0$ 就自動保證。
@@ -109,7 +109,7 @@ $$
 現在把慢時間取樣項乘回來。根據 Poisson Sum Formula，Dirac comb 的頻域表示為：
 
 $$
-\mathcal{F}\{\sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)\}
+\mathcal{F}\left[\sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)\right]
 = \text{PRF}\sum_{k=-\infty}^{\infty}\delta(f_\eta-k\cdot\text{PRF})
 $$
 
@@ -127,7 +127,7 @@ $$
 $$
 S_1(\tau,f_\eta;\omega_s)
 \approx A_2\,\text{sinc}[B_r(\tau-\frac{2R_0}{cD(f_\eta,V_r)})]\,
-\exp\{\Phi_{az}(f_\eta)\}
+\exp\left(\Phi_{az}(f_\eta)\right)
 \underbrace{[\sum_{k=-\infty}^{\infty}W_a(f_\eta-k\cdot\text{PRF};\omega_s)]}_{{\color{red}W_{fold}(f_\eta;\omega_s)}}
 $$
 
@@ -311,20 +311,20 @@ $$
 S_{1,c}(\tau,f_\eta;\omega_s)
 \propto
 W_a(f_\eta;\omega_s)
-\exp\{-j\pi \frac{(f_\eta-f_{dc})^2}{K_a}\}
+\exp\left(-j\pi \frac{(f_\eta-f_{dc})^2}{K_a}\right)
 $$
 
 其中 $K_a$ 為等效方位 FM rate，$f_{dc}$ 為 Doppler centroid。故第 $k$ 個 folded 副本可表示為
 
 $$
 W_a(f_\eta-k\cdot\mathrm{PRF};\omega_s)
-\exp\{-j\pi \frac{(f_\eta-k\cdot\mathrm{PRF}-f_{dc})^2}{K_a}\}
+\exp\left(-j\pi \frac{(f_\eta-k\cdot\mathrm{PRF}-f_{dc})^2}{K_a}\right)
 $$
 
 此式表明，各 folded 副本並非彼此無關，而是共享同一組二次相位 chirp law。若施加對應的逆二次相位，即 deramping / deskew 操作
 
 $$
-H_{de}(f_\eta) = \exp\{+j\pi \frac{(f_\eta-f_{ref})^2}{K_{ref}}\}
+H_{de}(f_\eta) = \exp\left(+j\pi \frac{(f_\eta-f_{ref})^2}{K_{ref}}\right)
 $$
 
 則 folded 副本可被映射至近似展平的表示。於是其逆運算可概念化為：先去除已知 chirp phase，再將各 folded 副本依其索引搬回原始位置，最後重新合成連續頻譜。因此其可還原性的核心可寫為
