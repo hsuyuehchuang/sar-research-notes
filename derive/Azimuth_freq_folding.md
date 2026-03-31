@@ -11,14 +11,10 @@
 設脈衝重複週期為 $T_p = 1/\text{PRF}$，則單點目標的方位向離散回波可寫為：
 
 $$
-\begin{aligned}
-s_{1,d}(\tau,\eta) =& A_1 \, \text{sinc}[B_r(\tau-\frac{2R(\eta)}{c})]
+s_{1,d}(\tau,\eta)= A_1 \, \text{sinc}[B_r(\tau-\frac{2R(\eta)}{c})]
 \cdot w_a(\frac{V_r}{R_0}(\eta-\eta_0)-\omega_s\eta)
 \exp\{-j\frac{4\pi f_0 R(\eta)}{c}\}
-{\color{red}
-\sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)
-}
-\end{aligned}
+{\color{red}\sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)}
 $$
 
 其中
@@ -48,9 +44,7 @@ $$
 對小角度近似 $\sin\theta\approx\theta$，若方位向天線長度為 $L_a$，則雙程天線方向圖可近似為：
 
 $$
-\begin{aligned}
 w_a(\theta)=\text{sinc}^2(\frac{L_a}{\lambda}\theta)
-\end{aligned}
 $$
 
 其中 $\frac{L_a}{\lambda}\theta$ 的來源見 Appendix A。
@@ -64,10 +58,8 @@ $$
 故 TOPSAR 的時域照明函數為
 
 $$
-\begin{aligned}
 w_a(\eta;\omega_s)
 =\text{sinc}^2[\frac{L_a}{\lambda}(\frac{V_r}{R_0}(\eta-\eta_0)-\omega_s\eta)]
-\end{aligned}
 $$
 
 此式表明：$\omega_s$ 先透過 beam steering 改變時域照明函數 $w_a(\eta;\omega_s)$，再經由傅立葉轉換進入連續方位頻域包絡 $W_a(f_\eta;\omega_s)$。
@@ -77,22 +69,18 @@ $$
 先忽略離散取樣 comb，只考慮其對應的連續訊號：
 
 $$
-\begin{aligned}
-s_{1,c}(\tau,\eta) =& A_1 \, \text{sinc}[B_r(\tau-\frac{2R(\eta)}{c})] \\
-&\cdot w_a(\eta;\omega_s)
+s_{1,c}(\tau,\eta)= A_1 \, \text{sinc}[B_r(\tau-\frac{2R(\eta)}{c})]
+\cdot w_a(\eta;\omega_s)
 \exp\{-j\frac{4\pi f_0 R(\eta)}{c}\}
-\end{aligned}
 $$
 
 對 $\eta$ 做方位向傅立葉轉換，並利用駐位相位原理 (POSP)，可得：
 
 $$
-\begin{aligned}
 S_{1,c}(\tau,f_\eta;\omega_s)
 = A_2 \, \text{sinc}[B_r(\tau-\frac{2R_0}{cD(f_\eta,V_r)})]
 W_a(f_\eta;\omega_s)
 \exp\{\Phi_{az}(f_\eta)\}
-\end{aligned}
 $$
 
 其中
@@ -120,31 +108,25 @@ $$
 現在把慢時間取樣項乘回來。根據 Poisson Sum Formula，Dirac comb 的頻域表示為：
 
 $$
-\begin{aligned}
 \mathcal{F}\{\sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)\}
 = \text{PRF}\sum_{k=-\infty}^{\infty}\delta(f_\eta-k\cdot\text{PRF})
-\end{aligned}
 $$
 
 因此時域相乘等效於頻域摺積，離散後的方位頻譜為：
 
 $$
-\begin{aligned}
 S_1(\tau,f_\eta;\omega_s)
-&= S_{1,c}(\tau,f_\eta;\omega_s)
-*[\text{PRF}\sum_{k=-\infty}^{\infty}\delta(f_\eta-k\cdot\text{PRF})] \\
-&= \text{PRF}\sum_{k=-\infty}^{\infty}S_{1,c}(\tau,f_\eta-k\cdot\text{PRF};\omega_s)
-\end{aligned}
+= S_{1,c}(\tau,f_\eta;\omega_s)
+*[\text{PRF}\sum_{k=-\infty}^{\infty}\delta(f_\eta-k\cdot\text{PRF})]
+= \text{PRF}\sum_{k=-\infty}^{\infty}S_{1,c}(\tau,f_\eta-k\cdot\text{PRF};\omega_s)
 $$
 
 將上一節結果代入，可得
 
 $$
-\begin{aligned}
 S_1(\tau,f_\eta;\omega_s)
-&\approx A_2\,\text{sinc}[\dots]\,\exp\{\Phi_{az}(f_\eta)\}
+\approx A_2\,\text{sinc}[\dots]\,\exp\{\Phi_{az}(f_\eta)\}
 \underbrace{[\sum_{k=-\infty}^{\infty}W_a(f_\eta-k\cdot\text{PRF};\omega_s)]}_{{\color{red}W_{fold}(f_\eta;\omega_s)}}
-\end{aligned}
 $$
 
 亦即
@@ -297,7 +279,7 @@ $$
 故 TOPSAR 的方向圖項可寫為
 
 $$
-w_a\bigl(\theta_{eff}(\eta)\bigr)
+w_a(\theta_{eff}(\eta))
 =
 w_a(\frac{V_r}{R_0}(\eta-\eta_0)-\omega_s\eta)
 $$
