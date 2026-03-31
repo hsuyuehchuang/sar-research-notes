@@ -12,13 +12,11 @@
 設脈衝重複週期為 $T_p = 1/\text{PRF}$，則單點目標的方位向離散回波可寫為：
 
 $$
-\begin{aligned}
 s_{1,d}(\tau,\eta)
-&= A_1 \, \text{sinc}\left[B_r\left(\tau-\frac{2R(\eta)}{c}\right)\right] \\
-&\quad \cdot w_a\left(\frac{V_r}{R_0}(\eta-\eta_0)-\omega_s\eta\right) \\
-&\quad \cdot \exp\left\{-j\frac{4\pi f_0 R(\eta)}{c}\right\}
+= A_1 \, \text{sinc}\left[B_r\left(\tau-\frac{2R(\eta)}{c}\right)\right]
+\cdot w_a\left(\frac{V_r}{R_0}(\eta-\eta_0)-\omega_s\eta\right)
+\cdot \exp\left\{-j\frac{4\pi f_0 R(\eta)}{c}\right\}
 {\color{red}\sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)}
-\end{aligned}
 $$
 
 其中
@@ -62,10 +60,8 @@ $$
 故 TOPSAR 的時域照明函數為
 
 $$
-\begin{aligned}
 w_a(\eta;\omega_s)
-&=\text{sinc}^2\left[\frac{L_a}{\lambda}\left(\frac{V_r}{R_0}(\eta-\eta_0)-\omega_s\eta\right)\right]
-\end{aligned}
+=\text{sinc}^2\left[\frac{L_a}{\lambda}\left(\frac{V_r}{R_0}(\eta-\eta_0)-\omega_s\eta\right)\right]
 $$
 
 此式表明：$\omega_s$ 先透過 beam steering 改變時域照明函數 $w_a(\eta;\omega_s)$，再經由傅立葉轉換進入連續方位頻域包絡 $W_a(f_\eta;\omega_s)$。
@@ -75,23 +71,19 @@ $$
 先忽略離散取樣 comb，只考慮其對應的連續訊號：
 
 $$
-\begin{aligned}
 s_{1,c}(\tau,\eta)
-&= A_1 \, \text{sinc}\left[B_r\left(\tau-\frac{2R(\eta)}{c}\right)\right] \\
-&\quad \cdot w_a(\eta;\omega_s) \\
-&\quad \cdot \exp\left\{-j\frac{4\pi f_0 R(\eta)}{c}\right\}
-\end{aligned}
+= A_1 \, \text{sinc}\left[B_r\left(\tau-\frac{2R(\eta)}{c}\right)\right]
+\cdot w_a(\eta;\omega_s)
+\cdot \exp\left\{-j\frac{4\pi f_0 R(\eta)}{c}\right\}
 $$
 
 對 $\eta$ 做方位向傅立葉轉換，並利用駐位相位原理 (POSP)，可得：
 
 $$
-\begin{aligned}
 S_{1,c}(\tau,f_\eta;\omega_s)
-&= A_2 \, \text{sinc}\left[B_r\left(\tau-\frac{2R_0}{cD(f_\eta,V_r)}\right)\right] \\
-&\quad \cdot W_a(f_\eta;\omega_s) \\
-&\quad \cdot \exp\left\{\Phi_{az}(f_\eta)\right\}
-\end{aligned}
+= A_2 \, \text{sinc}\left[B_r\left(\tau-\frac{2R_0}{cD(f_\eta,V_r)}\right)\right]
+\cdot W_a(f_\eta;\omega_s)
+\cdot \exp\left\{\Phi_{az}(f_\eta)\right\}
 $$
 
 其中
@@ -126,23 +118,25 @@ $$
 因此時域相乘等效於頻域摺積，離散後的方位頻譜為：
 
 $$
-\begin{aligned}
 S_1(\tau,f_\eta;\omega_s)
-&= S_{1,c}(\tau,f_\eta;\omega_s) \\
-&\quad *\left[\text{PRF}\sum_{k=-\infty}^{\infty}\delta(f_\eta-k\cdot\text{PRF})\right] \\
-&= \text{PRF}\sum_{k=-\infty}^{\infty}S_{1,c}(\tau,f_\eta-k\cdot\text{PRF};\omega_s)
-\end{aligned}
+= S_{1,c}(\tau,f_\eta;\omega_s)
+*\left[\text{PRF}\sum_{k=-\infty}^{\infty}\delta(f_\eta-k\cdot\text{PRF})\right]
+$$
+
+$$
+= \text{PRF}\sum_{k=-\infty}^{\infty}S_{1,c}(\tau,f_\eta-k\cdot\text{PRF};\omega_s)
 $$
 
 將上一節結果代入，可得
 
 $$
-\begin{aligned}
 S_1(\tau,f_\eta;\omega_s)
-&\approx A_2\,\text{sinc}\left[B_r\left(\tau-\frac{2R_0}{cD(f_\eta,V_r)}\right)\right] \\
-&\quad \cdot \exp\left\{\Phi_{az}(f_\eta)\right\} \\
-&\quad \cdot \underbrace{\left[\sum_{k=-\infty}^{\infty}W_a(f_\eta-k\cdot\text{PRF};\omega_s)\right]}_{{\color{red}W_{fold}(f_\eta;\omega_s)}}
-\end{aligned}
+\approx A_2\,\text{sinc}\left[B_r\left(\tau-\frac{2R_0}{cD(f_\eta,V_r)}\right)\right]
+$$
+
+$$
+\cdot \exp\left\{\Phi_{az}(f_\eta)\right\}
+\cdot \underbrace{\left[\sum_{k=-\infty}^{\infty}W_a(f_\eta-k\cdot\text{PRF};\omega_s)\right]}_{{\color{red}W_{fold}(f_\eta;\omega_s)}}
 $$
 
 亦即
@@ -188,29 +182,31 @@ $$
 其中波數 $k=2\pi/\lambda$。直接積分得
 
 $$
-\begin{aligned}
 E(\theta)
-&\propto
+\propto
 \Bigl.
 \frac{\exp(jk x\sin\theta)}{jk\sin\theta}
-\Bigr|_{-L_a/2}^{L_a/2} \\
-&=
-\frac{\exp(jk\frac{L_a}{2}\sin\theta)-\exp(-jk\frac{L_a}{2}\sin\theta)}{jk\sin\theta} \\
-&=
+\Bigr|_{-L_a/2}^{L_a/2}
+$$
+
+$$
+=
+\frac{\exp(jk\frac{L_a}{2}\sin\theta)-\exp(-jk\frac{L_a}{2}\sin\theta)}{jk\sin\theta}
+$$
+
+$$
+=
 \frac{2\sin(k\frac{L_a}{2}\sin\theta)}{k\sin\theta}
-\end{aligned}
 $$
 
 代入 $k=2\pi/\lambda$ 可得
 
 $$
-\begin{aligned}
 E(\theta)
-&\propto
+\propto
 L_a\,
 \frac{\sin\left(\pi\frac{L_a}{\lambda}\sin\theta\right)}
 {\pi\frac{L_a}{\lambda}\sin\theta}
-\end{aligned}
 $$
 
 因此其歸一化單程方向圖為
@@ -260,21 +256,21 @@ $$
 在小角度近似下，
 
 $$
-\begin{aligned}
-\theta_{tar}(\eta)
-&\approx \frac{x(\eta)}{R_0} \\
-&= \frac{V_r}{R_0}(\eta-\eta_0)
-\end{aligned}
+\theta_{tar}(\eta)\approx \frac{x(\eta)}{R_0}
+$$
+
+$$
+= \frac{V_r}{R_0}(\eta-\eta_0)
 $$
 
 若不考慮 beam steering，則方向圖可直接寫為
 
 $$
-\begin{aligned}
-w_a(\eta)
-&= w_a(\theta_{tar}(\eta)) \\
-&= w_a\left(\frac{V_r}{R_0}(\eta-\eta_0)\right)
-\end{aligned}
+w_a(\eta)= w_a(\theta_{tar}(\eta))
+$$
+
+$$
+= w_a\left(\frac{V_r}{R_0}(\eta-\eta_0)\right)
 $$
 
 在 TOPSAR 模式下，波束中心會隨慢時間進行掃描。若其等效掃描角速度為 $\omega_s$，則波束中心瞬時指向角可近似表示為
@@ -313,15 +309,13 @@ $$
 
 $$
 {\color{red}
-\begin{aligned}
 w_a(\eta;\omega_s)
-&=\mathrm{sinc}^2\left[
+=\mathrm{sinc}^2\left[
 \frac{L_a}{\lambda}
 \left(
 \frac{V_r}{R_0}(\eta-\eta_0)-\omega_s\eta
 \right)
 \right]
-\end{aligned}
 }
 $$
 
@@ -334,20 +328,16 @@ $$
 TOPS 中 folded phenomenon 之所以原理上可還原，關鍵不在於取樣後資訊自動保留，而在於原始方位向訊號具有可建模的 LFM 相位律。對單點目標，經 POSP 後的連續方位頻譜可近似寫為
 
 $$
-\begin{aligned}
 S_{1,c}(\tau,f_\eta;\omega_s)
-&\propto W_a(f_\eta;\omega_s) \\
-&\quad \cdot \exp\left\{-j\pi \frac{(f_\eta-f_{dc})^2}{K_a}\right\}
-\end{aligned}
+\propto W_a(f_\eta;\omega_s)
+\cdot \exp\left\{-j\pi \frac{(f_\eta-f_{dc})^2}{K_a}\right\}
 $$
 
 其中 $K_a$ 為等效方位 FM rate，$f_{dc}$ 為 Doppler centroid。故第 $k$ 個 folded 副本可表示為
 
 $$
-\begin{aligned}
 W_a(f_\eta-k\cdot\mathrm{PRF};\omega_s)
-&\quad \cdot \exp\left\{-j\pi \frac{(f_\eta-k\cdot\mathrm{PRF}-f_{dc})^2}{K_a}\right\}
-\end{aligned}
+\cdot \exp\left\{-j\pi \frac{(f_\eta-k\cdot\mathrm{PRF}-f_{dc})^2}{K_a}\right\}
 $$
 
 此式表明，各 folded 副本並非彼此無關，而是共享同一組二次相位 chirp law。若施加對應的逆二次相位，即 deramping / deskew 操作
