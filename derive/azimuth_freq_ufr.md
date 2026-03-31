@@ -54,7 +54,7 @@
 
 **1. folded spectrum 的起點**
 
-由 [Azimuth_freq_folding.md](/home/hsuyueh.chuang/Desktop/vscode/github/sar_tops_mode/derive/Azimuth_freq_folding.md) 可得 folded azimuth spectrum
+由 [azimuth_freq_folding.md](/home/hsuyueh.chuang/Desktop/vscode/github/sar_tops_mode/derive/azimuth_freq_folding.md) 可得 folded azimuth spectrum
 
 $$
 S_1(\tau,f_\eta;\omega_s)

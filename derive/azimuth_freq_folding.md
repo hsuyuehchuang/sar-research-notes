@@ -103,9 +103,6 @@ B_r\left(
 w_a\left(
 \frac{V_r}{R_0}(\eta-\eta_0)-\omega_s\eta
 \right)
-$$
-
-$$
 \cdot
 \exp\left(
 -j\frac{4\pi f_0R(\eta)}{c}
@@ -209,9 +206,6 @@ B_r\left(
 \right]
 \cdot
 w_a(\eta;\omega_s)
-$$
-
-$$
 \cdot
 \exp\left(
 -j\frac{4\pi f_0R(\eta)}{c}
@@ -256,9 +250,6 @@ B_r\left(
 \right]
 \cdot
 W_a(f_\eta;\omega_s)
-$$
-
-$$
 \cdot
 \exp\left(
 \Phi_{az}(f_\eta)
@@ -346,6 +337,7 @@ S_{1,c}(\tau,f_\eta;\omega_s)
 $$
 
 $$
+S_1(\tau,f_\eta;\omega_s)
 =
 \mathrm{PRF}
 \sum_{k=-\infty}^{\infty}
@@ -365,9 +357,6 @@ B_r\left(
 \tau-\frac{2R_0}{cD(f_\eta-k\cdot\mathrm{PRF},V_r)}
 \right)
 \right]
-$$
-
-$$
 \cdot
 W_a(f_\eta-k\cdot\mathrm{PRF};\omega_s)
 \cdot
@@ -402,9 +391,6 @@ B_r\left(
 \exp\left(
 \Phi_{az}(f_\eta)
 \right)
-$$
-
-$$
 \cdot
 \underbrace{
 \left[
@@ -630,7 +616,8 @@ jk\sin\theta
 $$
 
 $$
-=
+E(\theta)
+\propto
 \frac{
 2\sin\left(
 k\frac{L_a}{2}\sin\theta
