@@ -25,8 +25,7 @@ $$ S_2(\tau,f_\eta) = \sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}} S_{2,m}(
 其中第 $m$ 個 replica 為
 
 $$
-S_{2,m}(\tau,f_\eta)
-=
+S_{2,m}(\tau,f_\eta) =
 A_2
 \mathrm{sinc}\left[
 B_r\left(
@@ -59,8 +58,7 @@ $$
 上式中真正使 replica 呈現 chirp 結構的，是相位項
 
 $$
-\phi_m(f_\eta)
-=
+\phi_m(f_\eta) =
 -\frac{4\pi R_0f_0}{c}D_m(f_\eta)
 -2\pi\left(f_\eta-m\cdot\mathrm{PRF}\right)\eta_c
 $$
@@ -116,8 +114,7 @@ $$
 令參考 deramping filter 為
 
 $$
-H_{\mathrm{de}}(f_\eta)
-=
+H_{\mathrm{de}}(f_\eta) =
 \exp\left[
 -j\phi_{2,\mathrm{ref}}(f_\eta-f_{\mathrm{ref}})^2
 \right]
@@ -126,8 +123,7 @@ $$
 若使用常見的等效 azimuth FM 寫法，也可寫成
 
 $$
-H_{\mathrm{de}}(f_\eta)
-=
+H_{\mathrm{de}}(f_\eta) =
 \exp\left[
 +j\pi\frac{(f_\eta-f_{\mathrm{ref}})^2}{K_{\mathrm{ref}}}
 \right]
@@ -153,8 +149,7 @@ $$ S_3(\tau,f_\eta) = \sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}} S_{2,m}(
 考慮第 $m$ 個 replica 經 deramping 後的相位：
 
 $$
-\phi^{(\mathrm{de})}_m(f_\eta)
-=
+\phi^{(\mathrm{de})}_m(f_\eta) =
 \phi_m(f_\eta)+\phi_{\mathrm{de}}(f_\eta)
 $$
 
@@ -171,8 +166,7 @@ $$
 其中
 
 $$
-\tilde{\phi}_{2,m}
-=
+\tilde{\phi}_{2,m} =
 \phi_{2,m}-\phi_{2,\mathrm{ref}}
 $$
 
@@ -212,8 +206,7 @@ $$
 但在 deramping 之後，主 replica 會被映射到較窄的近 baseband 區域，因此可設一個 low-pass filter
 
 $$
-H_{\mathrm{LPF}}(f_\eta)
-=
+H_{\mathrm{LPF}}(f_\eta) =
 \mathrm{rect}\left(
 \frac{f_\eta-f_{\mathrm{LPF}}}{B_{\mathrm{LPF}}}
 \right)
@@ -298,8 +291,7 @@ $$ S_2 \;\xrightarrow{\ H_{\mathrm{de}}\ }\; S_3 \;\xrightarrow{\ H_{\mathrm{LPF
 $$ S_3(\tau,f_\eta) = S_2(\tau,f_\eta)\cdot H_{\mathrm{de}}(f_\eta) $$
 
 $$
-H_{\mathrm{de}}(f_\eta)
-=
+H_{\mathrm{de}}(f_\eta) =
 \exp\left[
 +j\pi\frac{(f_\eta-f_{\mathrm{ref}})^2}{K_{\mathrm{ref}}}
 \right]
@@ -308,8 +300,7 @@ $$
 $$ S_4(\tau,f_\eta) = S_3(\tau,f_\eta)\cdot H_{\mathrm{LPF}}(f_\eta) $$
 
 $$
-H_{\mathrm{LPF}}(f_\eta)
-=
+H_{\mathrm{LPF}}(f_\eta) =
 \mathrm{rect}\left(
 \frac{f_\eta-f_{\mathrm{LPF}}}{B_{\mathrm{LPF}}}
 \right)
