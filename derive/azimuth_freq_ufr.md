@@ -1,47 +1,60 @@
 **Azimuth-Frequency UFR / Mosaicking Derivation**
 
-**先講結論**
+**結論**
 
-做完 mosaicking 之後，signal 不再是「所有 aliased replicas 摺疊在單一 PRF 主頻帶內」的 folded 表示，而會變成一個沿 azimuth-frequency 軸被顯式鋪開的 UFR 表示。也就是說，原本重疊在同一個觀測頻帶內的各個 shifted components，會依照 `m\cdot\mathrm{PRF}` 的位移關係，被重新排列到 extended frequency axis 上，形成一塊一塊相鄰的 replica。
-
-若用數學表示，mosaicking 後的 signal 為
-
-$$
-S_2(\tau,f_\eta)
-=
-\sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}}
-S_{2,m}(\tau,f_\eta)
-$$
-
-其中
-
-$$
-S_{2,m}(\tau,f_\eta)
-=
-S_{1,\mathrm{cont}}(\tau,f_\eta-m\cdot\mathrm{PRF})
-$$
-
-因此，mosaicking 後的 signal 可以理解為：
-
-- 在頻率軸上變寬，不再侷限於單一 `[-\mathrm{PRF}/2,\mathrm{PRF}/2]` 主帶
-- 每一塊 replica 對應一個不同的 `m`
-- 每一塊都保留自己的 range response、support window 與 phase term
-- 結果是一個 unfolded / tiled 的 azimuth-frequency representation，方便後續做 deramping、LPF、reramping 與 azimuth compression
-
-本文件延續 [Azimuth_freq_folding.md](/home/hsuyueh.chuang/Desktop/vscode/github/sar_tops_mode/derive/Azimuth_freq_folding.md) 中的 folded 方位頻譜
-$S_1(\tau,f_\eta;\omega_s)$，進一步推導 azimuth-frequency mosaicking 在 extended aliased band 上的數學解析式。
-
-這裡的推導依據你提供的圖式做整理；其中 `tiling convolution` 的意義可理解為：
-
-- 不是再創造新的物理頻譜
-- 而是把原本在主 PRF band 內觀察到的 alias 結構，沿著 `m\cdot\mathrm{PRF}` 週期性平移
-- 於 expanded frequency axis 上顯式展開成一個可操作的 mosaic 頻譜
+- mosaicking 之後的 signal，不再是單一 PRF 主頻帶內的 folded 表示，而是沿著 extended azimuth-frequency axis 顯式鋪開的 UFR 表示。
+- 每一個 replica 都可視為同一個連續頻譜分量，沿 $m\cdot\mathrm{PRF}$ 做平移後所得到的結果。
+- 因此 mosaicking 的數學本質不是新的成像操作，而是把原本隱含在 folded 頻譜中的 shifted replicas 重新排列到可分離的頻率座標上。
+- 這個展開後的表示，才使後續 deramping、LPF、reramping 與 azimuth compression 能夠針對單一 replica 進行操作。
 
 ---
 
-**1. 起點：folded azimuth spectrum**
+**問題定義**
 
-由前一份文件可得
+本文件要回答的是：
+
+1. 從 folded azimuth spectrum $S_1(\tau,f_\eta;\omega_s)$ 出發，mosaicking 後的 signal 會變成什麼形式？
+2. 為什麼程式中「把 block 一塊一塊 append 到 extended 軸上」的作法，對應到一個嚴格的數學表示？
+3. 如何把這個動作寫成可供後續推導使用的 closed-form UFR expression？
+
+---
+
+**推導重點**
+
+- 先從 folded spectrum 的週期複製形式出發。
+- 將單一連續 replica 定義為 $S_{1,\mathrm{cont}}(\tau,f_\eta)$。
+- 用有限長 tiling comb 定義 mosaicking operator。
+- 證明該 operator 對應到各 replica 在 $m\cdot\mathrm{PRF}$ 上的平移與重排。
+- 寫出第 $m$ 個 replica 與總 UFR spectrum 的閉式表示。
+
+---
+
+**符號與假設**
+
+- $\tau$：距離時間
+- $\eta$：方位慢時間
+- $f_\eta$：方位頻率
+- $\mathrm{PRF}$：pulse repetition frequency
+- $R_0$：最近斜距
+- $f_0$：載波頻率
+- $V_{\mathrm{eff}}$：等效方位速度；若前文統一用 $V_r$，可直接替換
+- $k_s\eta_c$：方位頻域包絡中心
+- $B_{\max}$：mosaicked 後單一 replica 的有效頻寬近似
+- $N_{s,\mathrm{neg}},N_{s,\mathrm{pos}}$：往負頻與正頻方向保留的 replica 數目
+
+假設：
+
+- 單一 replica 的 beam envelope 可近似為有限支撐窗
+- mosaicking 只做頻率座標上的重排，不改變單一 replica 的物理相位模型
+- 各 replicas 的中心相隔 $\mathrm{PRF}$
+
+---
+
+**逐步推導**
+
+**1. folded spectrum 的起點**
+
+由 [Azimuth_freq_folding.md](/home/hsuyueh.chuang/Desktop/vscode/github/sar_tops_mode/derive/Azimuth_freq_folding.md) 可得 folded azimuth spectrum
 
 $$
 S_1(\tau,f_\eta;\omega_s)
@@ -50,34 +63,11 @@ S_1(\tau,f_\eta;\omega_s)
 S_{1,c}(\tau,f_\eta-k\cdot\mathrm{PRF};\omega_s)
 $$
 
-其中連續頻譜可寫為
+這個式子已經說明：在主頻帶中觀察到的 folded spectrum，本質上是許多沿 $k\cdot\mathrm{PRF}$ 平移後的連續頻譜副本之和。
 
-$$
-S_{1,c}(\tau,f_\eta;\omega_s)
-=
-A_2\,
-\mathrm{sinc}\left[
-B_r\left(
-\tau-\frac{2R_0}{c\,D(f_\eta,V_r)}
-\right)
-\right]
-\cdot
-W_a(f_\eta;\omega_s)
-\cdot
-\exp\left(\Phi_{az}(f_\eta)\right)
-$$
+**2. 定義單一連續 replica**
 
-若把 TOPS 掃描造成的有限頻寬包絡近似寫成一個中心在 `k_s\eta_c`、寬度為 `B_{\max}` 的頻域窗，則可進一步寫成
-
-$$
-W_a(f_\eta;\omega_s)
-\approx
-\mathrm{rect}\left(
-\frac{f_\eta-k_s\eta_c}{B_{\max}}
-\right)
-$$
-
-因此可把單一 replica 的連續分量近似表示為
+令單一連續頻譜副本寫為
 
 $$
 S_{1,\mathrm{cont}}(\tau,f_\eta)
@@ -88,26 +78,56 @@ B_r\left(
 \tau-\frac{2R_0}{c\,D(f_\eta,V_{\mathrm{eff}})}
 \right)
 \right]
+$$
+
+$$
+\cdot
+W_a(f_\eta;\omega_s)
+\cdot
+\exp\left(
+-j\frac{4\pi R_0f_0}{c}D(f_\eta,V_{\mathrm{eff}})
+-j2\pi f_\eta\eta_c
+\right)
+$$
+
+若將 beam envelope 以有限頻寬窗近似，則可寫成
+
+$$
+W_a(f_\eta;\omega_s)
+\approx
+\mathrm{rect}\left(
+\frac{f_\eta-k_s\eta_c}{B_{\max}}
+\right)
+$$
+
+因此
+
+$$
+S_{1,\mathrm{cont}}(\tau,f_\eta)
+\approx
+A_2\,
+\mathrm{sinc}\left[
+B_r\left(
+\tau-\frac{2R_0}{c\,D(f_\eta,V_{\mathrm{eff}})}
+\right)
+\right]
+$$
+
+$$
 \cdot
 \mathrm{rect}\left(
 \frac{f_\eta-k_s\eta_c}{B_{\max}}
 \right)
 \cdot
-\exp\left[
+\exp\left(
 -j\frac{4\pi R_0f_0}{c}D(f_\eta,V_{\mathrm{eff}})
 -j2\pi f_\eta\eta_c
-\right]
+\right)
 $$
 
-上式中的 `V_{\mathrm{eff}}` 只是強調此處使用 azimuth FM law 所對應的等效速度；若你前文已固定用 `V_r`，也可全部改寫回 `V_r`。
+**3. 定義 mosaicking operator**
 
----
-
-**2. Mosaicking 的數學操作**
-
-azimuth-frequency mosaicking 的核心，不是做 matched filtering，而是把已知的 PRF-shifted replicas 顯式鋪開到 extended axis。
-
-可把 mosaicking operator 定義為一個有限長的 tiling comb：
+用有限長的 tiling comb 表示 mosaicking：
 
 $$
 M(f_\eta)
@@ -116,7 +136,7 @@ M(f_\eta)
 \delta\left(f_\eta-m\cdot\mathrm{PRF}\right)
 $$
 
-則 expanded 頻域上的 mosaic spectrum 可寫為
+則 UFR 表示可寫為
 
 $$
 S_2(\tau,f_\eta)
@@ -124,7 +144,7 @@ S_2(\tau,f_\eta)
 S_{1,\mathrm{cont}}(\tau,f_\eta)*M(f_\eta)
 $$
 
-利用 delta train 的摺積平移性質，可得
+利用 delta 函數的平移摺積性質，可得第 $m$ 個 replica 為
 
 $$
 S_{2,m}(\tau,f_\eta)
@@ -132,9 +152,7 @@ S_{2,m}(\tau,f_\eta)
 S_{1,\mathrm{cont}}(\tau,f_\eta-m\cdot\mathrm{PRF})
 $$
 
-其中 `S_{2,m}` 表示第 `m` 個被鋪展到 extended frequency axis 上的 replica。
-
-因此總 mosaicked 頻譜可寫為
+因此總 mosaicked spectrum 為
 
 $$
 S_2(\tau,f_\eta)
@@ -143,17 +161,14 @@ S_2(\tau,f_\eta)
 S_{2,m}(\tau,f_\eta)
 $$
 
-這就是你圖片中 `tiling convolutions stretch the signal algebraically` 的精確數學形式。
+**4. 將第 $m$ 個 replica 展開**
 
----
-
-**3. 將第 `m` 個 replica 展開後的 closed-form expression**
-
-先把第 `m` 個 replica 寫開，可得
+把 $f_\eta$ 換成 $f_\eta-m\cdot\mathrm{PRF}$，得到
 
 $$
 S_{2,m}(\tau,f_\eta)
 =
+A_2\,
 \mathrm{sinc}\left[
 B_r\left(
 \tau-\frac{2R_0}{c\,D_m(f_\eta)}
@@ -170,19 +185,38 @@ $$
 
 $$
 \cdot
-\exp\left[
+\exp\left(
 -j\frac{4\pi R_0f_0}{c}D_m(f_\eta)
 -j2\pi\left(f_\eta-m\cdot\mathrm{PRF}\right)\eta_c
-\right]
+\right)
 $$
 
 其中
 
 $$
-D_m(f_\eta)=D\left(f_\eta-m\cdot\mathrm{PRF},V_{\mathrm{eff}}\right)
+D_m(f_\eta)
+=
+D\left(f_\eta-m\cdot\mathrm{PRF},V_{\mathrm{eff}}\right)
 $$
 
-因此總 mosaicked 頻譜為
+這就是 UFR / mosaicking 的 closed-form replica expression。
+
+---
+
+**物理意義**
+
+- $\mathrm{sinc}[\cdots]$ 對應 range response；每個 replica 都要以自己的 $D_m(f_\eta)$ 來描述 range-Doppler coupling。
+- $\mathrm{rect}[\cdots]$ 表示該 replica 在 extended 頻率軸上的有效支撐區間。
+- 指數項對應該 replica 的 propagation phase 與 centroid phase。
+- $m$ 不是新的物理目標，而是同一組連續頻譜在 $\mathrm{PRF}$ 週期下的 replica 索引。
+
+因此，mosaicking 的作用不是改變 signal 的物理內容，而是把 folded 表示中的隱含 replicas，顯式展開到一條更寬的頻率軸上。
+
+---
+
+**最終結果**
+
+最終可直接使用的方程組為
 
 $$
 S_2(\tau,f_\eta)
@@ -191,70 +225,6 @@ S_2(\tau,f_\eta)
 S_{2,m}(\tau,f_\eta)
 $$
 
-這就得到圖中 mosaicking / UFR representation 的解析形式。
-
----
-
-**4. 這個式子的物理意義**
-
-上式的三個因子可分開理解：
-
-- `\mathrm{sinc}[\cdots]`
-  對應 range-Doppler coupling 下的距離向響應；每個 shifted replica 都要用自己的 `D_m(f_\eta)`。
-
-- `\mathrm{rect}((f_\eta-m\cdot\mathrm{PRF}-k_s\eta_c)/B_{\max})`
-  表示第 `m` 個 replica 在 expanded 頻率軸上的有效支撐區間；mosaicking 就是把這些支撐區間一塊一塊鋪開。
-
-- `\exp[\cdots]`
-  表示該 replica 對應的二次距離相位與線性 centroid phase；這些相位在後續 deramping / reramping / azimuth compression 中會決定能否正確重建。
-
-因此 mosaicking 的本質可以總結為：
-
-$$
-\text{folded spectrum in one PRF band}
-\;\Longrightarrow\;
-\text{explicit periodic extension over } m\cdot\mathrm{PRF}
-\;\Longrightarrow\;
-\text{UFR domain representation}
-$$
-
----
-
-**5. 與 `S_1(\tau,f_\eta;\omega_s)` 的關係**
-
-若從 folded spectrum 的觀點來看，
-
-$$
-S_1(\tau,f_\eta;\omega_s)
-=
-\sum_{k=-\infty}^{\infty}
-S_{1,\mathrm{cont}}(\tau,f_\eta-k\cdot\mathrm{PRF})
-$$
-
-其實已經隱含了所有 replicas 的存在；只是這些 replicas 在主 band 內被 folded 疊加觀察。
-
-而 mosaicking 所做的，是改用一個 extended frequency coordinate 重新編排這些 replicas：
-
-$$
-S_1
-\;\xrightarrow{\ \text{mosaicking}\ }\;
-S_2
-$$
-
-其中 `S_1` 是 folded representation，
-`S_2` 是 unfolded / tiled representation。
-
-也就是說：
-
-- `folding` 是取樣造成的主 band 內重疊
-- `mosaicking` 是利用已知的 PRF shift 結構，把它們顯式搬回 extended axis
-
----
-
-**6. 建議在論文或筆記中採用的最終版本**
-
-若你想保留和圖片最接近的符號，可直接使用下面這組：
-
 $$
 S_{2,m}(\tau,f_\eta)
 =
@@ -262,8 +232,9 @@ S_{1,\mathrm{cont}}(\tau,f_\eta-m\cdot\mathrm{PRF})
 $$
 
 $$
+S_{2,m}(\tau,f_\eta)
 =
-A_2
+A_2\,
 \mathrm{sinc}\left[
 B_r\left(
 \tau-\frac{2R_0}{c\,D_m(f_\eta)}
@@ -277,39 +248,33 @@ $$
 \frac{f_\eta-m\cdot\mathrm{PRF}-k_s\eta_c}{B_{\max}}
 \right)
 \cdot
-\exp\left[
+\exp\left(
 -j\frac{4\pi R_0f_0}{c}D_m(f_\eta)
 -j2\pi\left(f_\eta-m\cdot\mathrm{PRF}\right)\eta_c
-\right]
+\right)
 $$
 
 $$
-S_2(\tau,f_\eta)
+D_m(f_\eta)
 =
-\sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}}
-S_{2,m}(\tau,f_\eta)
-$$
-
-$$
-D_m(f_\eta)=D\left(f_\eta-m\cdot\mathrm{PRF},V_{\mathrm{eff}}\right)
+D\left(f_\eta-m\cdot\mathrm{PRF},V_{\mathrm{eff}}\right)
 $$
 
 ---
 
-**7. 備註**
+**實作對應**
 
-這裡把 `W_a(f_\eta;\omega_s)` 近似成 `rect` 窗，是為了得到和你提供圖片一致的 closed-form UFR expression。若你要保留更一般的 TOPS 波束包絡，而不做 `rect` 近似，則只需把上式中的
+若程式中是把 signal block 一塊一塊 append 到 extended 頻率軸上，則它對應的正是離散化的 mosaicking operator。
 
-$$
-\mathrm{rect}\left(
-\frac{f_\eta-m\cdot\mathrm{PRF}-k_s\eta_c}{B_{\max}}
-\right)
-$$
+- 數學上：$S_2=\sum_m S_{2,m}$
+- 實作上：$block_m$ 依照 $m\cdot\mathrm{PRF}$ 的順序被拼接到更長的頻率軸
 
-替換回
+所以 append 並不是額外的近似，而是 $S_{2,m}$ 在離散頻域座標下的實作型態。
 
-$$
-W_a(f_\eta-m\cdot\mathrm{PRF};\omega_s)
-$$
+---
 
-即可得到更一般的 mosaicking 表達式。
+**限制與適用範圍**
+
+- 若 $W_a(f_\eta;\omega_s)$ 不能以 $\mathrm{rect}$ 近似，則只需把 $\mathrm{rect}$ 換回原本的 beam envelope。
+- 若各 replicas 在實作上存在重疊或插值，則離散程式不再是單純 append，而需要額外的 index mapping 或 resampling。
+- 本推導針對的是 UFR / mosaicking representation，本身尚未處理 deramping、LPF、reramping 與最終方位壓縮。

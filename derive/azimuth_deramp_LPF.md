@@ -1,24 +1,60 @@
-**Azimuth Deramping And LPF Derivation**
+**Azimuth Deramping, LPF, And Reramping Derivation**
 
-**先講結論**
+**結論**
 
-在完成 mosaicking 之後，訊號 `S_2(\tau,f_\eta)` 雖然已經被展開到 extended azimuth-frequency axis 上，但每一個 replica 仍然帶有二次 chirp phase。這些 replica 在頻域上雖然被排開了，卻還沒有被「拉平」。deramping filter 的作用，就是把每個 replica 共同具有的主要二次相位拿掉，使其能量從原本沿著 chirp law 擴展的樣子，轉成接近集中在較窄 baseband 內的表示。這時後續的 LPF 才能用一個固定頻寬窗，把欲保留的 unfolded 主分量濾出來。
-
-因此，deramping 不是直接消除 aliasing，而是先把可預測的 chirp phase 結構展平；LPF 則利用展平之後的頻譜集中性，將不需要的 replicas 或超出目標 band 的成分切除。
-
----
-
-本文件延續 [azimuth_freq_ufr.md](/home/hsuyueh.chuang/Desktop/vscode/github/sar_tops_mode/derive/azimuth_freq_ufr.md) 中的 mosaicked 頻譜 `S_2(\tau,f_\eta)`，進一步推導：
-
-- deramping filter 的數學形式
-- deramping 之後的頻譜為什麼會變得可被 LPF 分離
-- 後續 LPF 為什麼能保留欲重建的 unfolded 主頻帶
+- mosaicking 之後的 $S_2(\tau,f_\eta)$ 已經把 replicas 展開，但每個 replica 仍保留二次 chirp phase，尚不適合直接用固定頻寬窗分離。
+- deramping 的作用是乘上一個 reference quadratic phase，使欲保留的主 replica 在頻域上被展平並壓縮到較窄的 baseband。
+- LPF 的作用不是去除 chirp，而是在 deramping 之後只保留被壓縮到通帶內的主 replica，抑制其他 replicas 與帶外殘留。
+- reramping 則把先前拿掉的 reference quadratic phase 乘回去，使保留下來的主 replica 回到後續 azimuth compression 所需要的相位模型。
+- 因此 $deramping \rightarrow LPF \rightarrow reramping$ 的整體作用，是「先展平、再截取、最後恢復相位結構」。
 
 ---
 
-**1. 起點：mosaicked azimuth-frequency signal**
+**問題定義**
 
-由前一份文件可得，mosaicking 後的訊號可寫為
+本文件要回答的是：
+
+1. 為什麼 mosaicking 後還需要 deramping？
+2. 為什麼 deramping 之後 LPF 才有效？
+3. 為什麼在 LPF 之後還要 reramping？
+4. 如何把這三個操作寫成一組連續的數學表示？
+
+---
+
+**推導重點**
+
+- 以 mosaicked spectrum $S_2(\tau,f_\eta)$ 為起點。
+- 將每個 replica 的主要相位近似為二次 chirp phase。
+- 定義 deramping filter 去抵消主 replica 的二次項。
+- 證明主 replica 在 deramping 後會變得集中，因此 LPF 可以分離它。
+- 定義 reramping filter，將 LPF 後保留下來的主 replica 恢復到後續壓縮所需的 chirp phase。
+
+---
+
+**符號與假設**
+
+- $S_2(\tau,f_\eta)$：mosaicking 後的 UFR spectrum
+- $S_{2,m}(\tau,f_\eta)$：第 $m$ 個 replica
+- $H_{\mathrm{de}}(f_\eta)$：deramping filter
+- $H_{\mathrm{LPF}}(f_\eta)$：low-pass filter
+- $H_{\mathrm{re}}(f_\eta)$：reramping filter
+- $f_{\mathrm{ref}}$：reference frequency
+- $K_{\mathrm{ref}}$：reference chirp rate
+- $m_0$：欲保留的主 replica 索引
+
+假設：
+
+- 在欲處理的局部頻帶內，每個 replica 的主要相位可用二階近似表示
+- 主 replica 的二次相位可由單一 reference chirp 近似補償
+- LPF 通帶足以保留展平後的主 replica，並抑制其他 replicas 的主要能量
+
+---
+
+**逐步推導**
+
+**1. 起點：mosaicked spectrum**
+
+由 [azimuth_freq_ufr.md](/home/hsuyueh.chuang/Desktop/vscode/github/sar_tops_mode/derive/azimuth_freq_ufr.md) 可得
 
 $$
 S_2(\tau,f_\eta)
@@ -27,12 +63,12 @@ S_2(\tau,f_\eta)
 S_{2,m}(\tau,f_\eta)
 $$
 
-其中第 `m` 個 replica 為
+其中
 
 $$
 S_{2,m}(\tau,f_\eta)
 =
-A_2
+A_2\,
 \mathrm{sinc}\left[
 B_r\left(
 \tau-\frac{2R_0}{c\,D_m(f_\eta)}
@@ -45,103 +81,62 @@ $$
 \mathrm{rect}\left(
 \frac{f_\eta-m\cdot\mathrm{PRF}-k_s\eta_c}{B_{\max}}
 \right)
-$$
-
-$$
 \cdot
-\exp\left[
--j\frac{4\pi R_0f_0}{c}D_m(f_\eta)
--j2\pi\left(f_\eta-m\cdot\mathrm{PRF}\right)\eta_c
-\right]
+\exp\left(
+\phi_m(f_\eta)
+\right)
 $$
 
-且
-
-$$
-D_m(f_\eta)=D\left(f_\eta-m\cdot\mathrm{PRF},V_{\mathrm{eff}}\right)
-$$
-
-上式中真正使 replica 呈現 chirp 結構的，是相位項
+且相位定義為
 
 $$
 \phi_m(f_\eta)
 =
--\frac{4\pi R_0f_0}{c}D_m(f_\eta)
--2\pi\left(f_\eta-m\cdot\mathrm{PRF}\right)\eta_c
+-j\frac{4\pi R_0f_0}{c}D_m(f_\eta)
+-j2\pi\left(f_\eta-m\cdot\mathrm{PRF}\right)\eta_c
 $$
 
----
+**2. 局部二次相位近似**
 
-**2. 二次相位近似：為什麼它像一個 chirp**
-
-在目標頻帶附近，可將 `D_m(f_\eta)` 於某一參考頻率 `f_{\mathrm{ref},m}` 附近做二階展開：
-
-$$
-D_m(f_\eta)
-\approx
-D_m(f_{\mathrm{ref},m})
-+D_m'(f_{\mathrm{ref},m})(f_\eta-f_{\mathrm{ref},m})
-+\frac{1}{2}D_m''(f_{\mathrm{ref},m})(f_\eta-f_{\mathrm{ref},m})^2
-$$
-
-代回相位項後，可得
+在主 replica 附近，可把 $\phi_m(f_\eta)$ 近似為
 
 $$
 \phi_m(f_\eta)
 \approx
 \phi_{0,m}
-+\phi_{1,m}(f_\eta-f_{\mathrm{ref},m})
-+\phi_{2,m}(f_\eta-f_{\mathrm{ref},m})^2
-$$
-
-因此第 `m` 個 replica 的主要相位可近似為一個二次相位項，也就是 chirp phase：
-
-$$
-\exp\left[j\phi_m(f_\eta)\right]
-\approx
-\exp\left(j\phi_{0,m}\right)
-\cdot
-\exp\left[j\phi_{1,m}(f_\eta-f_{\mathrm{ref},m})\right]
-\cdot
-\exp\left[j\phi_{2,m}(f_\eta-f_{\mathrm{ref},m})^2\right]
++\phi_{1,m}(f_\eta-f_{\mathrm{ref}})
++\phi_{2,m}(f_\eta-f_{\mathrm{ref}})^2
 $$
 
 其中：
 
-- 常數項 `\phi_{0,m}` 只改變整體相位
-- 一次項 `\phi_{1,m}` 對應 centroid shift 或群延遲
-- 二次項 `\phi_{2,m}` 才是造成頻譜被展開、傾斜、難以直接用固定頻寬窗截取的主因
+- $\phi_{0,m}$ 是常數相位
+- $\phi_{1,m}$ 是一次相位
+- $\phi_{2,m}$ 是使 replica 呈現 chirp curvature 的二次項
 
-所以後續 deramping 的核心目標，就是拿掉這個二次項。
+主問題在於二次項使單一 replica 的能量沿頻域擴展，因此不適合直接用固定頻寬 LPF 截取。
 
----
+**3. Deramping**
 
-**3. Deramping filter 的定義**
-
-令參考 deramping filter 為
+定義 deramping filter 為
 
 $$
 H_{\mathrm{de}}(f_\eta)
 =
-\exp\left[
+\exp\left(
 -j\phi_{2,\mathrm{ref}}(f_\eta-f_{\mathrm{ref}})^2
-\right]
+\right)
 $$
 
-若使用常見的等效 azimuth FM 寫法，也可寫成
+或等價地寫成
 
 $$
 H_{\mathrm{de}}(f_\eta)
 =
-\exp\left[
+\exp\left(
 +j\pi\frac{(f_\eta-f_{\mathrm{ref}})^2}{K_{\mathrm{ref}}}
-\right]
+\right)
 $$
-
-這裡的符號約定是：
-
-- `K_{\mathrm{ref}}` 為用來 deskew / deramp 的參考 chirp rate
-- `f_{\mathrm{ref}}` 為 deramping 所使用的 reference center
 
 經 deramping 後，
 
@@ -151,38 +146,15 @@ S_3(\tau,f_\eta)
 S_2(\tau,f_\eta)\cdot H_{\mathrm{de}}(f_\eta)
 $$
 
-亦即
+因此第 $m$ 個 replica 變成
 
 $$
-S_3(\tau,f_\eta)
+S_{3,m}(\tau,f_\eta)
 =
-\sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}}
 S_{2,m}(\tau,f_\eta)\cdot H_{\mathrm{de}}(f_\eta)
 $$
 
----
-
-**4. Deramping 後每個 replica 會變成什麼**
-
-考慮第 `m` 個 replica 經 deramping 後的相位：
-
-$$
-\phi^{(\mathrm{de})}_m(f_\eta)
-=
-\phi_m(f_\eta)+\phi_{\mathrm{de}}(f_\eta)
-$$
-
-若 `H_{\mathrm{de}}` 的二次項設計為近似抵消主要 chirp curvature，則有
-
-$$
-\phi^{(\mathrm{de})}_m(f_\eta)
-\approx
-\tilde{\phi}_{0,m}
-+\tilde{\phi}_{1,m}(f_\eta-f_{\mathrm{ref}})
-+\tilde{\phi}_{2,m}(f_\eta-f_{\mathrm{ref}})^2
-$$
-
-其中
+其殘餘二次項為
 
 $$
 \tilde{\phi}_{2,m}
@@ -190,40 +162,17 @@ $$
 \phi_{2,m}-\phi_{2,\mathrm{ref}}
 $$
 
-若參考率選得好，則在欲保留的主 replica 上會有
+若對主 replica $m=m_0$ 選得好，則有
 
 $$
-\tilde{\phi}_{2,m}\approx 0
+\tilde{\phi}_{2,m_0}\approx 0
 $$
 
-因此主 replica 會從原本具有明顯 chirp curvature 的頻譜，變成近似只有常數相位與一次相位的展平表示：
+也就是說，主 replica 會被展平到近似只剩常數項與一次項的形式。
 
-$$
-S_{3,m}(\tau,f_\eta)
-\approx
-\tilde{A}_m(\tau,f_\eta)
-\cdot
-\exp\left[
-j\tilde{\phi}_{0,m}
-+j\tilde{\phi}_{1,m}(f_\eta-f_{\mathrm{ref}})
-\right]
-$$
+**4. LPF**
 
-也就是說，頻譜能量不再因為二次相位而沿著較寬的頻率區間展開，而會集中到一個較窄且近似線性的 baseband support。
-
-這就是「為什麼 deramping 之後 LPF 變得可行」的核心。
-
----
-
-**5. 為什麼 LPF 在 deramping 後可以把主頻譜濾出來**
-
-在未 deramp 之前，各 replica 雖然已被 mosaicking 排開，但其內部仍帶有 chirp curvature，因此：
-
-- 單一 replica 的能量分布較分散
-- replica 與 replica 之間的邊界不夠「平」
-- 用固定 cutoff 的 LPF 不容易只保留欲取的主分量
-
-但在 deramping 之後，主 replica 會被映射到較窄的近 baseband 區域，因此可設一個 low-pass filter
+定義 LPF 為
 
 $$
 H_{\mathrm{LPF}}(f_\eta)
@@ -233,7 +182,7 @@ H_{\mathrm{LPF}}(f_\eta)
 \right)
 $$
 
-得到
+經 LPF 後，
 
 $$
 S_4(\tau,f_\eta)
@@ -241,94 +190,82 @@ S_4(\tau,f_\eta)
 S_3(\tau,f_\eta)\cdot H_{\mathrm{LPF}}(f_\eta)
 $$
 
-若展平之後的主 replica 大部分能量都落在 `B_{\mathrm{LPF}}` 內，而其他 replicas 因為：
-
-- 中心位置不同
-- 線性相位不同
-- 殘餘二次相位不同
-
-而落在 LPF 通帶之外，則 LPF 就能有效保留主 replica，抑制不需要的 unfolded blocks。
-
-因此整個邏輯是
-
-$$
-\text{mosaicking}
-\;\Longrightarrow\;
-\text{replicas explicitly tiled}
-\;\Longrightarrow\;
-\text{deramping removes main quadratic phase}
-\;\Longrightarrow\;
-\text{desired replica becomes compact in baseband}
-\;\Longrightarrow\;
-\text{LPF can isolate it}
-$$
-
----
-
-**6. 用解析式看 LPF 為何有效**
-
-將 `S_3=S_2\cdot H_{\mathrm{de}}` 代入後，可得
-
-$$
-S_4(\tau,f_\eta)
-=
-\sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}}
-S_{2,m}(\tau,f_\eta)\cdot H_{\mathrm{de}}(f_\eta)\cdot H_{\mathrm{LPF}}(f_\eta)
-$$
-
-若 `m=m_0` 為欲保留之主 replica，且對此 replica 有
-
-$$
-\phi_{2,m_0}\approx \phi_{2,\mathrm{ref}}
-$$
-
-則
-
-$$
-S_{2,m_0}(\tau,f_\eta)\cdot H_{\mathrm{de}}(f_\eta)
-$$
-
-會近似成一個被壓縮到 baseband 內的分量，因此
+由於主 replica 已在 deramping 後變得集中，LPF 可近似保留
 
 $$
 S_4(\tau,f_\eta)
 \approx
-S_{2,m_0}(\tau,f_\eta)\cdot H_{\mathrm{de}}(f_\eta)\cdot H_{\mathrm{LPF}}(f_\eta)
+S_{3,m_0}(\tau,f_\eta)\cdot H_{\mathrm{LPF}}(f_\eta)
 $$
 
-而對 `m\neq m_0` 的 replicas，由於其中心位置或殘餘 chirp rate 不匹配，即使經過相同 deramping，也往往不能同時被拉平成和主 replica 相同的位置與頻寬，因此會在 LPF 之後被抑制。
+而對 $m\neq m_0$ 的 replicas，由於：
+
+- 中心位置不同
+- 殘餘二次項不同
+- 展平後能量不落在同一 baseband
+
+因此會被 LPF 抑制。
+
+**5. Reramping**
+
+LPF 之後保留下來的主 replica 雖然已被分離，但其相位已是「被展平後」的形式。若後續 azimuth compression 需要回到原本的 chirp 模型，則必須乘回 reference quadratic phase。
+
+定義 reramping filter 為
+
+$$
+H_{\mathrm{re}}(f_\eta)
+=
+H_{\mathrm{de}}^{-1}(f_\eta)
+$$
+
+也就是
+
+$$
+H_{\mathrm{re}}(f_\eta)
+=
+\exp\left(
+-j\pi\frac{(f_\eta-f_{\mathrm{ref}})^2}{K_{\mathrm{ref}}}
+\right)
+$$
+
+因此 reramping 後，
+
+$$
+S_5(\tau,f_\eta)
+=
+S_4(\tau,f_\eta)\cdot H_{\mathrm{re}}(f_\eta)
+$$
+
+在理想近似下，
+
+$$
+S_5(\tau,f_\eta)
+\approx
+S_{2,m_0}(\tau,f_\eta)\cdot H_{\mathrm{LPF}}(f_\eta)
+$$
+
+但現在它只保留了主 replica，且已回到與後續方位壓縮相容的相位框架。
 
 ---
 
-**7. 以實作角度理解**
+**物理意義**
 
-如果從程式實作角度看：
+- mosaicking：把 replicas 鋪開，但不改變其內部 chirp phase。
+- deramping：把主 replica 的二次相位拿掉，讓它在頻域上變平、變集中。
+- LPF：在展平之後，只保留目標 replica 所在的 baseband。
+- reramping：把 reference chirp phase 乘回去，恢復後續 matched filtering 所需的相位模型。
 
-- mosaicking：把各個 alias blocks 依序鋪展到 extended 頻率軸
-- deramping：對整條展開後的 spectrum 乘上一個 reference quadratic phase
-- LPF：只保留被 deramping 後集中到 central baseband 的那一塊
+所以這三步的物理分工非常明確：
 
-所以程式上看到的現象通常是：
-
-1. mosaicking 後，signal 變長、頻帶展開
-2. deramping 後，原本斜的 / 展開的頻譜變得比較平、比較集中
-3. LPF 後，只剩下中央主要那一塊 unfolded 頻譜
-
-這正對應數學上
-
-$$
-S_2
-\;\xrightarrow{\ H_{\mathrm{de}}\ }\;
-S_3
-\;\xrightarrow{\ H_{\mathrm{LPF}}\ }\;
-S_4
-$$
+- deramping 解決「不易分離」
+- LPF 解決「只保留哪一塊」
+- reramping 解決「怎麼回到後續聚焦模型」
 
 ---
 
-**8. 可直接放進筆記的最終版本**
+**最終結果**
 
-若要用最精簡的方式記錄，可直接寫成：
+可直接使用的鏈式表示為
 
 $$
 S_3(\tau,f_\eta)
@@ -339,9 +276,9 @@ $$
 $$
 H_{\mathrm{de}}(f_\eta)
 =
-\exp\left[
+\exp\left(
 +j\pi\frac{(f_\eta-f_{\mathrm{ref}})^2}{K_{\mathrm{ref}}}
-\right]
+\right)
 $$
 
 $$
@@ -358,4 +295,55 @@ H_{\mathrm{LPF}}(f_\eta)
 \right)
 $$
 
-其中 deramping 的作用是抵消主 replica 的二次 chirp phase，使其在頻域上集中到較窄的 baseband；LPF 則利用這種集中性，把目標 unfolded 主頻譜保留下來。
+$$
+S_5(\tau,f_\eta)
+=
+S_4(\tau,f_\eta)\cdot H_{\mathrm{re}}(f_\eta)
+$$
+
+$$
+H_{\mathrm{re}}(f_\eta)
+=
+H_{\mathrm{de}}^{-1}(f_\eta)
+=
+\exp\left(
+-j\pi\frac{(f_\eta-f_{\mathrm{ref}})^2}{K_{\mathrm{ref}}}
+\right)
+$$
+
+因此整體鏈可寫成
+
+$$
+S_2
+\xrightarrow{\ H_{\mathrm{de}}\ }
+S_3
+\xrightarrow{\ H_{\mathrm{LPF}}\ }
+S_4
+\xrightarrow{\ H_{\mathrm{re}}\ }
+S_5
+$$
+
+---
+
+**實作對應**
+
+在程式上通常對應為：
+
+1. 對 mosaicked spectrum 乘上 deramp phase
+2. 在展平後的 baseband 上做低通或裁切
+3. 對保留下來的主 block 乘回 reramp phase
+
+也就是說：
+
+- multiply by deramp phase 對應 $H_{\mathrm{de}}$
+- crop / LPF / mask 對應 $H_{\mathrm{LPF}}$
+- multiply by reramp phase 對應 $H_{\mathrm{re}}$
+
+---
+
+**限制與適用範圍**
+
+- 本推導假設主 replica 可由單一 reference chirp rate 良好近似。
+- 若不同 replicas 的二次項差異過大，則單一 deramp filter 可能不能同時展平所有 replicas。
+- LPF 是否有效，取決於 deramping 後主 replica 是否真的集中到與其他 replicas 可分離的 baseband。
+- reramping 的必要性取決於後續處理鏈是否需要回到原本的 chirp phase 模型；若後續直接在 deramped domain 處理，則可省略或改寫。
