@@ -327,9 +327,7 @@ $$
 此式表明，各 folded 副本並非彼此無關，而是共享同一組二次相位 chirp law。若施加對應的逆二次相位，即 deramping / deskew 操作
 
 $$
-H_{de}(f_\eta)
-=
-\exp\{+j\pi \frac{(f_\eta-f_{ref})^2}{K_{ref}}\}
+H_{de}(f_\eta) = \exp\{+j\pi \frac{(f_\eta-f_{ref})^2}{K_{ref}}\}
 $$
 
 則 folded 副本可被映射至近似展平的表示。於是其逆運算可概念化為：先去除已知 chirp phase，再將各 folded 副本依其索引搬回原始位置，最後重新合成連續頻譜。因此其可還原性的核心可寫為
