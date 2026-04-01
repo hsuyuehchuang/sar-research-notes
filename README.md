@@ -78,16 +78,16 @@ The documentation is organized so that a reader can move between:
 
 If you are new to this repository, the cleanest path is:
 
-1. [TOPS Azimuth Overall](/home/hsuyueh.chuang/Desktop/vscode/github/sar_tops_mode/derive/tops_azimuth_overall.md)
-2. [Range Compression](/home/hsuyueh.chuang/Desktop/vscode/github/sar_tops_mode/derive/range_compression.md)
-3. [Azimuth Deramp LPF](/home/hsuyueh.chuang/Desktop/vscode/github/sar_tops_mode/derive/azimuth_deramp_LPF.md)
-4. [Azimuth Compression](/home/hsuyueh.chuang/Desktop/vscode/github/sar_tops_mode/derive/azimuth_compression.md)
-5. [Azimuth Frequency Folding](/home/hsuyueh.chuang/Desktop/vscode/github/sar_tops_mode/derive/azimuth_freq_folding.md)
-6. [Azimuth Frequency UFR](/home/hsuyueh.chuang/Desktop/vscode/github/sar_tops_mode/derive/azimuth_freq_ufr.md)
-7. [Azimuth Time Folding](/home/hsuyueh.chuang/Desktop/vscode/github/sar_tops_mode/derive/azimuth_time_folding.md)
-8. [Azimuth Time UFR](/home/hsuyueh.chuang/Desktop/vscode/github/sar_tops_mode/derive/azimuth_time_ufr.md)
-9. [Explain UFR3 Notebook](/home/hsuyueh.chuang/Desktop/vscode/github/sar_tops_mode/derive/explain_ufr3.ipynb)
-10. [Explain UFR4 Notebook](/home/hsuyueh.chuang/Desktop/vscode/github/sar_tops_mode/derive/explain_ufr4.ipynb)
+1. [TOPS Azimuth Overall](derive/tops_azimuth_overall.md)
+2. [Range Compression](derive/range_compression.md)
+3. [Azimuth Deramp LPF](derive/azimuth_deramp_LPF.md)
+4. [Azimuth Compression](derive/azimuth_compression.md)
+5. [Azimuth Frequency Folding](derive/azimuth_freq_folding.md)
+6. [Azimuth Frequency UFR](derive/azimuth_freq_ufr.md)
+7. [Azimuth Time Folding](derive/azimuth_time_folding.md)
+8. [Azimuth Time UFR](derive/azimuth_time_ufr.md)
+9. [Explain UFR3 Notebook](derive/explain_ufr3.ipynb)
+10. [Explain UFR4 Notebook](derive/explain_ufr4.ipynb)
 
 ## Repository Structure
 
@@ -116,7 +116,7 @@ sar_tops_mode/
 
 This repository includes a local derivation-writing skill:
 
-- [github-readme-math-physics-derivation](/home/hsuyueh.chuang/Desktop/vscode/github/sar_tops_mode/.codex/skills/github-readme-math-physics-derivation/SKILL.md)
+- [github-readme-math-physics-derivation](.codex/skills/github-readme-math-physics-derivation/SKILL.md)
 
 That skill defines the documentation standard used in this project, including:
 
