@@ -1,4 +1,27 @@
-**重點摘要**
+# Azimuth Time Folding
+
+## Navigation
+
+- [Overall](./tops_azimuth_overall.md)
+- Main flow: [Azimuth Time UFR](./azimuth_time_ufr.md)
+- Previous main step: [Azimuth Compression](./azimuth_compression.md)
+
+## Table of Contents
+
+- [Summary](#summary)
+- [Problem Definition](#problem-definition)
+- [Derivation Highlights](#derivation-highlights)
+- [Symbols And Assumptions](#symbols-and-assumptions)
+- [1. Geometric Starting Point: Ground Motion Of The Beam Footprint](#1-geometric-starting-point-ground-motion-of-the-beam-footprint)
+- [2. From Ground Span To Equivalent Azimuth-Time Span](#2-from-ground-span-to-equivalent-azimuth-time-span)
+- [3. Required Length For Linear Convolution](#3-required-length-for-linear-convolution)
+- [4. Unambiguous Time Window In FFT Implementation](#4-unambiguous-time-window-in-fft-implementation)
+- [5. Why Finite-Length FFT Becomes Circular Convolution](#5-why-finite-length-fft-becomes-circular-convolution)
+- [6. Wrap-Around Location Formula](#6-wrap-around-location-formula)
+- [Physical Meaning](#physical-meaning)
+- [Final Result](#final-result)
+
+## Summary
 
 * TOPS 的 beam steering 不直接生成 time-domain ghost；它先把單一 burst 內被照射到的目標集合拉成更長的有效方位時間跨度 $T_{\mathrm{focus,TOPS}}$。
 * 若這個有效時間跨度再加上 azimuth matched-filter 長度後，超過 FFT block 所對應的無模糊時間窗口 $T_{\mathrm{window}}$，則 FFT 壓縮不再等價於線性卷積，而會退化為 circular convolution。
@@ -29,7 +52,7 @@ $$
 
 ---
 
-**問題定義**
+## Problem Definition
 
 本文件要回答三件事：
 
@@ -39,7 +62,7 @@ $$
 
 ---
 
-**推導重點**
+## Derivation Highlights
 
 * 先從 beam footprint 的地面移動出發，把 stripmap 與 TOPS 的地面跨度分別寫成 closed form。
 * 再把地面跨度映射回等效方位慢時間跨度，明確得到 $T_{\mathrm{focus,strip}}$ 與 $T_{\mathrm{focus,TOPS}}$。
@@ -49,7 +72,7 @@ $$
 
 ---
 
-**符號與假設**
+## Symbols And Assumptions
 
 * $\eta$：方位向慢時間
 * $T_b$：單一 burst 的原始慢時間長度
@@ -77,7 +100,7 @@ $$
 
 ---
 
-**1. 幾何起點：Beam Footprint 的地面移動**
+## 1. Geometric Starting Point: Ground Motion Of The Beam Footprint
 
 若波束不掃描，stripmap 模式下 beam center 的地面方位位置為
 
@@ -115,7 +138,7 @@ $$
 
 ---
 
-**2. 從地面跨度到等效方位時間跨度**
+## 2. From Ground Span To Equivalent Azimuth-Time Span
 
 地面方位座標 $y$ 與平台慢時間的對應關係可寫成
 
@@ -161,7 +184,7 @@ $$
 
 ---
 
-**3. 線性卷積所需的總處理長度**
+## 3. Required Length For Linear Convolution
 
 設方位 matched-filter 的時間長度為 $T_{\mathrm{ref}}$。若要對整批分布在慢時間上的目標做正確的線性卷積，總處理長度至少必須滿足
 
@@ -191,7 +214,7 @@ $$
 
 ---
 
-**4. FFT 實作所對應的無模糊時間窗口**
+## 4. Unambiguous Time Window In FFT Implementation
 
 若方位壓縮用 $N_a$ 點 FFT 實作，且慢時間取樣率為 $\mathrm{PRF}$，則 FFT 基本時間窗口為
 
@@ -231,7 +254,7 @@ $$
 
 ---
 
-**5. 有限長 FFT 為什麼會變成 Circular Convolution**
+## 5. Why Finite-Length FFT Becomes Circular Convolution
 
 若用 FFT 做 matched filtering，運算形式為
 
@@ -265,7 +288,7 @@ $$
 
 ---
 
-**6. Wrap-around 的位置公式**
+## 6. Wrap-Around Location Formula
 
 設某個目標在理想線性卷積下的聚焦中心位於 $\eta_c$。若它落在 FFT 的基本時間窗口之外，則實際 circular convolution 輸出中的 ghost 位置滿足
 
@@ -300,7 +323,7 @@ $$
 
 ---
 
-**物理意義**
+## Physical Meaning
 
 * $v_s$ 的作用是拉長同一個 burst 內被照射到的地面目標集合，因此先把幾何上的 footprint 變大。
 * 幾何 footprint 變大後，等效目標時間跨度 $T_{\mathrm{focus,TOPS}}$ 也同步變大。
@@ -309,7 +332,7 @@ $$
 
 ---
 
-**最終結果**
+## Final Result
 
 TOPS 的等效目標時間跨度：
 
@@ -375,7 +398,7 @@ $$
 
 ---
 
-**實作對應**
+## Implementation Mapping
 
 * 在程式實作上，若方位向 block 長度固定，則 $N_a$ 與 $\mathrm{PRF}$ 直接決定了 $T_{\mathrm{window}}$。
 * 若沒有額外 zero-padding 或 overlap-save / overlap-add 類處理，FFT-based matched filtering 就會自動落入 circular convolution。
@@ -383,7 +406,7 @@ $$
 
 ---
 
-**限制與適用範圍**
+## Limits And Applicability
 
 * 本文用 $v_s$ 表示 beam steering 的等效地面掃描速度，重點在因果鏈，不在機電幾何的最細節定義。
 * 本文將 matched-filter 長度寫成 $T_{\mathrm{ref}}$，只要求它能代表 azimuth compression kernel 的有效時間支撐，未展開到更細的 chirp parameter closed form。

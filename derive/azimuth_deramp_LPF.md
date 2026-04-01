@@ -1,4 +1,25 @@
-**重點摘要**
+# Azimuth Deramp LPF
+
+## Navigation
+
+- [Overall](./tops_azimuth_overall.md)
+- Main flow: [Azimuth Frequency UFR](./azimuth_freq_ufr.md)
+- Filter design support: [Frequency-Time Deramping](./freq_time_deramping.md)
+
+## Table of Contents
+
+- [Summary](#summary)
+- [Problem Definition](#problem-definition)
+- [Derivation Highlights](#derivation-highlights)
+- [Symbols And Assumptions](#symbols-and-assumptions)
+- [1. Starting Point: Mosaicked Signal](#1-starting-point-mosaicked-signal)
+- [2. Local Quadratic Phase Model](#2-local-quadratic-phase-model)
+- [3. Deramping](#3-deramping)
+- [4. LPF](#4-lpf)
+- [Physical Meaning](#physical-meaning)
+- [Final Result](#final-result)
+
+## Summary
 
 * mosaicking 之後的 $S_2(\tau,f_\eta)$ 只把 replicas 攤開到 extended azimuth-frequency axis，並不會自動拿掉每個 replica 內部的二次 phase curvature。
 * deramping 的核心作用，是對主 replica 乘上一個 reference quadratic phase 的共軛補償，使其殘餘二次項由 $\psi_{2,m}$ 變成 $\psi_{2,m}-\psi_{2,\mathrm{ref}}$。
@@ -45,7 +66,7 @@ $$
 
 ---
 
-**問題定義**
+## Problem Definition
 
 本文件要證明三件事：
 
@@ -55,7 +76,7 @@ $$
 
 ---
 
-**推導重點**
+## Derivation Highlights
 
 * 從 mosaicked azimuth-frequency signal $S_2(\tau,f_\eta)$ 出發，先把每個 replica 的完整振幅與 phase 寫清楚。
 * 再把第 $m$ 個 replica 的 phase function $\psi_m(f_\eta)$ 在主 replica 的參考頻率 $f_{\mathrm{ref}}$ 附近展成局部二次模型。
@@ -64,7 +85,7 @@ $$
 
 ---
 
-**符號與假設**
+## Symbols And Assumptions
 
 * $S_2(\tau,f_\eta)$：mosaicking 後的 azimuth-frequency signal
 * $S_{2,m}(\tau,f_\eta)$：第 $m$ 個 mosaicked replica
@@ -92,7 +113,7 @@ $$
 
 ---
 
-**1. 起點：mosaicked signal**
+## 1. Starting Point: Mosaicked Signal
 
 由 mosaicking 後的 extended azimuth-frequency representation，可先寫成 replica summation
 
@@ -124,8 +145,7 @@ $$
 
 $$
 \psi_m(f_\eta) =
-\frac{4\pi R_0f_0}{c}D_m(f_\eta)
-+2\pi\left(
+\frac{4\pi R_0f_0}{c}D_m(f_\eta) + 2\pi\left(
 f_\eta-m\cdot\mathrm{PRF}
 \right)\eta_c
 $$
@@ -161,14 +181,13 @@ $$
 
 ---
 
-**2. 局部二次 Phase Model**
+## 2. Local Quadratic Phase Model
 
 為了建立 deramping filter，必須先把第 $m$ 個 replica 的 phase function 在主 replica 所關注的局部頻帶內展成二次式：
 
 $$
 \psi_m(f_\eta) \approx
-\psi_{0,m}
-+\psi_{1,m}(f_\eta-f_{\mathrm{ref}})
+\psi_{0,m} + \psi_{1,m}(f_\eta-f_{\mathrm{ref}})
 +\psi_{2,m}(f_\eta-f_{\mathrm{ref}})^2
 $$
 
@@ -201,8 +220,7 @@ B_r\left(
 \right) \cdot
 \exp\left(
 -j\left[
-\psi_{0,m}
-+\psi_{1,m}(f_\eta-f_{\mathrm{ref}})
+\psi_{0,m} + \psi_{1,m}(f_\eta-f_{\mathrm{ref}})
 +\psi_{2,m}(f_\eta-f_{\mathrm{ref}})^2
 \right]
 \right)
@@ -224,8 +242,7 @@ B_r\left(
 \right) \cdot
 \exp\left(
 -j\left[
-\psi_{0,m}
-+\psi_{1,m}(f_\eta-f_{\mathrm{ref}})
+\psi_{0,m} + \psi_{1,m}(f_\eta-f_{\mathrm{ref}})
 +\psi_{2,m}(f_\eta-f_{\mathrm{ref}})^2
 \right]
 \right)
@@ -235,7 +252,7 @@ $$
 
 ---
 
-**3. Deramping**
+## 3. Deramping
 
 取 reference quadratic curvature 為主 replica 的局部二次係數
 
@@ -283,8 +300,7 @@ B_r\left(
 \right) \cdot
 \exp\left(
 -j\left[
-\psi_{0,m}
-+\psi_{1,m}(f_\eta-f_{\mathrm{ref}})
+\psi_{0,m} + \psi_{1,m}(f_\eta-f_{\mathrm{ref}})
 +\left(
 \psi_{2,m}-\psi_{2,\mathrm{ref}}
 \right)(f_\eta-f_{\mathrm{ref}})^2
@@ -309,8 +325,7 @@ B_r\left(
 \right) \cdot
 \exp\left(
 -j\left[
-\psi_{0,m}
-+\psi_{1,m}(f_\eta-f_{\mathrm{ref}})
+\psi_{0,m} + \psi_{1,m}(f_\eta-f_{\mathrm{ref}})
 +\left(
 \psi_{2,m}-\psi_{2,\mathrm{ref}}
 \right)(f_\eta-f_{\mathrm{ref}})^2
@@ -323,7 +338,7 @@ $$
 
 ---
 
-**4. LPF**
+## 4. LPF
 
 LPF 定義為
 
@@ -356,8 +371,7 @@ B_r\left(
 \right) \cdot
 \exp\left(
 -j\left[
-\psi_{0,m}
-+\psi_{1,m}(f_\eta-f_{\mathrm{ref}})
+\psi_{0,m} + \psi_{1,m}(f_\eta-f_{\mathrm{ref}})
 +\left(
 \psi_{2,m}-\psi_{2,\mathrm{ref}}
 \right)(f_\eta-f_{\mathrm{ref}})^2
@@ -385,8 +399,7 @@ B_r\left(
 \right) \cdot
 \exp\left(
 -j\left[
-\psi_{0,m}
-+\psi_{1,m}(f_\eta-f_{\mathrm{ref}})
+\psi_{0,m} + \psi_{1,m}(f_\eta-f_{\mathrm{ref}})
 +\left(
 \psi_{2,m}-\psi_{2,\mathrm{ref}}
 \right)(f_\eta-f_{\mathrm{ref}})^2
@@ -413,8 +426,7 @@ B_r\left(
 \right) \cdot
 \exp\left(
 -j\left[
-\psi_{0,m_0}
-+\psi_{1,m_0}(f_\eta-f_{\mathrm{ref}})
+\psi_{0,m_0} + \psi_{1,m_0}(f_\eta-f_{\mathrm{ref}})
 +\left(
 \psi_{2,m_0}-\psi_{2,\mathrm{ref}}
 \right)(f_\eta-f_{\mathrm{ref}})^2
@@ -429,7 +441,7 @@ $$
 
 ---
 
-**物理意義**
+## Physical Meaning
 
 * mosaicking 只是在 extended azimuth-frequency axis 上把 replicas 攤開，並不會消除每塊 replica 的內部 quadratic phase curvature。
 * phase 的二次項 $\psi_{2,m}(f_\eta-f_{\mathrm{ref}})^2$，正是主 replica 難以直接用固定頻帶窗截取的原因。
@@ -438,7 +450,7 @@ $$
 
 ---
 
-**最終結果**
+## Final Result
 
 起點 mosaicked signal：
 
@@ -485,8 +497,7 @@ B_r\left(
 \right) \cdot
 \exp\left(
 -j\left[
-\psi_{0,m}
-+\psi_{1,m}(f_\eta-f_{\mathrm{ref}})
+\psi_{0,m} + \psi_{1,m}(f_\eta-f_{\mathrm{ref}})
 +\left(
 \psi_{2,m}-\psi_{2,\mathrm{ref}}
 \right)(f_\eta-f_{\mathrm{ref}})^2
@@ -521,8 +532,7 @@ B_r\left(
 \right) \cdot
 \exp\left(
 -j\left[
-\psi_{0,m}
-+\psi_{1,m}(f_\eta-f_{\mathrm{ref}})
+\psi_{0,m} + \psi_{1,m}(f_\eta-f_{\mathrm{ref}})
 +\left(
 \psi_{2,m}-\psi_{2,\mathrm{ref}}
 \right)(f_\eta-f_{\mathrm{ref}})^2
@@ -536,7 +546,7 @@ $$
 
 ---
 
-**實作對應**
+## Implementation Mapping
 
 * 程式上通常先對 mosaicked spectrum 乘上 reference quadratic phase 的共軛補償，這對應 $H_{\mathrm{de}}(f_\eta)$。
 * 再對 deramped spectrum 乘上固定通帶窗，這對應 $H_{\mathrm{LPF}}(f_\eta)$。
@@ -544,7 +554,7 @@ $$
 
 ---
 
-**限制與適用範圍**
+## Limits And Applicability
 
 * 本文使用局部二階 phase model，適用於主 replica 附近的有限頻帶；若通帶過寬，三階以上項可能不可忽略。
 * 單一 deramping filter 只會精確匹配單一 reference curvature，因此它是為了分離某一個指定主 replica，而不是同時展平所有 replicas。

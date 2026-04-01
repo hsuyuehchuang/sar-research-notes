@@ -1,4 +1,26 @@
-**重點摘要**
+# Azimuth Frequency Folding
+
+## Navigation
+
+- [Overall](./tops_azimuth_overall.md)
+- Main flow: [Azimuth Frequency UFR](./azimuth_freq_ufr.md)
+- Next support note: [Frequency-Time Deramping](./freq_time_deramping.md)
+
+## Table of Contents
+
+- [Summary](#summary)
+- [Problem Definition](#problem-definition)
+- [Derivation Highlights](#derivation-highlights)
+- [Symbols And Assumptions](#symbols-and-assumptions)
+- [1. Geometry And Full Time-Domain Model](#1-geometry-and-full-time-domain-model)
+- [2. TOPSAR Illumination Function](#2-topsar-illumination-function)
+- [3. Continuous Azimuth Signal And Continuous Frequency Envelope](#3-continuous-azimuth-signal-and-continuous-frequency-envelope)
+- [4. Folded Spectrum From The Sampling Comb](#4-folded-spectrum-from-the-sampling-comb)
+- [5. Why TOPSAR Especially Tends To Produce Folded Spectrum](#5-why-topsar-especially-tends-to-produce-folded-spectrum)
+- [Physical Meaning](#physical-meaning)
+- [Final Result](#final-result)
+
+## Summary
 
 * TOPSAR 的掃描率 $\omega_s$ 不會直接生成 folded spectrum；它先改變慢時間照明函數 $w_a(\eta;\omega_s)$，再經傅立葉轉換形成連續方位包絡 $W_a(f_\eta;\omega_s)$。
 * folded phenomenon 的直接數學來源是慢時間離散取樣，也就是 Dirac comb $\sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)$ 所導致的頻域週期性複製。
@@ -29,7 +51,7 @@ $$
 
 ---
 
-**問題定義**
+## Problem Definition
 
 本文件要證明三件事：
 
@@ -39,7 +61,7 @@ $$
 
 ---
 
-**推導重點**
+## Derivation Highlights
 
 * 先從完整時域模型出發，同時保留幾何距離項、天線照明項與慢時間取樣 comb。
 * 再把 TOPSAR beam steering 幾何寫成有效離軸角 $\theta_{eff}(\eta)$，將方向圖改寫成 $w_a(\eta;\omega_s)$。
@@ -49,7 +71,7 @@ $$
 
 ---
 
-**符號與假設**
+## Symbols And Assumptions
 
 * $\tau$：距離向快時間
 * $\eta$：方位向慢時間
@@ -81,7 +103,7 @@ $$
 
 ---
 
-**1. 幾何與完整時域模型**
+## 1. Geometry And Full Time-Domain Model
 
 設單點目標的瞬時斜距為
 
@@ -125,7 +147,7 @@ $$
 
 ---
 
-**2. TOPSAR 照明函數**
+## 2. TOPSAR Illumination Function
 
 在小角度近似下，雙程方向圖可寫為
 
@@ -182,7 +204,7 @@ $$
 
 ---
 
-**3. 連續方位訊號與連續頻域包絡**
+## 3. Continuous Azimuth Signal And Continuous Frequency Envelope
 
 為了把 beam steering 的影響與取樣效應分開，先忽略 Dirac comb。對應的連續慢時間訊號為
 
@@ -276,7 +298,7 @@ $$
 
 ---
 
-**4. 由取樣 comb 得到 folded 頻譜**
+## 4. Folded Spectrum From The Sampling Comb
 
 慢時間取樣 comb 的傅立葉轉換為
 
@@ -384,7 +406,7 @@ $$
 
 ---
 
-**5. 為什麼 TOPSAR 特別容易出現 folded spectrum**
+## 5. Why TOPSAR Especially Tends To Produce Folded Spectrum
 
 這裡的因果順序必須保持清楚：
 
@@ -410,7 +432,7 @@ $$
 
 ---
 
-**物理意義**
+## Physical Meaning
 
 * $R(\eta)$：控制幾何距離、二次相位歷程與方位壓縮基礎
 * $w_a(\eta;\omega_s)$：描述 beam steering 下目標被照射多久、如何被照射
@@ -422,7 +444,7 @@ $$
 
 ---
 
-**最終結果**
+## Final Result
 
 完整時域模型：
 
@@ -530,7 +552,7 @@ $$
 
 ---
 
-**實作對應**
+## Implementation Mapping
 
 在程式上通常可分成兩個層次：
 
@@ -544,7 +566,7 @@ $$
 
 ---
 
-**限制與適用範圍**
+## Limits And Applicability
 
 * 本文將 folded phenomenon 的直接來源限定為固定 PRF 的慢時間取樣，未展開 burst slicing、有限 aperture truncation 與加窗效應的高階修正。
 * 連續頻譜表示依賴 POSP 與緩變近似，因此更適合說明結構與因果鏈，而不是做最終高精度誤差分析。
@@ -552,7 +574,7 @@ $$
 
 ---
 
-**Appendix A. $\frac{L_a}{\lambda}\theta$ 的來源**
+## Appendix A. Origin Of $\frac{L_a}{\lambda}\theta$
 
 設方位向天線孔徑沿座標 $x\in[-L_a/2,L_a/2]$ 均勻照明，則孔徑分布為
 
@@ -653,7 +675,7 @@ $$
 
 ---
 
-**Appendix B. $w_a(\eta;\omega_s)$ 的幾何來源**
+## Appendix B. Geometric Origin Of $w_a(\eta;\omega_s)$
 
 $w_a$ 最原始是角度 $\theta$ 的函數。要把它改寫成 $w_a(\eta;\omega_s)$，必須先把目標相對於掃描波束中心的離軸角表示為慢時間函數。
 
@@ -712,7 +734,7 @@ $$
 
 ---
 
-**Appendix C. folded 頻譜的可還原性為什麼來自 phase structure**
+## Appendix C. Why Folded Spectrum Recoverability Comes From Phase Structure
 
 folding 本身由取樣公式決定，但 folded 副本之所以在 TOPS 中常可被重排與還原，關鍵在於連續訊號具有可建模的 chirp phase structure。
 

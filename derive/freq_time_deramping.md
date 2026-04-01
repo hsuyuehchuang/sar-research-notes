@@ -1,10 +1,33 @@
-**重點摘要**
+# Frequency-Time Deramping
+
+## Navigation
+
+- [Overall](./tops_azimuth_overall.md)
+- Main flow:
+  [Azimuth Frequency UFR](./azimuth_freq_ufr.md),
+  [Azimuth Time UFR](./azimuth_time_ufr.md)
+- Related support note: [Azimuth Deramp LPF](./azimuth_deramp_LPF.md)
+
+## Table of Contents
+
+- [Summary](#summary)
+- [Problem Definition](#problem-definition)
+- [Derivation Highlights](#derivation-highlights)
+- [Symbols And Assumptions](#symbols-and-assumptions)
+- [1. Local Frequency-Time Mapping](#1-local-frequency-time-mapping)
+- [2. Frequency-Domain Deramping Filter Design](#2-frequency-domain-deramping-filter-design)
+- [3. Time-Domain Deramping Filter Design](#3-time-domain-deramping-filter-design)
+- [4. Relation To The TOPS SAR Main Flow](#4-relation-to-the-tops-sar-main-flow)
+- [Physical Meaning](#physical-meaning)
+- [Final Result](#final-result)
+
+## Summary
 
 * 這份文件的重點不是再證明「為什麼要 deramp」，而是明確回答「TOPS SAR 的 deramping filter 應該怎麼設計」。
 * 若某個主 replica 在局部可用線性關係 $f_\eta = k_s\eta + f_{\eta_c}$ 描述，則 frequency-domain deramping filter 應設計成一個 quadratic phase，讓由該 chirp 對應的群延遲被拉回 reference 位置。
 * 若同一個 replica 在 slow-time domain 可視為 azimuth chirp，則 time-domain deramping filter 應設計成其 conjugate quadratic phase，使 instantaneous Doppler 由斜線變成常數。
 * frequency-domain deramping 與 time-domain deramping 本質上是在不同 domain 做同一件事：消去主 replica 的 reference chirp slope。
-* 這份設計筆記應與 [azimuth_freq_folding.md](/home/hsuyueh.chuang/Desktop/vscode/github/sar_tops_mode/derive/azimuth_freq_folding.md) 及 [azimuth_deramp_LPF.md](/home/hsuyueh.chuang/Desktop/vscode/github/sar_tops_mode/derive/azimuth_deramp_LPF.md) 一起讀，前者說明 replicas 如何形成，後者說明 deramp 之後為什麼 LPF 才有效。
+* 這份設計筆記應與 [azimuth_freq_folding.md](./azimuth_freq_folding.md) 及 [azimuth_deramp_LPF.md](./azimuth_deramp_LPF.md) 一起讀，前者說明 replicas 如何形成，後者說明 deramp 之後為什麼 LPF 才有效。
 
 摘要中最重要的關鍵公式為
 
@@ -30,7 +53,7 @@ $$
 
 ---
 
-**問題定義**
+## Problem Definition
 
 本文件要回答四件事：
 
@@ -41,16 +64,16 @@ $$
 
 ---
 
-**推導重點**
+## Derivation Highlights
 
 * 先以主 replica 的局部線性關係 $f_\eta = k_s\eta + f_{\eta_c}$ 建立 frequency-time mapping。
 * 再從 group delay compensation 的角度推導 frequency-domain deramping filter。
 * 接著從 instantaneous Doppler compensation 的角度推導 time-domain deramping filter。
-* 最後把兩者和 [azimuth_deramp_LPF.md](/home/hsuyueh.chuang/Desktop/vscode/github/sar_tops_mode/derive/azimuth_deramp_LPF.md) 裡的 reference quadratic curvature 概念對齊。
+* 最後把兩者和 [azimuth_deramp_LPF.md](./azimuth_deramp_LPF.md) 裡的 reference quadratic curvature 概念對齊。
 
 ---
 
-**符號與假設**
+## Symbols And Assumptions
 
 * $\eta$：方位向 slow time
 * $f_\eta$：azimuth frequency
@@ -73,7 +96,7 @@ $$
 
 ---
 
-**1. 局部 Frequency-Time Mapping**
+## 1. Local Frequency-Time Mapping
 
 若主 replica 在局部頻帶內可視為一條線性 chirp，則其 azimuth frequency 與 slow time 的關係可寫成
 
@@ -93,7 +116,7 @@ $$
 
 ---
 
-**2. Frequency-Domain Deramping Filter Design**
+## 2. Frequency-Domain Deramping Filter Design
 
 設 frequency-domain deramping filter 的 phase 為
 
@@ -167,7 +190,7 @@ $$
 
 ---
 
-**3. Time-Domain Deramping Filter Design**
+## 3. Time-Domain Deramping Filter Design
 
 若改在 slow-time domain 看同一個主 replica，其局部 instantaneous Doppler 可寫成
 
@@ -256,10 +279,10 @@ $$
 
 ---
 
-**4. 與 TOPS SAR 主流程的對應**
+## 4. Relation To The TOPS SAR Main Flow
 
-[azimuth_freq_folding.md](/home/hsuyueh.chuang/Desktop/vscode/github/sar_tops_mode/derive/azimuth_freq_folding.md) 說明了 TOPS 為什麼會在 azimuth-frequency domain 出現 folded replicas。  
-[azimuth_deramp_LPF.md](/home/hsuyueh.chuang/Desktop/vscode/github/sar_tops_mode/derive/azimuth_deramp_LPF.md) 則說明了在 mosaicking 之後，為什麼必須再做 deramping，才能讓 LPF 有效保留主 replica。
+[azimuth_freq_folding.md](./azimuth_freq_folding.md) 說明了 TOPS 為什麼會在 azimuth-frequency domain 出現 folded replicas。  
+[azimuth_deramp_LPF.md](./azimuth_deramp_LPF.md) 則說明了在 mosaicking 之後，為什麼必須再做 deramping，才能讓 LPF 有效保留主 replica。
 
 把那份文件的 quadratic curvature notation 對到這裡，可以得到：
 
@@ -276,7 +299,7 @@ $$
 
 ---
 
-**物理意義**
+## Physical Meaning
 
 * $k_s$ 或 $k_t$ 代表主 replica 在局部頻帶內的 chirp slope。
 * frequency-domain deramp filter 不直接「消掉 aliasing」，它是把主 replica 的群延遲斜率拉回 reference location。
@@ -285,7 +308,7 @@ $$
 
 ---
 
-**最終結果**
+## Final Result
 
 局部 frequency-time mapping：
 
@@ -355,7 +378,7 @@ $$
 
 ---
 
-**實作對應**
+## Implementation Mapping
 
 * 若你手上已有主 replica 在 frequency-domain 的局部 slope estimate，則最直接的設計法是用 $H_{\mathrm{deramp},f}(f_\eta)$。
 * 若你手上已有時間域參考 chirp，則最直接的設計法是用其 conjugate chirp 當作 $H_{\mathrm{deramp},t}(\eta)$。
@@ -363,7 +386,7 @@ $$
 
 ---
 
-**限制與適用範圍**
+## Limits And Applicability
 
 * 本文的設計法則建立在局部線性 chirp 假設上；若主 replica 的 slope 在通帶內變化太大，單一 quadratic phase 可能不足。
 * 這裡的 frequency-domain 與 time-domain 濾波器是理論上的 reference design；實際系統中可能還需乘上窗函數、做相位中心平移或把 reference shift 併入 mosaicking。
