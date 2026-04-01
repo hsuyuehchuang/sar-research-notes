@@ -66,36 +66,19 @@ Figure Caption:
 
 Mathematical Step:
 $$
-w_p(\eta) =
-\mathrm{rect}\left(
-\frac{\eta-t_{\mathrm{expo},p}}{T_{\mathrm{dwell}}}
-\right)
+w_p(\eta) = \mathrm{rect}\left( \frac{\eta-t_{\mathrm{expo},p}}{T_{\mathrm{dwell}}} \right)
 $$
 
 $$
-s_{1,p}(\eta) =
-w_p(\eta)
-\exp\left(
-j\pi k_a(\eta-t_{cp})^2
-\right)
+s_{1,p}(\eta) = w_p(\eta) \exp\left( j\pi k_a(\eta-t_{c,p})^2 \right)
 $$
 
 $$
-{\color{red}
-s_1(\eta) =
-\sum_p
-\mathrm{rect}\left(
-\frac{\eta-t_{\mathrm{expo},p}}{T_{\mathrm{dwell}}}
-\right)
-\exp\left(
-j\pi k_a(\eta-t_{c,p})^2
-\right)
-}
+\color{red}{ s_1(\eta) = \sum_p \mathrm{rect}\left( \frac{\eta-t_{\mathrm{expo},p}}{T_{\mathrm{dwell}}} \right) \exp\left( j\pi k_a(\eta-t_{c,p})^2 \right) }
 $$
+
 $$
-{\color{red}
-t_{\mathrm{expo},p} = \frac{k_a}{k_a-k_s} t_{c,p}
-}
+\color{red}{ t_{\mathrm{expo},p} = \frac{k_a}{k_a-k_s} t_{c,p} }
 $$
 Code Mapping:
 
