@@ -31,7 +31,7 @@
 
 - `explain_UFR3.py` 用一維 azimuth signal 把 TOPS 的 `frequency UFR -> azimuth compression -> time UFR` 串成完整的 time-frequency diagram。
 - 這份文件現在採用 `圖 -> 數學 -> 程式碼 -> 物理` 的 flow，因此每一張圖下面都能直接看到它對應的公式與實作。
-- 這條主線是 `$s_1(\eta) \rightarrow S_1(f_\eta) \rightarrow S_2(f_\eta) \rightarrow S_3(f_\eta) \rightarrow S_4(f_\eta) \rightarrow S_5(f_\eta) \rightarrow s_7(\eta) \rightarrow s_{7,\mathrm{mosaic}}(\eta) \rightarrow s_8(\eta) \rightarrow s_{8,\mathrm{unfolded}}(\eta) \rightarrow s_{\mathrm{final}}(\eta)$`。
+- 這條主線依序經過 `s_1(eta) -> S_1(f_eta) -> S_2(f_eta) -> S_3(f_eta) -> S_4(f_eta) -> S_5(f_eta) -> s_7(eta) -> s_7_mosaic(eta) -> s_8(eta) -> s_8_unfolded(eta) -> s_final(eta)`。
 
 ## Problem Definition
 
@@ -43,29 +43,28 @@
 
 ## Symbols And Assumptions
 
-- $\eta$：azimuth slow time
-- $f_\eta$：azimuth frequency
-- $T_{\mathrm{burst}}$：burst duration
-- $\mathrm{PRF}$：azimuth sampling rate
-- $N_{\mathrm{az}}=\mathrm{PRF}\cdot T_{\mathrm{burst}}$
-- $k_a$：target azimuth FM rate
-- $k_s$：scan-induced Doppler-centroid rate
-- $T_{\mathrm{dwell}}$：illumination dwell time
-- $t_c$：target focus-center label
-- $t_{\mathrm{expo}}$：target exposure center
-- $k_t=\frac{k_ak_s}{k_a-k_s}$：time-UFR chirp rate
+- `\eta`：azimuth slow time
+- `f_\eta`：azimuth frequency
+- `T_{\mathrm{burst}}`：burst duration
+- `\mathrm{PRF}`：azimuth sampling rate
+- `N_{\mathrm{az}}=\mathrm{PRF}\cdot T_{\mathrm{burst}}`
+- `k_a`：target azimuth FM rate
+- `k_s`：scan-induced Doppler-centroid rate
+- `T_{\mathrm{dwell}}`：illumination dwell time
+- `t_c`：target focus-center label
+- `t_{\mathrm{expo}}`：target exposure center
+- `k_t=\frac{k_ak_s}{k_a-k_s}`：time-UFR chirp rate
 
 ## 1. Input Aliased Signal
 
 <p align="center">
-  <img src="./figures/explain_ufr3/ufr3_step1_input_aliased.png" width="900">
+  <img src="./figures/explain_ufr3/ufr3_step1_input_aliased.png" width="350">
 </p>
 
 Figure Caption:
-這張圖是原始輸入 `$s_1(\eta)$` 的 time-frequency view。每條斜 chirp trace 代表一個目標的 azimuth phase history，而可見區域則由 illumination window 決定。
+這張圖是原始輸入 `s_1(eta)` 的 time-frequency view。每條斜 chirp trace 代表一個目標的 azimuth phase history，而可見區域則由 illumination window 決定。
 
 Mathematical Step:
-
 $$
 w_p(\eta) =
 \mathrm{rect}\left(
@@ -93,13 +92,11 @@ j\pi k_a(\eta-t_{c,p})^2
 \right)
 }
 $$
-
 $$
 {\color{red}
 t_{\mathrm{expo},p} = \frac{k_a}{k_a-k_s} t_{c,p}
 }
 $$
-
 Code Mapping:
 
 ```python
@@ -112,37 +109,25 @@ for tc in tc_array:
     raw_signal[window] += target_phase[window]
 ```
 
-Strict Math <-> Code Mapping:
-
-- `$s_1(\eta)$` <-> `raw_signal`
-- `$t_c$` <-> `tc`
-- `$t_{\mathrm{expo}}$` <-> `t_expo`
-- `$T_{\mathrm{dwell}}$` <-> `T_dwell`
-- `$k_a$` <-> `ka`
-- `$k_s$` <-> `ks`
-- `$w_p(\eta)$` <-> `window`
-
 Physical Meaning:
 TOPS 先改變的是目標被照亮的時刻，而不是直接改變 matched filter。這也是後面 folding 與 focused-time inflation 的源頭。
 
 Why This Leads To The Next Figure:
-對 `$s_1(\eta)$` 做 FFT 之後，就進入原始 PRF 限制下的 aliased azimuth spectrum。
+對 `s_1(eta)` 做 FFT 之後，就進入原始 PRF 限制下的 aliased azimuth spectrum。
 
 ## 2. Frequency Mosaicking
 
 <p align="center">
-  <img src="./figures/explain_ufr3/ufr3_step2_mosaicking.png" width="900">
+  <img src="./figures/explain_ufr3/ufr3_step2_mosaicking.png" width="350">
 </p>
 
 Figure Caption:
-這張圖對應 `$S_2(f_\eta)$`。它把 folded 在 principal band 內的 replicas 沿 extended frequency axis 攤開。
+這張圖對應 ``S_2(f_\eta)``。它把 folded 在 principal band 內的 replicas 沿 extended frequency axis 攤開。
 
 Mathematical Step:
-
 $$
 S_1(f_\eta) = \mathcal{F}_\eta\left[s_1(\eta)\right]
 $$
-
 $$
 {\color{red}
 S_2(f_\eta) =
@@ -150,7 +135,6 @@ S_2(f_\eta) =
 S_1(f_\eta-m\cdot\mathrm{PRF})
 }
 $$
-
 Code Mapping:
 
 ```python
@@ -162,14 +146,6 @@ PRF_ufr = PRF * num_replicas
 f_eta = np.linspace(-PRF_ufr / 2, PRF_ufr / 2, N_ufr, endpoint=False)
 ```
 
-Strict Math <-> Code Mapping:
-
-- `$S_1(f_\eta)$` <-> `S1_aliased`
-- `$S_2(f_\eta)$` <-> `S2`
-- `$N_s$` <-> `num_replicas`
-- `$f_\eta$` on extended axis <-> `f_eta`
-- `extended bandwidth` <-> `PRF_ufr`
-
 Physical Meaning:
 這一步把原本疊在主頻帶內的 folded replicas 攤開，讓主 replica 可以被單獨處理。
 
@@ -179,14 +155,13 @@ Why This Leads To The Next Figure:
 ## 3. Frequency Deramping
 
 <p align="center">
-  <img src="./figures/explain_ufr3/ufr3_step3_freq_deramp.png" width="900">
+  <img src="./figures/explain_ufr3/ufr3_step3_freq_deramp.png" width="350">
 </p>
 
 Figure Caption:
-這張圖對應 `$S_3(f_\eta)$`。主 replica 經過 deramp 後，quadratic curvature 被展平。
+這張圖對應 ``S_3(f_\eta)``。主 replica 經過 deramp 後，quadratic curvature 被展平。
 
 Mathematical Step:
-
 $$
 {\color{red}
 D_{\mathrm{de}}(f_\eta) =
@@ -195,25 +170,17 @@ j\pi \frac{f_\eta^2}{k_s}
 \right)
 }
 $$
-
 $$
 {\color{red}
 S_3(f_\eta) = S_2(f_\eta)\,D_{\mathrm{de}}(f_\eta)
 }
 $$
-
 Code Mapping:
 
 ```python
 deramp_phase = np.exp(1j * np.pi * (1.0 / ks) * f_eta**2)
 S3 = S2 * deramp_phase
 ```
-
-Strict Math <-> Code Mapping:
-
-- `$D_{\mathrm{de}}(f_\eta)$` <-> `deramp_phase`
-- `$S_3(f_\eta)$` <-> `S3`
-- `$k_s$` <-> `ks`
 
 Physical Meaning:
 deramp 的作用是把主 replica 的 reference curvature 拿掉，讓主能量在下一步 pseudo-time domain 變得集中。
@@ -224,14 +191,13 @@ Why This Leads To The Next Figure:
 ## 4. Pseudo-Time LPF
 
 <p align="center">
-  <img src="./figures/explain_ufr3/ufr3_step4_pseudotime_lpf.png" width="900">
+  <img src="./figures/explain_ufr3/ufr3_step4_pseudotime_lpf.png" width="350">
 </p>
 
 Figure Caption:
-這張圖對應 `$S_4(f_\eta)$` 的形成過程。程式先把 `$S_3$` 轉到 pseudo-time domain，再用中央窗口保留主 clone。
+這張圖對應 ``S_4(f_\eta)`` 的形成過程。程式先把 ``S_3`` 轉到 pseudo-time domain，再用中央窗口保留主 clone。
 
 Mathematical Step:
-
 $$
 \widetilde{s}_3(\eta') = \mathcal{F}_{f_\eta}\left[S_3(f_\eta)\right]
 $$
@@ -243,7 +209,6 @@ $$
 \frac{\eta'}{T_{\mathrm{keep}}}
 \right)
 $$
-
 $$
 {\color{red}
 S_4(f_\eta) =
@@ -252,7 +217,6 @@ S_4(f_\eta) =
 \right]
 }
 $$
-
 Code Mapping:
 
 ```python
@@ -264,13 +228,6 @@ pseudo_time_signal[center_idx + pts_to_keep // 2:] = 0
 S4 = np.fft.ifft(pseudo_time_signal)
 ```
 
-Strict Math <-> Code Mapping:
-
-- `$\widetilde{s}_3(\eta')$` <-> `pseudo_time_signal` before masking
-- `$T_{\mathrm{keep}}$` support <-> `pts_to_keep`
-- `$S_4(f_\eta)$` <-> `S4`
-- central support location <-> `center_idx`
-
 Physical Meaning:
 這一步就是 frequency-UFR 真正只留下主 replica 的地方。其餘 clones 在 pseudo-time domain 被直接清零。
 
@@ -280,14 +237,13 @@ LPF 後主 replica 已被孤立，但後續 matched filtering 還需要 referenc
 ## 5. Frequency Reramping
 
 <p align="center">
-  <img src="./figures/explain_ufr3/ufr3_step5_freq_reramp.png" width="900">
+  <img src="./figures/explain_ufr3/ufr3_step5_freq_reramp.png" width="350">
 </p>
 
 Figure Caption:
-這張圖對應 `$S_5(f_\eta)$`。經過 reramp 之後，主 replica 被補回 reference curvature。
+這張圖對應 ``S_5(f_\eta)``。經過 reramp 之後，主 replica 被補回 reference curvature。
 
 Mathematical Step:
-
 $$
 {\color{red}
 D_{\mathrm{re}}(f_\eta) =
@@ -296,24 +252,17 @@ D_{\mathrm{re}}(f_\eta) =
 \right)
 }
 $$
-
 $$
 {\color{red}
 S_5(f_\eta) = S_4(f_\eta)\,D_{\mathrm{re}}(f_\eta)
 }
 $$
-
 Code Mapping:
 
 ```python
 reramp_phase = np.exp(-1j * np.pi * (1.0 / ks) * f_eta**2)
 S5 = S4 * reramp_phase
 ```
-
-Strict Math <-> Code Mapping:
-
-- `$D_{\mathrm{re}}(f_\eta)$` <-> `reramp_phase`
-- `$S_5(f_\eta)$` <-> `S5`
 
 Physical Meaning:
 reramp 只對主 replica 恢復 reference phase law，並不是把 clones 放回來。
@@ -324,14 +273,13 @@ Why This Leads To The Next Figure:
 ## 6. Azimuth Compression
 
 <p align="center">
-  <img src="./figures/explain_ufr3/ufr3_step6_azimuth_compression.png" width="900">
+  <img src="./figures/explain_ufr3/ufr3_step6_azimuth_compression.png" width="350">
 </p>
 
 Figure Caption:
-這張圖對應 `$s_7(\eta)$`。目標已經被壓縮成 focused response，但 focused support 已超出原始 `T_{\mathrm{burst}}`。
+這張圖對應 ``s_7(\eta)``。目標已經被壓縮成 focused response，但 focused support 已超出原始 `T_{\mathrm{burst}}`。
 
 Mathematical Step:
-
 $$
 {\color{red}
 H_{\mathrm{az}}(f_\eta) =
@@ -344,14 +292,12 @@ $$
 $$
 S_6(f_\eta) = S_5(f_\eta)H_{\mathrm{az}}(f_\eta)
 $$
-
 $$
 {\color{red}
 s_7(\eta) =
 \mathcal{F}^{-1}_\eta\left[S_6(f_\eta)\right]
 }
 $$
-
 Code Mapping:
 
 ```python
@@ -359,13 +305,6 @@ H_az = np.exp(1j * np.pi * (1.0 / ka) * f_eta**2)
 S6 = S5 * H_az
 s7_aliased_time = np.fft.ifft(np.fft.ifftshift(S6))
 ```
-
-Strict Math <-> Code Mapping:
-
-- `$H_{\mathrm{az}}(f_\eta)$` <-> `H_az`
-- `$S_6(f_\eta)$` <-> `S6`
-- `$s_7(\eta)$` <-> `s7_aliased_time`
-- `$k_a$` <-> `ka`
 
 Physical Meaning:
 第一個 UFR 問題已經解掉，但第二個問題在這裡出現：focus 後的時間支撐不再被原始 burst window 容納，因此開始出現 time aliasing。
@@ -376,11 +315,11 @@ Why This Leads To The Next Figure:
 ## 7. Time Mosaicking
 
 <p align="center">
-  <img src="./figures/explain_ufr3/ufr3_step7_time_mosaicking.png" width="900">
+  <img src="./figures/explain_ufr3/ufr3_step7_time_mosaicking.png" width="350">
 </p>
 
 Figure Caption:
-這張圖對應 `$s_{7,\mathrm{mosaic}}(\eta)$`。時間折返的 aliased timeline 被沿時間軸攤開。
+這張圖對應 ``s_{7,\mathrm{mosaic}}(\eta)``。時間折返的 aliased timeline 被沿時間軸攤開。
 
 Mathematical Step:
 
@@ -402,13 +341,6 @@ T_tufr = T_burst * num_time_replicas
 eta_tufr = np.linspace(-T_tufr / 2, T_tufr / 2, N_tufr, endpoint=False)
 ```
 
-Strict Math <-> Code Mapping:
-
-- `$s_{7,\mathrm{mosaic}}(\eta)$` <-> `s7_mosaic`
-- time replicas <-> `num_time_replicas`
-- unfolded time axis <-> `eta_tufr`
-- unfolded support <-> `T_tufr`
-
 Physical Meaning:
 這一步在時間域中扮演和前面 frequency mosaicking 完全平行的角色，也就是先把 wrapped clones 攤開。
 
@@ -418,20 +350,18 @@ Why This Leads To The Next Figure:
 ## 8. Time Deramping
 
 <p align="center">
-  <img src="./figures/explain_ufr3/ufr3_step8_time_deramp.png" width="900">
+  <img src="./figures/explain_ufr3/ufr3_step8_time_deramp.png" width="350">
 </p>
 
 Figure Caption:
-這張圖對應 `$s_8(\eta)$`。主時間 clone 的 quadratic curvature 被拿掉。
+這張圖對應 ``s_8(\eta)``。主時間 clone 的 quadratic curvature 被拿掉。
 
 Mathematical Step:
-
 $$
 {\color{red}
 k_t = \frac{k_ak_s}{k_a-k_s}
 }
 $$
-
 $$
 {\color{red}
 s_8(\eta) =
@@ -441,7 +371,6 @@ s_{7,\mathrm{mosaic}}(\eta)\,
 \right)
 }
 $$
-
 Code Mapping:
 
 ```python
@@ -449,12 +378,6 @@ kt = (ka * ks) / (ka - ks)
 deramp_phase_time = np.exp(-1j * np.pi * kt * eta_tufr**2)
 s8_deramped = s7_mosaic * deramp_phase_time
 ```
-
-Strict Math <-> Code Mapping:
-
-- `$k_t$` <-> `kt`
-- time-deramp phase <-> `deramp_phase_time`
-- `$s_8(\eta)$` <-> `s8_deramped`
 
 Physical Meaning:
 這一步和 frequency deramp 完全平行，只是現在被展平的是時間域中的 quadratic phase curvature。
@@ -465,14 +388,13 @@ Why This Leads To The Next Figure:
 ## 9. Time LPF
 
 <p align="center">
-  <img src="./figures/explain_ufr3/ufr3_step9_time_lpf.png" width="900">
+  <img src="./figures/explain_ufr3/ufr3_step9_time_lpf.png" width="350">
 </p>
 
 Figure Caption:
-這張圖對應 `$s_{8,\mathrm{unfolded}}(\eta)$`。經過 time-domain LPF 後，只留下 central PRF band 對應的主時間 clone。
+這張圖對應 `$s_{8,\mathrm{unfolded}}(\eta)$$。經過 time-domain LPF 後，只留下 central PRF band 對應的主時間 clone。
 
 Mathematical Step:
-
 $$
 S_8(f_\eta) = \mathcal{F}_\eta\left[s_8(\eta)\right]
 $$
@@ -484,7 +406,6 @@ S_8(f_\eta)\,
 \frac{f_\eta}{B_{\mathrm{keep,time}}}
 \right)
 $$
-
 $$
 {\color{red}
 s_{8,\mathrm{unfolded}}(\eta) =
@@ -505,14 +426,6 @@ S8_filtered = S8_freq * time_lpf_mask
 s8_unfolded = np.fft.ifft(np.fft.ifftshift(S8_filtered))
 ```
 
-Strict Math <-> Code Mapping:
-
-- `$S_8(f_\eta)$` <-> `S8_freq`
-- keep band width <-> `time_lpf_width`
-- keep mask <-> `time_lpf_mask`
-- `$S_{8,\mathrm{LPF}}(f_\eta)$` <-> `S8_filtered`
-- `$s_{8,\mathrm{unfolded}}(\eta)$` <-> `s8_unfolded`
-
 Physical Meaning:
 這一步在時間-UFR 中扮演和 pseudo-time LPF 對應的角色，也就是只保留主時間 clone，去掉其餘時間折返。
 
@@ -522,11 +435,11 @@ LPF 後主時間 clone 雖已孤立，但仍處於 deramped geometry，因此最
 ## 10. Final Time Reramping
 
 <p align="center">
-  <img src="./figures/explain_ufr3/ufr3_step10_time_reramp.png" width="900">
+  <img src="./figures/explain_ufr3/ufr3_step10_time_reramp.png" width="350">
 </p>
 
 Figure Caption:
-這張圖對應最終輸出 `$s_{\mathrm{final}}(\eta)$`。時間 aliasing 已被解除，主 focused response 回到正確幾何。
+這張圖對應最終輸出 `$s_{\mathrm{final}}(\eta)$$。時間 aliasing 已被解除，主 focused response 回到正確幾何。
 
 Mathematical Step:
 
@@ -546,11 +459,6 @@ Code Mapping:
 reramp_phase_time = np.exp(1j * np.pi * kt * eta_tufr**2)
 s_final = s8_unfolded * reramp_phase_time
 ```
-
-Strict Math <-> Code Mapping:
-
-- final time-reramp phase <-> `reramp_phase_time`
-- `$s_{\mathrm{final}}(\eta)$` <-> `s_final`
 
 Physical Meaning:
 time reramp 只對保留下來的主時間 clone 恢復正確相位幾何，因此最終得到 unaliased 的 focused response。
