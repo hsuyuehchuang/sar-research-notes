@@ -76,7 +76,7 @@ $$
 s_{1,p}(\eta) =
 w_p(\eta)
 \exp\left(
-j\pi k_a(\eta-t_{c,p})^2
+j\pi k_a(\eta-t_{cp})^2
 \right)
 $$
 
