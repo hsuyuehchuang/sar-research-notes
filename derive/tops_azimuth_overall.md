@@ -32,14 +32,14 @@
 ## Reading Order
 
 1. [Range Compression](./range_compression.md)
-2. [Azimuth Frequency UFR](./azimuth_freq_ufr.md)
-3. [Azimuth Compression](./azimuth_compression.md)
-4. [Azimuth Time UFR](./azimuth_time_ufr.md)
-5. Support derivations:
-   [Azimuth Frequency Folding](./azimuth_freq_folding.md),
+2. [Azimuth Frequency Folding](./azimuth_freq_folding.md)
+3. [Azimuth Frequency UFR](./azimuth_freq_ufr.md)
+4. [Azimuth Compression](./azimuth_compression.md)
+5. [Azimuth Time Folding](./azimuth_time_folding.md)
+6. [Azimuth Time UFR](./azimuth_time_ufr.md)
+7. Support derivations:
    [Frequency-Time Deramping](./freq_time_deramping.md),
-   [Azimuth Deramp LPF](./azimuth_deramp_LPF.md),
-   [Azimuth Time Folding](./azimuth_time_folding.md)
+   [Azimuth Deramp LPF](./azimuth_deramp_LPF.md)
 
 ## Table of Contents
 
@@ -222,6 +222,8 @@ w_a(\eta;\omega_s) \cdot
 $$
 
 ## 3. Azimuth Frequency Unfolding And Resampling (UFR)
+
+這一段主流程的前置現象推導是 [Azimuth Frequency Folding](./azimuth_freq_folding.md)。也就是先證明 folded spectrum 為什麼會出現，再進入 `mosaicking -> deramping -> LPF -> reramping` 的處理鏈。
 
 ### 3.1. Azimuth Frequency Folding
 
@@ -408,6 +410,8 @@ $$
 
 ## 4. Azimuth Compression
 
+這一步的輸入來自 [Azimuth Frequency UFR](./azimuth_freq_ufr.md)，而它的輸出 wrap-around 現象則由 [Azimuth Time Folding](./azimuth_time_folding.md) 進一步解釋。
+
 令 azimuth matched filter 為
 
 $$
@@ -443,6 +447,8 @@ $$
 這裡 $\eta_{c,m}$ 表示因 circular convolution 或窗口週期延拓而出現的時間 replica center。
 
 ## 5. Azimuth Time Unfolding And Resampling (UFR)
+
+這一段主流程的前置現象推導是 [Azimuth Time Folding](./azimuth_time_folding.md)。也就是先證明 finite-FFT 為什麼會把線性卷積折回成 time-domain wrap-around，再進入 `mosaicking -> deramping -> LPF -> reramping` 的處理鏈。
 
 ### 5.1. Mosaicking
 

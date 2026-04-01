@@ -3,7 +3,8 @@
 ## Navigation
 
 - [Overall](./tops_azimuth_overall.md)
-- Main flow: [Azimuth Frequency UFR](./azimuth_freq_ufr.md)
+- Previous main step: [Range Compression](./range_compression.md)
+- Next main step: [Azimuth Frequency UFR](./azimuth_freq_ufr.md)
 - Next support note: [Frequency-Time Deramping](./freq_time_deramping.md)
 
 ## Table of Contents

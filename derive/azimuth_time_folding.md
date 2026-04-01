@@ -3,8 +3,8 @@
 ## Navigation
 
 - [Overall](./tops_azimuth_overall.md)
-- Main flow: [Azimuth Time UFR](./azimuth_time_ufr.md)
 - Previous main step: [Azimuth Compression](./azimuth_compression.md)
+- Next main step: [Azimuth Time UFR](./azimuth_time_ufr.md)
 
 ## Table of Contents
 
