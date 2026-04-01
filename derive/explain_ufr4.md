@@ -23,8 +23,8 @@
 ## Summary
 
 - `explain_UFR4.py` 的重點不是完整 UFR，而是比較兩種 exposure geometry。
-- Case A 用 ``t_{\mathrm{expo}} = t_c``，代表 stripmap-like reference。
-- Case B 用 ``t_{\mathrm{expo}} = \frac{k_a}{k_a-k_s} t_c``，代表 TOPS-like scan-dependent exposure。
+- Case A 用 `t_expo = t_c`，代表 stripmap-like reference。
+- Case B 用 `t_expo = (k_a / (k_a - k_s)) t_c`，代表 TOPS-like scan-dependent exposure。
 - 兩個 case 共用同一條 `raw -> spectrum -> matched filtering -> focused output` 鏈，所以差異只會來自 `t_expo` 的幾何定義。
 - 這份文件同樣採用 `圖 -> 數學 -> 程式碼 -> 物理`，讓 focused-time inflation 的來源可以一眼看懂。
 
@@ -280,7 +280,7 @@ Why This Leads To The Next Figure:
 </p>
 
 Figure Caption:
-這張總覽圖提醒你：Case B 的所有變化都來自 ``t_{\mathrm{expo}}`` 與 ``t_c`` 的映射關係，而不是來自不同的 matched filter。
+這張總覽圖提醒你：Case B 的所有變化都來自 `t_expo` 與 `t_c` 的映射關係，而不是來自不同的 matched filter。
 
 Mathematical Step:
 $$
@@ -328,7 +328,7 @@ exposure_fn = lambda tc: (ka / (ka - ks)) * tc
 ```
 
 Physical Meaning:
-只要 `$k_s \neq 0`` 且與 ``k_a$$ 反號，TOPS-like case 的 focused-time span 就會比 raw burst window 更長。這就是 focused-time inflation，也是後續 time wrap-around 與 time UFR 必須存在的幾何根源。
+只要 `k_s != 0` 且與 `k_a` 反號，TOPS-like case 的 focused-time span 就會比 raw burst window 更長。這就是 focused-time inflation，也是後續 time wrap-around 與 time UFR 必須存在的幾何根源。
 
 Why This Leads To The Next Figure:
 這已經是最後的整理公式，沒有下一步。
@@ -337,7 +337,7 @@ Why This Leads To The Next Figure:
 
 `explain_UFR4.py` 用兩個最小對照 case 證明：
 
-- 若 ``t_{\mathrm{expo}} = t_c``，則 focused-time span 不會因 exposure geometry 額外拉長
-- 若 ``t_{\mathrm{expo}} = \frac{k_a}{k_a-k_s}t_c``，則固定的 raw burst window 會映射成更長的 focused support
+- 若 `t_expo = t_c`，則 focused-time span 不會因 exposure geometry 額外拉長
+- 若 `t_expo = (k_a / (k_a - k_s)) t_c`，則固定的 raw burst window 會映射成更長的 focused support
 
-這份文件的重點就是讓你在看圖的同時，也立刻看到對應的數學、程式碼和嚴格的符號對應。
+這份文件的重點就是讓你在看圖的同時，也立刻看到對應的數學、程式碼和物理解釋。

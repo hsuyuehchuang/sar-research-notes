@@ -122,7 +122,7 @@ Why This Leads To The Next Figure:
 </p>
 
 Figure Caption:
-這張圖對應 ``S_2(f_\eta)``。它把 folded 在 principal band 內的 replicas 沿 extended frequency axis 攤開。
+這張圖對應 `S_2(f_eta)`。它把 folded 在 principal band 內的 replicas 沿 extended frequency axis 攤開。
 
 Mathematical Step:
 $$
@@ -159,7 +159,7 @@ Why This Leads To The Next Figure:
 </p>
 
 Figure Caption:
-這張圖對應 ``S_3(f_\eta)``。主 replica 經過 deramp 後，quadratic curvature 被展平。
+這張圖對應 `S_3(f_eta)`。主 replica 經過 deramp 後，quadratic curvature 被展平。
 
 Mathematical Step:
 $$
@@ -195,7 +195,7 @@ Why This Leads To The Next Figure:
 </p>
 
 Figure Caption:
-這張圖對應 ``S_4(f_\eta)`` 的形成過程。程式先把 ``S_3`` 轉到 pseudo-time domain，再用中央窗口保留主 clone。
+這張圖對應 `S_4(f_eta)` 的形成過程。程式先把 `S_3` 轉到 pseudo-time domain，再用中央窗口保留主 clone。
 
 Mathematical Step:
 $$
@@ -241,7 +241,7 @@ LPF 後主 replica 已被孤立，但後續 matched filtering 還需要 referenc
 </p>
 
 Figure Caption:
-這張圖對應 ``S_5(f_\eta)``。經過 reramp 之後，主 replica 被補回 reference curvature。
+這張圖對應 `S_5(f_eta)`。經過 reramp 之後，主 replica 被補回 reference curvature。
 
 Mathematical Step:
 $$
@@ -277,7 +277,7 @@ Why This Leads To The Next Figure:
 </p>
 
 Figure Caption:
-這張圖對應 ``s_7(\eta)``。目標已經被壓縮成 focused response，但 focused support 已超出原始 `T_{\mathrm{burst}}`。
+這張圖對應 `s_7(eta)`。目標已經被壓縮成 focused response，但 focused support 已超出原始 `T_burst`。
 
 Mathematical Step:
 $$
@@ -319,7 +319,7 @@ Why This Leads To The Next Figure:
 </p>
 
 Figure Caption:
-這張圖對應 ``s_{7,\mathrm{mosaic}}(\eta)``。時間折返的 aliased timeline 被沿時間軸攤開。
+這張圖對應 `s_7_mosaic(eta)`。時間折返的 aliased timeline 被沿時間軸攤開。
 
 Mathematical Step:
 
@@ -354,7 +354,7 @@ Why This Leads To The Next Figure:
 </p>
 
 Figure Caption:
-這張圖對應 ``s_8(\eta)``。主時間 clone 的 quadratic curvature 被拿掉。
+這張圖對應 `s_8(eta)`。主時間 clone 的 quadratic curvature 被拿掉。
 
 Mathematical Step:
 $$
@@ -392,7 +392,7 @@ Why This Leads To The Next Figure:
 </p>
 
 Figure Caption:
-這張圖對應 `$s_{8,\mathrm{unfolded}}(\eta)$$。經過 time-domain LPF 後，只留下 central PRF band 對應的主時間 clone。
+這張圖對應 `s_8_unfolded(eta)`。經過 time-domain LPF 後，只留下 central PRF band 對應的主時間 clone。
 
 Mathematical Step:
 $$
@@ -439,7 +439,7 @@ LPF 後主時間 clone 雖已孤立，但仍處於 deramped geometry，因此最
 </p>
 
 Figure Caption:
-這張圖對應最終輸出 `$s_{\mathrm{final}}(\eta)$$。時間 aliasing 已被解除，主 focused response 回到正確幾何。
+這張圖對應最終輸出 `s_final(eta)`。時間 aliasing 已被解除，主 focused response 回到正確幾何。
 
 Mathematical Step:
 
@@ -482,4 +482,4 @@ $$
 \text{time UFR}
 $$
 
-而這份文件的重點，是讓你在看每一張圖的同時，立刻看到對應的 fully expanded closed form、對應的程式碼，以及數學符號和變數之間的嚴格映射。
+而這份文件的重點，是讓你在看每一張圖的同時，立刻看到對應的 fully expanded closed form、對應的程式碼，以及對應的物理解釋。
