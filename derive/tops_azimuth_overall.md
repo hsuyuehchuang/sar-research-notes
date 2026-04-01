@@ -16,17 +16,18 @@
 - [Raw Data](#1-raw-data)
 - [Range Compression](#2-range-compression)
 - [Azimuth Frequency Unfolding And Resampling (UFR)](#3-azimuth-frequency-unfolding-and-resampling-ufr)
-  - [Azimuth Frequency Folding](#31-azimuth-frequency-folding)
+  - [Azimuth Frequency Folding (Explain)](#31-azimuth-frequency-folding-explain)
   - [Mosaicking](#32-mosaicking)
   - [Deramping](#33-deramping)
   - [Low Pass Filter](#34-low-pass-filter)
   - [Reramping](#35-reramping)
 - [Azimuth Compression](#4-azimuth-compression)
 - [Azimuth Time Unfolding And Resampling (UFR)](#5-azimuth-time-unfolding-and-resampling-ufr)
-  - [Mosaicking](#51-mosaicking)
-  - [Deramping](#52-deramping)
-  - [Low Pass Filter](#53-low-pass-filter)
-  - [Reramping](#54-reramping)
+  - [Azimuth Time Folding (Explain)](#51-azimuth-time-folding-explain)
+  - [Mosaicking](#52-mosaicking)
+  - [Deramping](#53-deramping)
+  - [Low Pass Filter](#54-low-pass-filter)
+  - [Reramping](#55-reramping)
 - [Focused Image](#6-focused-image)
 
 ## Reading Order
@@ -51,8 +52,10 @@
 - [1. Raw Data](#1-raw-data)
 - [2. Range Compression](#2-range-compression)
 - [3. Azimuth Frequency Unfolding And Resampling (UFR)](#3-azimuth-frequency-unfolding-and-resampling-ufr)
+- [3.1. Azimuth Frequency Folding (Explain)](#31-azimuth-frequency-folding-explain)
 - [4. Azimuth Compression](#4-azimuth-compression)
 - [5. Azimuth Time Unfolding And Resampling (UFR)](#5-azimuth-time-unfolding-and-resampling-ufr)
+- [5.1. Azimuth Time Folding (Explain)](#51-azimuth-time-folding-explain)
 - [6. Focused Image](#6-focused-image)
 - [Physical Meaning](#physical-meaning)
 - [Final Result](#final-result)
@@ -225,7 +228,7 @@ $$
 
 這一段主流程的前置現象推導是 [Azimuth Frequency Folding](./azimuth_freq_folding.md)。也就是先證明 folded spectrum 為什麼會出現，再進入 `mosaicking -> deramping -> LPF -> reramping` 的處理鏈。
 
-### 3.1. Azimuth Frequency Folding
+### 3.1. Azimuth Frequency Folding (Explain)
 
 連續 azimuth spectrum 先寫成
 
@@ -450,7 +453,15 @@ $$
 
 這一段主流程的前置現象推導是 [Azimuth Time Folding](./azimuth_time_folding.md)。也就是先證明 finite-FFT 為什麼會把線性卷積折回成 time-domain wrap-around，再進入 `mosaicking -> deramping -> LPF -> reramping` 的處理鏈。
 
-### 5.1. Mosaicking
+### 5.1. Azimuth Time Folding (Explain)
+
+time-domain wrap-around 的現象本身由 [Azimuth Time Folding](./azimuth_time_folding.md) 單獨說明。主流程在這裡把它列成 explain stage，目的不是重複整份推導，而是明確標出：
+
+- azimuth compression 之後，問題已經從 frequency folding 轉成 time folding
+- `mosaicking -> deramping -> LPF -> reramping` 這條 time-UFR 鏈是為了解開這個 wrap-around 現象
+- 若不先理解 [Azimuth Time Folding](./azimuth_time_folding.md)，後面的 time-UFR 會只剩操作流程，少掉幾何原因
+
+### 5.2. Mosaicking
 
 把 azimuth-time replicas 攤到 extended time axis 後，可寫成
 
@@ -482,7 +493,7 @@ B_{\mathrm{az},m}\left(
 }
 $$
 
-### 5.2. Deramping
+### 5.3. Deramping
 
 time-domain deramping filter 為
 
@@ -525,7 +536,7 @@ B_{\mathrm{az},m}\left(
 }
 $$
 
-### 5.3. Low Pass Filter
+### 5.4. Low Pass Filter
 
 time-domain keep window 為
 
@@ -571,7 +582,7 @@ B_{\mathrm{az},m}\left(
 }
 $$
 
-### 5.4. Reramping
+### 5.5. Reramping
 
 time-domain reramping filter 為
 

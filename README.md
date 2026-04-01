@@ -21,13 +21,12 @@ graph TD
     B --> C1
 
     subgraph FREQ[Frequency UFR]
-        C1[Azimuth Frequency Folding] --> C2[Mosaicking]
-        C2 --> C3[Deramping]
-        C3 --> C4[Low-Pass Filter]
-        C4 --> C5[Reramping]
+        C1[Mosaicking] --> C2[Deramping]
+        C2 --> C3[Low-Pass Filter]
+        C3 --> C4[Reramping]
     end
 
-    C5 --> D[Azimuth Compression]
+    C4 --> D[Azimuth Compression]
     D --> E1
 
     subgraph TIME[Time UFR]
@@ -50,17 +49,18 @@ graph TD
 - [Raw Data](#1-raw-data)
 - [Range Compression](#2-range-compression)
 - [Azimuth Frequency Unfolding And Resampling (UFR)](#3-azimuth-frequency-unfolding-and-resampling-ufr)
-  - [Azimuth Frequency Folding](#31-azimuth-frequency-folding)
+  - [Azimuth Frequency Folding (Explain)](#31-azimuth-frequency-folding-explain)
   - [Mosaicking](#32-mosaicking)
   - [Deramping](#33-deramping)
   - [Low Pass Filter](#34-low-pass-filter)
   - [Reramping](#35-reramping)
 - [Azimuth Compression](#4-azimuth-compression)
 - [Azimuth Time Unfolding And Resampling (UFR)](#5-azimuth-time-unfolding-and-resampling-ufr)
-  - [Mosaicking](#51-mosaicking)
-  - [Deramping](#52-deramping)
-  - [Low Pass Filter](#53-low-pass-filter)
-  - [Reramping](#54-reramping)
+  - [Azimuth Time Folding (Explain)](#51-azimuth-time-folding-explain)
+  - [Mosaicking](#52-mosaicking)
+  - [Deramping](#53-deramping)
+  - [Low Pass Filter](#54-low-pass-filter)
+  - [Reramping](#55-reramping)
 - [Focused Image](#6-focused-image)
 
 ## Overview
