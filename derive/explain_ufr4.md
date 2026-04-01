@@ -23,10 +23,10 @@
 ## Summary
 
 - `explain_UFR4.py` 的重點不是完整 UFR，而是比較兩種 exposure geometry。
-- Case A 用 `$t_{\mathrm{expo}} = t_c$`，代表 illumination center 與 focus-center label 一致。
-- Case B 用 `$t_{\mathrm{expo}} = \frac{k_a}{k_a-k_s} t_c$`，代表 TOPS-like 掃描把 illumination trajectory 扭斜。
-- 同一個 raw burst window 若沿 `$t_{\mathrm{expo}}$` 被截斷，映到 focused domain 的 `$t_c$` 之後，TOPS-like case 會對應到更長的 focused-time span。
-- 因此這份文件要解釋的是：為什麼 TOPS 相比 stripmap 更容易出現 focused-time 膨脹與 time wrap-around 風險。
+- Case A 用 `$t_{\mathrm{expo}} = t_c$`，代表 stripmap-like reference。
+- Case B 用 `$t_{\mathrm{expo}} = \frac{k_a}{k_a-k_s} t_c$`，代表 TOPS-like scan-dependent exposure。
+- 兩個 case 共用同一條 `raw -> spectrum -> matched filtering -> focused output` 鏈，所以差異只會來自 `$t_{\mathrm{expo}}$` 的幾何定義。
+- 這份文件同樣採用 `圖 -> 數學 -> 程式碼 -> 物理`，讓 focused-time inflation 的來源可以一眼看懂。
 
 ## Problem Definition
 
@@ -48,26 +48,19 @@
 - $t_{\mathrm{expo}}$：raw slow-time 中的 exposure center
 - $s_{\mathrm{raw}}(\eta)$：synthetic raw azimuth signal
 - $S_1(f_\eta)$：raw signal 的 azimuth spectrum
-- $H_{\mathrm{az}}(f_\eta)$：azimuth matched filter
+- $H_{\mathrm{az}}(f_\eta)$：matched filter
 - $s_{\mathrm{final}}(\eta)$：focus 後的時間域輸出
-
-假設如下：
-
-- 本文只做一維 azimuth demonstration。
-- Case A 是 stripmap-like reference，不代表完整 stripmap 幾何重建。
-- Case B 是 TOPS-like exposure model，重點是 illumination slope 改變了 raw-to-focus 的座標映射。
 
 ## 1. Common Raw-Signal Model
 
-![Case A Overview](./figures/explain_ufr4/ufr4_caseA_overview.png)
+<p align="center">
+  <img src="./figures/explain_ufr4/ufr4_caseA_overview.png" width="900">
+</p>
 
 Figure Caption:
-這張總覽圖顯示程式中共同使用的一維 azimuth chain：`raw_signal -> S_1 -> matched filtering -> s_final`。兩個 case 的不同，只在 `$t_{\mathrm{expo}}$` 的定義。
+這張總覽圖顯示兩個 case 共用的一維 azimuth chain：`raw_signal -> S_1 -> matched filtering -> s_final`。
 
 Mathematical Step:
-每個 scatterer 都共享同一個 raw-signal model。
-
-Fully Expanded Closed Form:
 
 $$
 s_{\mathrm{raw},p}(\eta) =
@@ -112,23 +105,47 @@ S_1(f_\eta)H_{\mathrm{az}}(f_\eta)
 }
 $$
 
+Code Mapping:
+
+```python
+raw_signal = np.zeros(Naz, dtype=complex)
+for tc in tc_array:
+    t_expo = exposure_fn(tc)
+    window = np.abs(eta - t_expo) <= (T_dwell / 2)
+    target_phase = np.exp(1j * np.pi * ka * (eta - tc) ** 2)
+    raw_signal[window] += target_phase[window]
+
+S1 = np.fft.fftshift(np.fft.fft(raw_signal))
+H_az = np.exp(1j * np.pi * (1.0 / ka) * f_eta**2)
+S2 = S1 * H_az
+s_final = np.fft.ifft(np.fft.ifftshift(S2))
+```
+
+Strict Math <-> Code Mapping:
+
+- `$s_{\mathrm{raw}}(\eta)$` <-> `raw_signal`
+- `$S_1(f_\eta)$` <-> `S1`
+- `$H_{\mathrm{az}}(f_\eta)$` <-> `H_az`
+- focused output <-> `s_final`
+- `$t_{\mathrm{expo}}$` <-> `t_expo`
+- `$t_c$` <-> `tc`
+
 Physical Meaning:
-這支程式不是在比較 matched filter 本身，而是在比較 raw signal 裡面 `$t_{\mathrm{expo}}$` 的幾何定義如何改變最後的 focused support。
+兩個 case 的處理鏈完全一樣，所以任何 focused-time 差異都只能來自 exposure geometry。
 
 Why This Leads To The Next Figure:
-既然兩個 case 共用同一條處理鏈，那麼差異一定只會來自 exposure geometry。
+既然共用同一條處理鏈，就先看 stripmap-like reference case。
 
 ## 2. Case A: Stripmap-Like Reference
 
-![Case A Raw TF](./figures/explain_ufr4/ufr4_caseA_raw_tf.png)
+<p align="center">
+  <img src="./figures/explain_ufr4/ufr4_caseA_raw_tf.png" width="900">
+</p>
 
 Figure Caption:
 這張圖是 stripmap-like 參考情況的 raw time-frequency view。各條 chirp traces 的 illumination center 與 focus-center label 對齊。
 
 Mathematical Step:
-Case A 直接令 exposure center 等於 focus-center label。
-
-Fully Expanded Closed Form:
 
 $$
 {\color{red}
@@ -147,21 +164,34 @@ j\pi k_a(\eta-t_{c,p})^2
 \right)
 $$
 
+Code Mapping:
+
+```python
+_plot_latex_ufr_case(
+    ...,
+    exposure_fn=lambda tc: 1.0 * tc,
+)
+```
+
+Strict Math <-> Code Mapping:
+
+- `$t_{\mathrm{expo}} = t_c$` <-> `exposure_fn=lambda tc: 1.0 * tc`
+- `$s_{\mathrm{raw},A}(\eta)$` <-> `raw_signal` in Case A
+
 Physical Meaning:
-在這個 case 中，raw signal 中目標出現的時間與後來應該聚焦的位置是一致的，因此 raw burst support 映到 focused domain 時不會被額外拉伸。
+這個 case 中，raw signal 中目標出現的時間與後來應該聚焦的位置一致，因此 raw burst support 映到 focused domain 時不會被額外拉伸。
 
 Why This Leads To The Next Figure:
-既然 raw geometry 沒有被扭斜，focus 後的時間支撐就會成為一個基準參考。
+有了 raw 參考圖之後，就可以看它 focus 後是否仍維持相同幾何尺度。
 
-![Case A Focused TF](./figures/explain_ufr4/ufr4_caseA_focused_tf.png)
+<p align="center">
+  <img src="./figures/explain_ufr4/ufr4_caseA_focused_tf.png" width="900">
+</p>
 
 Figure Caption:
 這張圖顯示 stripmap-like 參考情況下的 focused time-frequency view。能量被壓縮，但 focused support 並沒有額外膨脹。
 
 Mathematical Step:
-Case A 只是一般的 azimuth matched filtering：
-
-Fully Expanded Closed Form:
 
 $$
 {\color{red}
@@ -173,23 +203,35 @@ H_{\mathrm{az}}(f_\eta)
 }
 $$
 
+Code Mapping:
+
+```python
+S1 = np.fft.fftshift(np.fft.fft(raw_signal))
+S2 = S1 * H_az
+s_final = np.fft.ifft(np.fft.ifftshift(S2))
+```
+
+Strict Math <-> Code Mapping:
+
+- `$s_{\mathrm{final},A}(\eta)$` <-> `s_final` in Case A
+- focused spectrum product <-> `S2`
+
 Physical Meaning:
-這裡最重要的不是聚焦本身，而是把它當成「沒有 focused-time inflation」時的對照組。
+這是沒有 focused-time inflation 時的基準圖。
 
 Why This Leads To The Next Figure:
-有了這個基準之後，就可以看出 TOPS-like case 為什麼會不一樣。
+有了基準之後，再看 TOPS-like case 時才知道差異到底從哪裡來。
 
 ## 3. Case B: TOPS-Like Scan-Dependent Exposure
 
-![Case B Raw TF](./figures/explain_ufr4/ufr4_caseB_raw_tf.png)
+<p align="center">
+  <img src="./figures/explain_ufr4/ufr4_caseB_raw_tf.png" width="900">
+</p>
 
 Figure Caption:
-這張圖是 TOPS-like case 的 raw time-frequency view。和 Case A 相比，chirp traces 的可見範圍與中心位置已被 scan-dependent exposure 改變。
+這張圖是 TOPS-like case 的 raw time-frequency view。和 Case A 相比，chirp traces 的中心位置與可見範圍已被 scan-dependent exposure 改變。
 
 Mathematical Step:
-Case B 把 exposure center 改成掃描率控制的函數。
-
-Fully Expanded Closed Form:
 
 $$
 {\color{red}
@@ -210,21 +252,36 @@ j\pi k_a(\eta-t_{c,p})^2
 }
 $$
 
+Code Mapping:
+
+```python
+_plot_latex_ufr_case(
+    ...,
+    exposure_fn=lambda tc: (ka / (ka - ks)) * tc,
+)
+```
+
+Strict Math <-> Code Mapping:
+
+- `$t_{\mathrm{expo}} = \frac{k_a}{k_a-k_s}t_c$` <-> `exposure_fn=lambda tc: (ka / (ka - ks)) * tc`
+- `$k_a$` <-> `ka`
+- `$k_s$` <-> `ks`
+- `$s_{\mathrm{raw},B}(\eta)$` <-> `raw_signal` in Case B
+
 Physical Meaning:
-TOPS-like case 改變的不是 matched filter，而是目標在 raw burst 內被照亮的時刻。也就是說，beam scanning 先扭斜了 exposure geometry，再間接造成 focused-time inflation。
+TOPS-like case 改變的不是 matched filter，而是目標在 raw burst 內被照亮的時刻。beam scanning 先扭斜了 exposure geometry，再間接造成 focused-time inflation。
 
 Why This Leads To The Next Figure:
-一旦 `$t_{\mathrm{expo}}$` 不再等於 `$t_c$`，同一個 raw burst window 在 focused domain 裡就不可能維持同樣長度。
+一旦 raw geometry 被扭斜，就要看 focus 後這個扭斜如何變成時間支撐的拉長。
 
-![Case B Focused TF](./figures/explain_ufr4/ufr4_caseB_focused_tf.png)
+<p align="center">
+  <img src="./figures/explain_ufr4/ufr4_caseB_focused_tf.png" width="900">
+</p>
 
 Figure Caption:
 這張圖顯示 TOPS-like case 的 focused time-frequency view。目標仍然可以被聚焦，但能量支撐相對於 raw burst geometry 已被拉長。
 
 Mathematical Step:
-Case B 的聚焦公式形式與 Case A 一樣，但輸入訊號不同。
-
-Fully Expanded Closed Form:
 
 $$
 {\color{red}
@@ -236,23 +293,35 @@ H_{\mathrm{az}}(f_\eta)
 }
 $$
 
+Code Mapping:
+
+```python
+S1 = np.fft.fftshift(np.fft.fft(raw_signal))
+S2 = S1 * H_az
+s_final = np.fft.ifft(np.fft.ifftshift(S2))
+```
+
+Strict Math <-> Code Mapping:
+
+- `$s_{\mathrm{final},B}(\eta)$` <-> `s_final` in Case B
+- focused-spectrum multiplication <-> `S2`
+
 Physical Meaning:
-這張圖說明問題不是「不能聚焦」，而是「聚焦之後的時間支撐比原本 burst window 更寬」。這正是 time wrap-around 與後續 time UFR 必須存在的原因。
+這張圖說明問題不是「不能聚焦」，而是「聚焦之後的時間支撐比原本 burst window 更寬」。
 
 Why This Leads To The Next Figure:
-既然現象已經被圖上看見，就可以把它整理成 focused-time inflation 的公式。
+既然現象已經在圖上看見，就可以把它整理成 focused-time inflation 的公式。
 
 ## 4. Focused-Time Inflation Formula
 
-![Case B Overview](./figures/explain_ufr4/ufr4_caseB_overview.png)
+<p align="center">
+  <img src="./figures/explain_ufr4/ufr4_caseB_overview.png" width="900">
+</p>
 
 Figure Caption:
 這張總覽圖提醒你：Case B 的所有變化都來自 `$t_{\mathrm{expo}}$` 與 `$t_c$` 的映射關係，而不是來自不同的 matched filter。
 
 Mathematical Step:
-把 `$t_{\mathrm{expo}} = \frac{k_a}{k_a-k_s}t_c$` 反解成 focused-coordinate mapping。
-
-Fully Expanded Closed Form:
 
 $$
 {\color{red}
@@ -290,23 +359,34 @@ T_{\mathrm{burst}}
 }
 $$
 
-而 stripmap-like 基準則是
+Code Mapping:
 
-$$
-T_{\mathrm{focused,stripmap}} \approx T_{\mathrm{burst}}
-$$
+```python
+PRF = 1000.0
+T_burst = 4.0
+ks = 100.0
+ka = -500.0
+exposure_fn = lambda tc: (ka / (ka - ks)) * tc
+```
+
+Strict Math <-> Code Mapping:
+
+- `$T_{\mathrm{burst}}$` <-> `T_burst`
+- `$k_a$` <-> `ka`
+- `$k_s$` <-> `ks`
+- exposure mapping <-> `exposure_fn`
 
 Physical Meaning:
-只要 `$k_s \neq 0$` 且與 `$k_a$` 反號，TOPS-like case 的 focused-time span 就會比原本 raw burst window 更長。這個幾何放大效應就是 focused-time inflation。
+只要 `$k_s \neq 0$` 且與 `$k_a$` 反號，TOPS-like case 的 focused-time span 就會比 raw burst window 更長。這就是 focused-time inflation，也是後續 time wrap-around 與 time UFR 必須存在的幾何根源。
 
 Why This Leads To The Next Figure:
-這已經是最後的整理公式，沒有下一步；它直接說明為什麼 TOPS 相比 stripmap 更需要 time-domain unfolding。
+這已經是最後的整理公式，沒有下一步。
 
 ## Final Result
 
-`explain_UFR4.py` 的核心不是 UFR 實作，而是用兩個最小對照 case 說明：
+`explain_UFR4.py` 用兩個最小對照 case 證明：
 
 - 若 `$t_{\mathrm{expo}} = t_c$`，則 focused-time span 不會因 exposure geometry 額外拉長
 - 若 `$t_{\mathrm{expo}} = \frac{k_a}{k_a-k_s}t_c$`，則固定的 raw burst window 會映射成更長的 focused support
 
-因此這份文件的定位就是：當你看到圖時，立刻就在圖下面看到它對應的數學與物理，並理解 TOPS vs stripmap 的 focused-time 差異到底從哪裡來。
+這份文件的重點就是讓你在看圖的同時，也立刻看到對應的數學、程式碼和嚴格的符號對應。
