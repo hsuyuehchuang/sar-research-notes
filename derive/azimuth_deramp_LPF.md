@@ -15,7 +15,8 @@
 - [1. Starting Point: Mosaicked Signal](#1-starting-point-mosaicked-signal)
 - [2. Local Quadratic Phase Model](#2-local-quadratic-phase-model)
 - [3. Deramping](#3-deramping)
-- [4. LPF](#4-lpf)
+- [4. Ideal LPF Model](#4-ideal-lpf-model)
+- [5. FFT-Based LPF Implementation](#5-fft-based-lpf-implementation)
 - [Physical Meaning](#physical-meaning)
 - [Final Result](#final-result)
 
@@ -24,7 +25,8 @@
 * mosaicking 之後的 $S_2(\tau,f_\eta)$ 只把 replicas 攤開到 extended azimuth-frequency axis，並不會自動拿掉每個 replica 內部的二次 phase curvature。
 * deramping 的核心作用，是對主 replica 乘上一個 reference quadratic phase 的共軛補償，使其殘餘二次項由 $\psi_{2,m}$ 變成 $\psi_{2,m}-\psi_{2,\mathrm{ref}}$。
 * LPF 之所以有效，不是因為它會自己辨認主 replica，而是因為主 replica 已先在 deramping 後被展平成接近 baseband 的窄頻表示。
-* 整個處理鏈必須拆成起點訊號、局部 phase model、deramping、LPF 四個模組，並且每一步都寫出 fully expanded closed form。
+* 理想數學模型可以寫成固定通帶的 `rect` 窗，但實作上採用 FFT-based sharp-cut filtering：Forward FFT、將不需要的 bins 直接設為 0、Inverse FFT。
+* 整個處理鏈必須拆成起點訊號、局部 phase model、deramping、理想 LPF 模型、FFT-based LPF 實作五個模組，並且每一步都寫出 fully expanded closed form。
 * 這裡真正 carried-forward 的結果是 deramping 後的 $S_3(\tau,f_\eta)$ 與 LPF 後的 $S_4(\tau,f_\eta)$。
 
 摘要中最重要的關鍵公式為
@@ -99,10 +101,12 @@ $$
 * $\psi_{0,m},\psi_{1,m},\psi_{2,m}$：$\psi_m(f_\eta)$ 在 $f_{\mathrm{ref}}$ 附近的局部係數
 * $\psi_{2,\mathrm{ref}}$：reference quadratic curvature
 * $H_{\mathrm{de}}(f_\eta)$：deramping filter
-* $H_{\mathrm{LPF}}(f_\eta)$：low-pass filter
+* $H_{\mathrm{LPF}}(f_\eta)$：ideal low-pass filter
 * $D_m(f_\eta)=D\left(f_\eta-m\cdot\mathrm{PRF},V_{\mathrm{eff}}\right)$：第 $m$ 個 replica 的幾何因子
 * $B_{\max}$：mosaicked replica 的有效頻寬
 * $B_{\mathrm{LPF}}$：LPF 通帶寬度
+* $\widetilde{S}_3(\tau,\nu_u)$：沿目前離散處理軸 $u$ 對 $S_3(\tau,u)$ 做 FFT 後的表示
+* $\widetilde{M}_{\mathrm{LPF}}(\nu_u)$：FFT-domain binary keep mask
 
 假設如下：
 
@@ -338,9 +342,9 @@ $$
 
 ---
 
-## 4. LPF
+## 4. Ideal LPF Model
 
-LPF 定義為
+理想 LPF 定義為
 
 $$
 H_{\mathrm{LPF}}(f_\eta) =
@@ -437,7 +441,56 @@ B_r\left(
 \right)
 $$
 
-這一步說明：LPF 不是主角。主角是 deramping 先把主 replica 變窄，LPF 才有可能用固定通帶把它留住。
+這一步說明：理想 LPF 不是主角。主角是 deramping 先把主 replica 變窄，LPF 才有可能用固定通帶把它留住。
+
+---
+
+## 5. FFT-Based LPF Implementation
+
+雖然上一節的數學模型寫成
+
+$$
+H_{\mathrm{LPF}}(f_\eta) =
+\mathrm{rect}\left(
+\frac{f_\eta-f_{\mathrm{LPF}}}{B_{\mathrm{LPF}}}
+\right)
+$$
+
+但在實作上，sharp-cut LPF 採用 FFT-based 方式完成。若以 $u$ 表示目前 UFR 的離散處理軸，則先做
+
+$$
+\widetilde{S}_3(\tau,\nu_u) =
+\mathcal{F}_{u}\left[
+S_3(\tau,u)
+\right]
+$$
+
+然後用 binary keep mask 將不需要的 bins 直接設為 0：
+
+$$
+\widetilde{S}_4(\tau,\nu_u) =
+\widetilde{S}_3(\tau,\nu_u)\,
+\widetilde{M}_{\mathrm{LPF}}(\nu_u)
+$$
+
+最後做 inverse FFT：
+
+$$
+{\color{red}
+S_4(\tau,u) =
+\mathcal{F}_{u}^{-1}\left[
+\widetilde{S}_3(\tau,\nu_u)\,
+\widetilde{M}_{\mathrm{LPF}}(\nu_u)
+\right]
+}
+$$
+
+因此這裡要明確區分兩層：
+
+- 理想模型：`rect` 通帶，用來定義 desired keep region
+- 實作方法：Forward FFT -> zero out unwanted bins -> Inverse FFT
+
+LPF 完成後，再進入 resampling。resampling 是 LPF 之後的下一步，不與 LPF 本身混寫。
 
 ---
 
@@ -447,6 +500,7 @@ $$
 * phase 的二次項 $\psi_{2,m}(f_\eta-f_{\mathrm{ref}})^2$，正是主 replica 難以直接用固定頻帶窗截取的原因。
 * deramping 的物理作用，是把主 replica 的 reference curvature 拿掉，使其從彎曲展寬的 chirp-like 表示轉成較平坦的表示。
 * LPF 的物理作用，則是在這個已展平的 domain 上保留主 replica 的主要能量，並抑制其他 replicas。
+* 在數學上，這件事可由理想 `rect` 通帶表示；在程式實作上，則以 FFT-domain zeroing 來實現 sharp cutoff。
 
 ---
 

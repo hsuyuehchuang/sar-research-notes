@@ -41,7 +41,7 @@
 - 先把連續 azimuth spectrum 與 folded spectrum 分開。
 - 再把 folded replicas 重排成 extended-frequency mosaicked signal。
 - 接著以主 replica 的二次 curvature 建立 deramping filter。
-- 然後用固定頻寬窗口做 LPF。
+- 然後用理想通帶模型定義 LPF，並以 FFT-based zeroing 實作 sharp-cut filtering。
 - 最後用 reramping 把保留下來的主 replica 補回 reference curvature。
 
 ## Symbols And Assumptions
@@ -56,6 +56,8 @@
 - $D_m(f_\eta)=D(f_\eta-m\cdot\mathrm{PRF},V_r)$：第 $m$ 個 replica 的幾何因子
 - $\psi_{0,m},\psi_{1,m},\psi_{2,m}$：第 $m$ 個 replica 的局部 phase 係數
 - $\psi_{2,\mathrm{ref}}$：主 replica 的 reference quadratic curvature
+- $\widetilde{S}_4(\tau,\nu_u)$：沿目前離散處理軸 $u$ 對 $S_4(\tau,u)$ 做 FFT 後的表示
+- $\widetilde{M}_{\mathrm{LPF}}(\nu_u)$：FFT-domain keep mask
 
 ## 1. Input Signal
 
@@ -181,7 +183,7 @@ $$
 
 ## 5. Low Pass Filter
 
-frequency-domain LPF 為
+理想 frequency-domain LPF 為
 
 $$
 H_{\mathrm{LPF},f}(f_\eta) =
@@ -189,6 +191,40 @@ H_{\mathrm{LPF},f}(f_\eta) =
 \frac{f_\eta-f_{\mathrm{LPF}}}{B_{\mathrm{LPF}}}
 \right)
 $$
+
+在數學上，上一式定義了 desired keep band。
+
+但在實作上，sharp-cut LPF 採用 FFT-based 方式完成。若以目前 UFR 的離散處理軸記為 $u$，則
+
+$$
+\widetilde{S}_4(\tau,\nu_u) =
+\mathcal{F}_{u}\left[
+S_4(\tau,u)
+\right]
+$$
+
+$$
+\widetilde{S}_5(\tau,\nu_u) =
+\widetilde{S}_4(\tau,\nu_u)\,
+\widetilde{M}_{\mathrm{LPF}}(\nu_u)
+$$
+
+$$
+{\color{red}
+S_5(\tau,u) =
+\mathcal{F}_{u}^{-1}\left[
+\widetilde{S}_4(\tau,\nu_u)\,
+\widetilde{M}_{\mathrm{LPF}}(\nu_u)
+\right]
+}
+$$
+
+也就是說，這一步要分成兩層來理解：
+
+- 理想模型：`rect` 通帶
+- 實作方法：Forward FFT -> zero out unwanted bins -> Inverse FFT
+
+LPF 完成後，再進入 resampling；resampling 不是 LPF 本身的一部分。
 
 因此 LPF output 的 fully expanded closed form 為
 
@@ -264,7 +300,7 @@ $$
 - $S_2$：folded replicas 還疊在 PRF 週期內
 - $S_3$：replicas 被攤開，但主 replica 還是彎的
 - $S_4$：主 replica 的 curvature 被拿掉
-- $S_5$：固定通帶只保留已展平的主 replica
+- $S_5$：固定通帶只保留已展平的主 replica，而實作上對應 FFT-domain zeroing 後再 inverse FFT 的結果
 - $S_6$：主 replica 被補回正確 reference phase，供後續 azimuth compression 使用
 
 ## Final Result

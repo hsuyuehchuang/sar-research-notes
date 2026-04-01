@@ -37,7 +37,7 @@
 - 先把壓縮後的 time replicas 顯式寫成 $s_7(\tau,\eta)$。
 - 再把它重排到 extended azimuth-time axis，得到 $I_8(\tau,\eta)$。
 - 接著用 reference time curvature 做 deramping，得到 $I_9(\tau,\eta)$。
-- 再用固定 time window 保留主 replica，得到 $I_{10}(\tau,\eta)$。
+- 再用理想 keep-window 模型定義 LPF，並以 FFT-based zeroing 實作 sharp-cut filtering，得到 $I_{10}(\tau,\eta)$。
 - 最後 reramp，得到 $I_{11}(\tau,\eta)$ 與 focused image。
 
 ## Symbols And Assumptions
@@ -53,6 +53,8 @@
 - $T_{\mathrm{window}}$：FFT 對應的基本時間窗口
 - $T_{\mathrm{keep}}$：單一 time replica 的保持窗口
 - $T_{\mathrm{LPF}}$：time-domain keep window
+- $\widetilde{I}_9(\tau,\nu_\eta)$：沿目前離散處理軸對 $I_9(\tau,\eta)$ 做 FFT 後的表示
+- $\widetilde{M}_{\mathrm{LPF}}(\nu_\eta)$：FFT-domain keep mask
 
 ## 1. Input Signal
 
@@ -156,7 +158,7 @@ $$
 
 ## 4. Low Pass Filter
 
-time-domain keep window 為
+理想 time-domain keep window 為
 
 $$
 H_{\mathrm{LPF},t}(\eta) =
@@ -164,6 +166,40 @@ H_{\mathrm{LPF},t}(\eta) =
 \frac{\eta-\eta_{\mathrm{LPF}}}{T_{\mathrm{LPF}}}
 \right)
 $$
+
+在數學上，上一式定義了要保留的主 replica support。
+
+但在實作上，sharp-cut filtering 採用 FFT-based 方式完成。若以目前 time-UFR 的離散處理軸仍記為 $\eta$，則
+
+$$
+\widetilde{I}_9(\tau,\nu_\eta) =
+\mathcal{F}_{\eta}\left[
+I_9(\tau,\eta)
+\right]
+$$
+
+$$
+\widetilde{I}_{10}(\tau,\nu_\eta) =
+\widetilde{I}_9(\tau,\nu_\eta)\,
+\widetilde{M}_{\mathrm{LPF}}(\nu_\eta)
+$$
+
+$$
+{\color{red}
+I_{10}(\tau,\eta) =
+\mathcal{F}_{\eta}^{-1}\left[
+\widetilde{I}_9(\tau,\nu_\eta)\,
+\widetilde{M}_{\mathrm{LPF}}(\nu_\eta)
+\right]
+}
+$$
+
+因此這一步也要分成兩層：
+
+- 理想模型：`rect` keep window
+- 實作方法：Forward FFT -> zero out unwanted bins -> Inverse FFT
+
+LPF 完成後，再進入 resampling；resampling 不是 LPF 本身的一部分。
 
 因此 LPF output 的 fully expanded closed form 為
 
@@ -267,7 +303,7 @@ $$
 
 - $I_8$：所有時間 replicas 都被攤到 extended time axis
 - $I_9$：主 replica 被展平
-- $I_{10}$：固定 keep window 保留主 replica
+- $I_{10}$：固定 keep window 保留主 replica，而實作上對應 FFT-domain zeroing 後再 inverse FFT 的結果
 - $I_{11}$：主 replica 被補回 reference curvature
 - $I_{\mathrm{focus}}$：只保留主 replica 的最終 focused image
 
