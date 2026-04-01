@@ -14,10 +14,11 @@
 - [Symbols And Assumptions](#symbols-and-assumptions)
 - [1. Geometric Starting Point: Ground Motion Of The Beam Footprint](#1-geometric-starting-point-ground-motion-of-the-beam-footprint)
 - [2. From Ground Span To Equivalent Azimuth-Time Span](#2-from-ground-span-to-equivalent-azimuth-time-span)
-- [3. Required Length For Linear Convolution](#3-required-length-for-linear-convolution)
-- [4. Unambiguous Time Window In FFT Implementation](#4-unambiguous-time-window-in-fft-implementation)
-- [5. Why Finite-Length FFT Becomes Circular Convolution](#5-why-finite-length-fft-becomes-circular-convolution)
-- [6. Wrap-Around Location Formula](#6-wrap-around-location-formula)
+- [3. Paper Parameterization Of The Stretch Factor](#3-paper-parameterization-of-the-stretch-factor)
+- [4. Required Length For Linear Convolution](#4-required-length-for-linear-convolution)
+- [5. Unambiguous Time Window In FFT Implementation](#5-unambiguous-time-window-in-fft-implementation)
+- [6. Why Finite-Length FFT Becomes Circular Convolution](#6-why-finite-length-fft-becomes-circular-convolution)
+- [7. Wrap-Around Location Formula](#7-wrap-around-location-formula)
 - [Physical Meaning](#physical-meaning)
 - [Final Result](#final-result)
 
@@ -78,6 +79,8 @@ $$
 * $T_b$：單一 burst 的原始慢時間長度
 * $v_p$：平台沿方位向的等效速度
 * $v_s$：beam steering 在地面上對應的等效掃描速度
+* $v_{\mathrm{scan}}$：paper notation 中的 scan speed，與本文的 $v_s$ 對應
+* $\omega_{rot}$：beam rotation rate
 * $y_{\mathrm{strip}}(\eta)$：stripmap 模式下 beam center 的地面方位位置
 * $y_{\mathrm{TOPS}}(\eta)$：TOPS 模式下 beam center 的地面方位位置
 * $\Delta y_{\mathrm{strip}}$：單一 burst 內 stripmap footprint 掃過的地面跨度
@@ -86,6 +89,10 @@ $$
 * $T_{\mathrm{focus,TOPS}}$：TOPS 的等效目標時間跨度
 * $T_{\mathrm{ref}}$：方位 matched-filter 的時間長度
 * $L_{\mathrm{req}}$：實現線性卷積所需的總時間長度
+* $\alpha$：TOPS focus-time stretching factor
+* $k_a$：平台幾何造成的 azimuth FM rate
+* $k_{rot}$：beam rotation 引入的 Doppler-rate term
+* $k_t$：paper notation 中的 effective TOPS chirp rate
 * $N_a$：方位向 FFT 點數
 * $\mathrm{PRF}$：脈衝重複頻率
 * $T_{\mathrm{window}}=N_a/\mathrm{PRF}$：FFT 對應的基本時間窗口
@@ -184,7 +191,98 @@ $$
 
 ---
 
-## 3. Required Length For Linear Convolution
+## 3. Paper Parameterization Of The Stretch Factor
+
+若用 paper notation 把 TOPS 的時間展寬寫成 stretch factor，則
+
+$$
+{\color{red}
+\alpha \triangleq
+\frac{T_{\mathrm{focused}}}{T_{\mathrm{burst}}}
+}
+$$
+
+由前兩步的幾何結果可直接得到
+
+$$
+{\color{red}
+\alpha =
+\frac{v_p+v_{\mathrm{scan}}}{v_p}
+=
+1+\frac{v_{\mathrm{scan}}}{v_p}
+}
+$$
+
+若再改用 paper 中的 rate relation，並代入
+
+$$
+k_a \approx -\frac{2v_p^2}{\lambda R_0},
+\qquad
+k_{rot} \approx \frac{2v_p\omega_{rot}}{\lambda}
+$$
+
+則
+
+$$
+\frac{k_{rot}}{k_a} =
+\frac{\frac{2v_p\omega_{rot}}{\lambda}}
+-\frac{2v_p^2}{\lambda R_0}
+=
+-\frac{R_0\omega_{rot}}{v_p}
+=
+-\frac{v_{\mathrm{scan}}}{v_p}
+$$
+
+因此 stretch factor 也可寫成
+
+$$
+{\color{red}
+\alpha =
+1-\frac{k_{rot}}{k_a}
+=
+\frac{k_a-k_{rot}}{k_a}
+}
+$$
+
+在 TOPS mode 中，通常 $k_a k_{rot} < 0$，因此
+
+$$
+{\color{red}
+\alpha > 1
+}
+$$
+
+這就把幾何版的「focus time 變長」與 paper 版的「rotation rate 改寫等效 chirp law」接起來了。
+
+若再把 effective TOPS chirp rate 寫成 paper 常用形式，則
+
+$$
+{\color{red}
+k_t = \frac{k_{rot}}{\alpha}
+=
+\frac{k_{rot}}{1-\frac{k_{rot}}{k_a}}
+=
+\frac{k_a k_{rot}}{k_a-k_{rot}}
+}
+$$
+
+因此本步結束後，有兩個必須 carried forward 的 paper-style 結果：
+
+$$
+\alpha = 1-\frac{k_{rot}}{k_a}
+$$
+
+$$
+k_t = \frac{k_a k_{rot}}{k_a-k_{rot}}
+$$
+
+這兩個式子分別對應：
+- TOPS burst 被拉長多少
+- TOPS 在 paper notation 下的等效 chirp rate 應該怎麼寫
+
+---
+
+## 4. Required Length For Linear Convolution
 
 設方位 matched-filter 的時間長度為 $T_{\mathrm{ref}}$。若要對整批分布在慢時間上的目標做正確的線性卷積，總處理長度至少必須滿足
 
@@ -204,9 +302,7 @@ $$
 {\color{red}
 L_{\mathrm{req,TOPS}} =
 T_{\mathrm{focus,TOPS}} + T_{\mathrm{ref}} =
-T_b\left(
-1+\frac{v_s}{v_p}
-\right) + T_{\mathrm{ref}}
+\alpha T_b + T_{\mathrm{ref}}
 }
 $$
 
@@ -214,7 +310,7 @@ $$
 
 ---
 
-## 4. Unambiguous Time Window In FFT Implementation
+## 5. Unambiguous Time Window In FFT Implementation
 
 若方位壓縮用 $N_a$ 點 FFT 實作，且慢時間取樣率為 $\mathrm{PRF}$，則 FFT 基本時間窗口為
 
@@ -244,9 +340,7 @@ $$
 $$
 {\color{red}
 T_{\mathrm{window}} <
-T_b\left(
-1+\frac{v_s}{v_p}
-\right) + T_{\mathrm{ref}}
+\alpha T_b + T_{\mathrm{ref}}
 }
 $$
 
@@ -254,7 +348,7 @@ $$
 
 ---
 
-## 5. Why Finite-Length FFT Becomes Circular Convolution
+## 6. Why Finite-Length FFT Becomes Circular Convolution
 
 若用 FFT 做 matched filtering，運算形式為
 
@@ -288,7 +382,7 @@ $$
 
 ---
 
-## 6. Wrap-Around Location Formula
+## 7. Wrap-Around Location Formula
 
 設某個目標在理想線性卷積下的聚焦中心位於 $\eta_c$。若它落在 FFT 的基本時間窗口之外，則實際 circular convolution 輸出中的 ghost 位置滿足
 
@@ -327,6 +421,8 @@ $$
 
 * $v_s$ 的作用是拉長同一個 burst 內被照射到的地面目標集合，因此先把幾何上的 footprint 變大。
 * 幾何 footprint 變大後，等效目標時間跨度 $T_{\mathrm{focus,TOPS}}$ 也同步變大。
+* 在 paper notation 中，這件事等價於說 $\alpha = 1-k_{rot}/k_a > 1$，因此 TOPS 的 effective focused span 一定比 burst 本身更長。
+* 同時，$k_t = k_{rot}/\alpha$ 提供了後續 paper-style azimuth compression / deramping 表示法所需的有效 chirp-rate 參數。
 * FFT block 只能表示一個基本區間長度為 $T_{\mathrm{window}}$ 的時間軸，因此當線性卷積輸出比這個窗口更長時，超出的部分只能被週期折回。
 * 所以 TOPS 比 stripmap 更容易出現 azimuth-time folding / wrap-around，不是因為它有什麼神祕新機制，而是因為它更容易讓 $L_{\mathrm{req}}$ 超出 $T_{\mathrm{window}}$。
 
@@ -339,9 +435,33 @@ TOPS 的等效目標時間跨度：
 $$
 {\color{red}
 T_{\mathrm{focus,TOPS}} =
+\alpha T_b =
 T_b\left(
 1+\frac{v_s}{v_p}
+\right) =
+T_b\left(
+1-\frac{k_{rot}}{k_a}
 \right)
+}
+$$
+
+paper-style stretch factor：
+
+$$
+{\color{red}
+\alpha =
+1+\frac{v_{\mathrm{scan}}}{v_p}
+=
+1-\frac{k_{rot}}{k_a}
+}
+$$
+
+paper-style effective chirp rate：
+
+$$
+{\color{red}
+k_t = \frac{k_{rot}}{\alpha} =
+\frac{k_a k_{rot}}{k_a-k_{rot}}
 }
 $$
 
@@ -350,9 +470,7 @@ TOPS 的線性卷積需求長度：
 $$
 {\color{red}
 L_{\mathrm{req,TOPS}} =
-T_b\left(
-1+\frac{v_s}{v_p}
-\right) + T_{\mathrm{ref}}
+\alpha T_b + T_{\mathrm{ref}}
 }
 $$
 

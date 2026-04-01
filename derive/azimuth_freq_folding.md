@@ -14,10 +14,11 @@
 - [Derivation Highlights](#derivation-highlights)
 - [Symbols And Assumptions](#symbols-and-assumptions)
 - [1. Geometry And Full Time-Domain Model](#1-geometry-and-full-time-domain-model)
-- [2. TOPSAR Illumination Function](#2-topsar-illumination-function)
-- [3. Continuous Azimuth Signal And Continuous Frequency Envelope](#3-continuous-azimuth-signal-and-continuous-frequency-envelope)
-- [4. Folded Spectrum From The Sampling Comb](#4-folded-spectrum-from-the-sampling-comb)
-- [5. Why TOPSAR Especially Tends To Produce Folded Spectrum](#5-why-topsar-especially-tends-to-produce-folded-spectrum)
+- [2. Doppler Relations And Paper Parameterization](#2-doppler-relations-and-paper-parameterization)
+- [3. TOPSAR Illumination Function](#3-topsar-illumination-function)
+- [4. Continuous Azimuth Signal And Continuous Frequency Envelope](#4-continuous-azimuth-signal-and-continuous-frequency-envelope)
+- [5. Folded Spectrum From The Sampling Comb](#5-folded-spectrum-from-the-sampling-comb)
+- [6. Why TOPSAR Especially Tends To Produce Folded Spectrum](#6-why-topsar-especially-tends-to-produce-folded-spectrum)
 - [Physical Meaning](#physical-meaning)
 - [Final Result](#final-result)
 
@@ -86,7 +87,15 @@ $$
 * $f_0$：載波頻率
 * $B_r$：距離向頻寬
 * $\omega_s$：TOPSAR beam steering 的等效角速度
+* $\omega_{rot}$：paper notation 中的 beam rotation rate
 * $R(\eta)$：慢時間下的瞬時斜距
+* $\psi$：squint angle
+* $v_r$：line-of-sight range rate
+* $f_D$：瞬時 Doppler frequency
+* $f_{\mathrm{DC}}$：Doppler centroid
+* $f_{rot}(t)$：由 beam rotation 引入的附加 Doppler term
+* $k_a$：平台幾何造成的 azimuth FM rate
+* $k_{rot}$：beam rotation 造成的 Doppler-rate term
 * $w_a(\theta)$：雙程天線方向圖
 * $w_a(\eta;\omega_s)$：改寫成慢時間座標後的 TOPSAR 時域照明函數
 * $W_a(f_\eta;\omega_s)$：連續方位頻域包絡
@@ -148,7 +157,102 @@ $$
 
 ---
 
-## 2. TOPSAR Illumination Function
+## 2. Doppler Relations And Paper Parameterization
+
+若以
+
+$$
+\phi(t) = -\frac{4\pi}{\lambda}R(t)
+$$
+
+表示單點目標的方位相位，則瞬時 Doppler frequency 為
+
+$$
+f_D(t) =
+\frac{1}{2\pi}\frac{d\phi(t)}{dt} =
+-\frac{2}{\lambda}\frac{dR}{dt} =
+-\frac{2}{\lambda}v_r
+$$
+
+在本文的符號約定下，若 $v_r=-v_p\sin\psi$，則
+
+$$
+{\color{red}
+f_D(t) = \frac{2v_p\sin\psi(t)}{\lambda}
+}
+$$
+
+因此 Doppler centroid 可寫成
+
+$$
+{\color{red}
+f_{\mathrm{DC}} = \frac{2v_p}{\lambda}\sin\psi
+}
+$$
+
+若採用小 squint-angle 近似 $\sin\psi \approx \psi$，並令
+
+$$
+\psi(t) = \omega_{rot}t
+$$
+
+則由 beam rotation 引入的附加 Doppler term 可近似寫成
+
+$$
+{\color{red}
+f_{rot}(t) \approx \frac{2v_p}{\lambda}\omega_{rot}t
+}
+$$
+
+因此 paper notation 中的 rotation-induced Doppler rate 為
+
+$$
+{\color{red}
+k_{rot} = \frac{d f_{rot}(t)}{dt} \approx \frac{2v_p\omega_{rot}}{\lambda}
+}
+$$
+
+另一方面，若
+
+$$
+R(t) = \sqrt{R_0^2+(v_pt)^2}
+$$
+
+則
+
+$$
+v_r = \frac{dR}{dt} =
+\frac{v_p^2 t}{\sqrt{R_0^2+(v_pt)^2}}
+\approx
+\frac{v_p^2}{R_0}t
+$$
+
+將它代回 $f_D(t)$，可得平台幾何造成的 azimuth FM rate
+
+$$
+{\color{red}
+k_a =
+\frac{d f_D}{dt}
+\approx
+-\frac{2v_p^2}{\lambda R_0}
+}
+$$
+
+因此在 TOPS 的 paper parameterization 中，最核心的一組 rate relation 就是
+
+$$
+{\color{red}
+k_a \approx -\frac{2v_p^2}{\lambda R_0},
+\qquad
+k_{rot} \approx \frac{2v_p\omega_{rot}}{\lambda}
+}
+$$
+
+這一步的重要性在於：它把 folded / broadened azimuth spectrum 的驅動因素，從幾何語言轉成 paper 常用的 Doppler-rate 語言。之後若要討論 TOPS 為什麼比 stripmap 更容易出現 folded spectrum，就可以直接用 $k_a$ 與 $k_{rot}$ 來描述。
+
+---
+
+## 3. TOPSAR Illumination Function
 
 在小角度近似下，雙程方向圖可寫為
 
@@ -205,7 +309,7 @@ $$
 
 ---
 
-## 3. Continuous Azimuth Signal And Continuous Frequency Envelope
+## 4. Continuous Azimuth Signal And Continuous Frequency Envelope
 
 為了把 beam steering 的影響與取樣效應分開，先忽略 Dirac comb。對應的連續慢時間訊號為
 
@@ -299,7 +403,7 @@ $$
 
 ---
 
-## 4. Folded Spectrum From The Sampling Comb
+## 5. Folded Spectrum From The Sampling Comb
 
 慢時間取樣 comb 的傅立葉轉換為
 
@@ -407,7 +511,7 @@ $$
 
 ---
 
-## 5. Why TOPSAR Especially Tends To Produce Folded Spectrum
+## 6. Why TOPSAR Especially Tends To Produce Folded Spectrum
 
 這裡的因果順序必須保持清楚：
 
@@ -436,6 +540,8 @@ $$
 ## Physical Meaning
 
 * $R(\eta)$：控制幾何距離、二次相位歷程與方位壓縮基礎
+* $f_D$、$f_{\mathrm{DC}}$、$k_a$：描述平台幾何本身所造成的 Doppler 與 FM-rate
+* $f_{rot}(t)$、$k_{rot}$：描述 beam rotation 如何改寫原本的 Doppler law
 * $w_a(\eta;\omega_s)$：描述 beam steering 下目標被照射多久、如何被照射
 * $W_a(f_\eta;\omega_s)$：時域照明經傅立葉轉換後的連續方位頻域包絡
 * $\sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)$：慢時間離散取樣算子
