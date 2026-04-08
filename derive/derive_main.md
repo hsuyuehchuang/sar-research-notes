@@ -164,7 +164,7 @@ w_a(\eta;\omega_s) \cdot
 \exp\left(
 -j\frac{4\pi f_0R(\eta)}{c}
 \right) \cdot
-\underline{
+\color{red}{
 \sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)}
 $$
 
@@ -204,7 +204,7 @@ $$
 
 接下來對 $s_1(\tau,\eta)$ 在 azimuth 方向 $\eta$ 做 Fourier transform
 $$
-\underline{
+\color{red}{
 S_{1,c}(\tau,f_\eta;\omega_s)
 =
 \mathcal{F}_{\eta}\left\{s_1(\tau,\eta)\right\}
@@ -270,7 +270,7 @@ $$
 
 所以
 $$
-\underline{
+\color{red}{
 f_\eta-k\cdot\mathrm{PRF}}
 $$
 就是把連續頻譜平移 `k * PRF`，得到第 $k$ 個 folded copy。
@@ -288,7 +288,7 @@ After mosaicking onto the extended axis, the signal can be written as
 - 到了 $S_3$，每個 replica 已經改用 $m$ 編號，並被放到 extended axis 的對應位置
 - 式子中的
   $$
-  \underline{
+  \color{red}{
   \mathrm{rect}\left(
   \frac{f_\eta-m\cdot\mathrm{PRF}-f_{\eta_c}}{B_{\max}}
   \right)}
@@ -316,7 +316,7 @@ $$
 近似。這樣的寫法把每個 replica 的 phase 拆成 offset、線性 slope 與 quadratic curvature，方便後面直接定義 deramping filter 去補償主 replica 的曲率項。
 
 $$
-\underline{
+\color{red}{
 S_3(\tau,f_\eta) =
 \sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}}
 A_3\,
@@ -358,7 +358,7 @@ $$
 frequency-domain deramping filter 為
 
 $$
-\underline{
+\color{red}{
 H_{\mathrm{de},f}(f_\eta) =
 \exp\left(
 +j\pi\frac{1}{k_s}(f_\eta-f_{\eta_c})^2
@@ -383,7 +383,7 @@ H_{\mathrm{de},f}(f_\eta)
 $$
 
 $$
-\underline{
+\color{red}{
 \phi_{\mathrm{after}}(f_\eta)
 =
 \phi_{0,\mathrm{main}}
@@ -391,7 +391,7 @@ $$
 }
 $$
 
-這個 underlined equation 就是最直接的數學證據：主 replica 的 quadratic term
+這個 red-highlighted equation 就是最直接的數學證據：主 replica 的 quadratic term
 \[
 \pi\frac{1}{k_s}(f_\eta-f_{\eta_c})^2
 \]
@@ -405,7 +405,7 @@ $$
 因此
 
 $$
-\underline{
+\color{red}{
 \frac{d^2\phi_{\mathrm{after}}(f_\eta)}{df_\eta^2} = 0
 }
 $$
@@ -536,7 +536,7 @@ $$
 With the main replica restored to the reference curvature, azimuth compression gives
 
 $$
-\underline{
+\color{red}{
 s_7(\tau,\eta) \approx
 \sum_{m=-N_{t,\mathrm{neg}}}^{N_{t,\mathrm{pos}}}
 A_7\,
@@ -576,7 +576,7 @@ time-domain wrap-around 的現象本身由 [Azimuth Time Folding](./azimuth_time
 其中最直接表達 time folding / wrap-around 的 equation 是
 
 $$
-\underline{
+\color{red}{
 I_{\mathrm{circ}}(\eta) =
 \sum_{m=-\infty}^{\infty}
 I_{\mathrm{lin}}(\eta-mT_{\mathrm{window}})
@@ -613,7 +613,7 @@ After mosaicking onto the extended time axis, the signal can be written as
 所以最白話地講，$I_8$ 不再是 wrap-around copies 疊在同一個主時間窗口裡，而是每個 time replica 已經被拆開、排開，這就是 time-domain UFR 的 mosaicking。
 
 $$
-\underline{
+\color{red}{
 I_8(\tau,\eta) =
 \sum_{m=-N_{t,\mathrm{neg}}}^{N_{t,\mathrm{pos}}}
 A_8\,
@@ -660,7 +660,7 @@ $$
 time-domain deramping filter 為
 
 $$
-\underline{
+\color{red}{
 H_{\mathrm{de},t}(\eta) =
 \exp\left(
 -j\pi k_t(\eta-\eta_c)^2 - j2\pi f_{\eta_c}\eta
@@ -682,12 +682,12 @@ H_{\mathrm{de},t}(\eta)
 $$
 
 $$
-\underline{
+\color{red}{
 \phi_{\mathrm{after}}(\eta)=\phi_{0,\mathrm{main}}
 }
 $$
 
-這個 underlined equation 就是 time-domain 的 cancellation 證據：  
+這個 red-highlighted equation 就是 time-domain 的 cancellation 證據：  
 主 replica 的 quadratic chirp phase 與 linear carrier term 在乘完 deramp filter 後都被消掉，只剩常數相位。
 
 對主 replica 而言，若把 time-domain 局部 phase 也寫成
@@ -712,7 +712,7 @@ $$
 所以
 
 $$
-\underline{
+\color{red}{
 f_{\eta,\mathrm{new}}(\eta)=
 f_{\eta,\mathrm{old}}(\eta)+\Delta f_\eta(\eta)=0
 }
@@ -847,7 +847,7 @@ $$
 If only the main replica $m=m_0$ is retained, the final focused image is
 
 $$
-\underline{
+\color{red}{
 I_{\mathrm{focus}}(\tau,\eta) \approx
 A_f\,
 \mathrm{sinc}\left[
