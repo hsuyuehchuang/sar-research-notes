@@ -33,22 +33,18 @@
 摘要中最重要的關鍵公式為
 
 $$
-{\color{red}
 T_{\mathrm{focus,TOPS}} =
 T_b\left(
 1+\frac{v_s}{v_p}
 \right)
-}
 $$
 
 以及
 
 $$
-{\color{red}
 I_{\mathrm{circ}}(\eta) =
 \sum_{m=-\infty}^{\infty}
 I_{\mathrm{lin}}(\eta-mT_{\mathrm{window}})
-}
 $$
 
 ---
@@ -132,13 +128,11 @@ v_pT_b
 $$
 
 $$
-{\color{red}
 \Delta y_{\mathrm{TOPS}} =
 y_{\mathrm{TOPS}}(T_b)-y_{\mathrm{TOPS}}(0) =
 \left(
 v_p+v_s
 \right)T_b
-}
 $$
 
 因此本步結束後的 closed-form 結論是：在同一個 burst 內，TOPS 比 stripmap 多掃過了額外的地面距離 $v_sT_b$。這件事本身還不是 wrap-around，但它已經把後面會被聚焦的目標集合拉長了。
@@ -167,7 +161,6 @@ $$
 對 TOPS，
 
 $$
-{\color{red}
 T_{\mathrm{focus,TOPS}} =
 \frac{\Delta y_{\mathrm{TOPS}}}{v_p} =
 \frac{\left(
@@ -176,7 +169,6 @@ v_p+v_s
 T_b\left(
 1+\frac{v_s}{v_p}
 \right)
-}
 $$
 
 因此
@@ -196,21 +188,17 @@ $$
 若用 paper notation 把 TOPS 的時間展寬寫成 stretch factor，則
 
 $$
-{\color{red}
 \alpha \triangleq
 \frac{T_{\mathrm{focused}}}{T_{\mathrm{burst}}}
-}
 $$
 
 由前兩步的幾何結果可直接得到
 
 $$
-{\color{red}
 \alpha =
 \frac{v_p+v_{\mathrm{scan}}}{v_p}
 =
 1+\frac{v_{\mathrm{scan}}}{v_p}
-}
 $$
 
 若再改用 paper 中的 rate relation，並代入
@@ -236,20 +224,16 @@ $$
 因此 stretch factor 也可寫成
 
 $$
-{\color{red}
 \alpha =
 1-\frac{k_{rot}}{k_a}
 =
 \frac{k_a-k_{rot}}{k_a}
-}
 $$
 
 在 TOPS mode 中，通常 $k_a k_{rot} < 0$，因此
 
 $$
-{\color{red}
 \alpha > 1
-}
 $$
 
 這就把幾何版的「focus time 變長」與 paper 版的「rotation rate 改寫等效 chirp law」接起來了。
@@ -257,13 +241,11 @@ $$
 若再把 effective TOPS chirp rate 寫成 paper 常用形式，則
 
 $$
-{\color{red}
 k_t = \frac{k_{rot}}{\alpha}
 =
 \frac{k_{rot}}{1-\frac{k_{rot}}{k_a}}
 =
 \frac{k_a k_{rot}}{k_a-k_{rot}}
-}
 $$
 
 因此本步結束後，有兩個必須 carried forward 的 paper-style 結果：
@@ -299,11 +281,9 @@ T_b + T_{\mathrm{ref}}
 $$
 
 $$
-{\color{red}
 L_{\mathrm{req,TOPS}} =
 T_{\mathrm{focus,TOPS}} + T_{\mathrm{ref}} =
 \alpha T_b + T_{\mathrm{ref}}
-}
 $$
 
 因此本步的重點不是 matched-filter 的精確 closed form，而是：TOPS 先把 $T_{\mathrm{focus}}$ 變長，然後這個變長的結果直接推高線性卷積所需的總窗口。
@@ -315,9 +295,7 @@ $$
 若方位壓縮用 $N_a$ 點 FFT 實作，且慢時間取樣率為 $\mathrm{PRF}$，則 FFT 基本時間窗口為
 
 $$
-{\color{red}
 T_{\mathrm{window}} = \frac{N_a}{\mathrm{PRF}}
-}
 $$
 
 要讓 FFT-based matched filtering 仍等價於線性卷積，至少要滿足
@@ -338,10 +316,8 @@ $$
 一旦反過來出現
 
 $$
-{\color{red}
 T_{\mathrm{window}} <
 \alpha T_b + T_{\mathrm{ref}}
-}
 $$
 
 就表示 FFT block 已不足以承載正確的線性卷積輸出。wrap-around 的必要條件就在這一步被寫出來了。
@@ -363,11 +339,9 @@ $$
 在有限長 DFT 下，這個結果不等於無條件的線性卷積，而是等於理想線性卷積的週期延拓和：
 
 $$
-{\color{red}
 I_{\mathrm{circ}}(\eta) =
 \sum_{m=-\infty}^{\infty}
 I_{\mathrm{lin}}(\eta-mT_{\mathrm{window}})
-}
 $$
 
 這裡
@@ -393,13 +367,11 @@ $$
 其中 $m$ 是某個整數，並且必須選到使得
 
 $$
-{\color{red}
 \eta_{\mathrm{ghost}} \in
 \left[
 -\frac{T_{\mathrm{window}}}{2},
 \frac{T_{\mathrm{window}}}{2}
 \right]
-}
 $$
 
 若寫成條件句，就是：
@@ -433,7 +405,6 @@ $$
 TOPS 的等效目標時間跨度：
 
 $$
-{\color{red}
 T_{\mathrm{focus,TOPS}} =
 \alpha T_b =
 T_b\left(
@@ -442,68 +413,54 @@ T_b\left(
 T_b\left(
 1-\frac{k_{rot}}{k_a}
 \right)
-}
 $$
 
 paper-style stretch factor：
 
 $$
-{\color{red}
 \alpha =
 1+\frac{v_{\mathrm{scan}}}{v_p}
 =
 1-\frac{k_{rot}}{k_a}
-}
 $$
 
 paper-style effective chirp rate：
 
 $$
-{\color{red}
 k_t = \frac{k_{rot}}{\alpha} =
 \frac{k_a k_{rot}}{k_a-k_{rot}}
-}
 $$
 
 TOPS 的線性卷積需求長度：
 
 $$
-{\color{red}
 L_{\mathrm{req,TOPS}} =
 \alpha T_b + T_{\mathrm{ref}}
-}
 $$
 
 FFT 的無模糊時間窗口：
 
 $$
-{\color{red}
 T_{\mathrm{window}} = \frac{N_a}{\mathrm{PRF}}
-}
 $$
 
 wrap-around 的必要條件：
 
 $$
-{\color{red}
 T_{\mathrm{window}} < L_{\mathrm{req,TOPS}}
-}
 $$
 
 FFT 壓縮對應的 circular convolution：
 
 $$
-{\color{red}
 I_{\mathrm{circ}}(\eta) =
 \sum_{m=-\infty}^{\infty}
 I_{\mathrm{lin}}(\eta-mT_{\mathrm{window}})
-}
 $$
 
 ghost location formula：
 
 $$
-{\color{red}
 \eta_{\mathrm{ghost}} = \eta_c - mT_{\mathrm{window}},
 \qquad
 \eta_{\mathrm{ghost}} \in
@@ -511,7 +468,6 @@ $$
 -\frac{T_{\mathrm{window}}}{2},
 \frac{T_{\mathrm{window}}}{2}
 \right]
-}
 $$
 
 ---

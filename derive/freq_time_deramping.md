@@ -32,23 +32,19 @@
 摘要中最重要的關鍵公式為
 
 $$
-{\color{red}
 H_{\mathrm{deramp},f}(f_\eta) =
 \exp\left(
 +j\pi\frac{1}{k_s}(f_\eta-f_{\eta_c})^2
 \right)
-}
 $$
 
 以及
 
 $$
-{\color{red}
 H_{\mathrm{deramp},t}(\eta) =
 \exp\left(
 -j\pi k_t(\eta-\eta_c)^2 - j2\pi f_{\eta_c}\eta
 \right)
-}
 $$
 
 ---
@@ -101,9 +97,7 @@ $$
 若主 replica 在局部頻帶內可視為一條線性 chirp，則其 azimuth frequency 與 slow time 的關係可寫成
 
 $$
-{\color{red}
 f_\eta = k_s\eta + f_{\eta_c}
-}
 $$
 
 因此 slow time 可反解為
@@ -128,7 +122,6 @@ $$
 則對應的 filter 為
 
 $$
-{\color{red}
 H_{\mathrm{deramp},f}(f_\eta) =
 \exp\left(
 +j\phi_f(f_\eta)
@@ -136,7 +129,6 @@ H_{\mathrm{deramp},f}(f_\eta) =
 \exp\left(
 +j\pi\frac{1}{k_s}(f_\eta-f_{\eta_c})^2
 \right)
-}
 $$
 
 frequency-domain 相位乘法所對應的群延遲補償量為
@@ -156,10 +148,8 @@ $$
 因此
 
 $$
-{\color{red}
 \Delta\eta(f_\eta) =
 -\frac{1}{k_s}(f_\eta-f_{\eta_c})
-}
 $$
 
 又因為原本的 slow-time mapping 是
@@ -181,9 +171,7 @@ $$
 因此本步的 fully expanded closed-form 結論是：
 
 $$
-{\color{red}
 \eta_{\mathrm{new}} = 0
-}
 $$
 
 也就是說，frequency-domain deramping filter 的設計原理，就是把原本由 chirp slope 對應出的 time offset 完整拉回 reference location。
@@ -195,9 +183,7 @@ $$
 若改在 slow-time domain 看同一個主 replica，其局部 instantaneous Doppler 可寫成
 
 $$
-{\color{red}
 f_\eta(\eta) = k_t(\eta-\eta_c) + f_{\eta_c}
-}
 $$
 
 這表示對應的 time-domain replica 可視為一個以 $\eta_c$ 為 reference center 的 azimuth chirp。其 phase 可寫成
@@ -210,7 +196,6 @@ $$
 因此對應的 time-domain deramping filter 應取其 conjugate quadratic phase：
 
 $$
-{\color{red}
 H_{\mathrm{deramp},t}(\eta) =
 \exp\left(
 -j\phi_{\mathrm{sig}}(\eta)
@@ -218,7 +203,6 @@ H_{\mathrm{deramp},t}(\eta) =
 \exp\left(
 -j\pi k_t(\eta-\eta_c)^2 - j2\pi f_{\eta_c}\eta
 \right)
-}
 $$
 
 若將 filter phase 記為
@@ -245,10 +229,8 @@ $$
 因此
 
 $$
-{\color{red}
 \Delta f_\eta(\eta) =
 -k_t(\eta-\eta_c) - f_{\eta_c}
-}
 $$
 
 原本的 instantaneous Doppler 為
@@ -270,9 +252,7 @@ $$
 因此本步的 fully expanded closed-form 結論是：
 
 $$
-{\color{red}
 f_{\eta,\mathrm{new}}(\eta) = 0
-}
 $$
 
 也就是說，time-domain deramping 的設計原理，是把原本線性變化的 instantaneous Doppler 直接展平成常數。
@@ -313,67 +293,53 @@ $$
 局部 frequency-time mapping：
 
 $$
-{\color{red}
 f_\eta = k_s\eta + f_{\eta_c},
 \qquad
 \eta = \frac{1}{k_s}(f_\eta-f_{\eta_c})
-}
 $$
 
 frequency-domain deramping filter：
 
 $$
-{\color{red}
 H_{\mathrm{deramp},f}(f_\eta) =
 \exp\left(
 +j\pi\frac{1}{k_s}(f_\eta-f_{\eta_c})^2
 \right)
-}
 $$
 
 其對應的群延遲補償量：
 
 $$
-{\color{red}
 \Delta\eta(f_\eta) =
 -\frac{1}{k_s}(f_\eta-f_{\eta_c})
-}
 $$
 
 補償後的新 slow-time location：
 
 $$
-{\color{red}
 \eta_{\mathrm{new}} = 0
-}
 $$
 
 time-domain deramping filter：
 
 $$
-{\color{red}
 H_{\mathrm{deramp},t}(\eta) =
 \exp\left(
 -j\pi k_t(\eta-\eta_c)^2 - j2\pi f_{\eta_c}\eta
 \right)
-}
 $$
 
 其對應的 Doppler 補償量：
 
 $$
-{\color{red}
 \Delta f_\eta(\eta) =
 -k_t(\eta-\eta_c) - f_{\eta_c}
-}
 $$
 
 補償後的新 instantaneous Doppler：
 
 $$
-{\color{red}
 f_{\eta,\mathrm{new}}(\eta) = 0
-}
 $$
 
 ---

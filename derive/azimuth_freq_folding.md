@@ -33,22 +33,18 @@
 摘要中最重要的關鍵公式為
 
 $$
-{\color{red}
 W_{fold}(f_\eta;\omega_s) =
 \sum_{k=-\infty}^{\infty}
 W_a(f_\eta-k\cdot\mathrm{PRF};\omega_s)
-}
 $$
 
 以及
 
 $$
-{\color{red}
 S_1(\tau,f_\eta;\omega_s) =
 \mathrm{PRF}
 \sum_{k=-\infty}^{\infty}
 S_{1,c}(\tau,f_\eta-k\cdot\mathrm{PRF};\omega_s)
-}
 $$
 
 ---
@@ -121,7 +117,6 @@ $$
 R(\eta) =
 \sqrt{
 R_0^2+V_r^2(\eta-\eta_0)^2
-}
 $$
 
 若保留距離包絡、天線照明與慢時間取樣 comb，則離散慢時間回波可寫成
@@ -146,11 +141,9 @@ $$
 若以 $s_c(\eta)$ 表示對應的連續慢時間訊號，則離散取樣模型為
 
 $$
-{\color{red}
 s_d(\eta) =
 s_c(\eta)
 \sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)
-}
 $$
 
 因此本步結束後的輸出訊號就是完整的離散慢時間回波 $s_{1,d}(\tau,\eta)$。這一步只建立 folded 的來源算子，還沒有把 folded 頻譜寫出來。
@@ -177,17 +170,13 @@ $$
 在本文的符號約定下，若 $v_r=-v_p\sin\psi$，則
 
 $$
-{\color{red}
 f_D(t) = \frac{2v_p\sin\psi(t)}{\lambda}
-}
 $$
 
 因此 Doppler centroid 可寫成
 
 $$
-{\color{red}
 f_{\mathrm{DC}} = \frac{2v_p}{\lambda}\sin\psi
-}
 $$
 
 若採用小 squint-angle 近似 $\sin\psi \approx \psi$，並令
@@ -199,17 +188,13 @@ $$
 則由 beam rotation 引入的附加 Doppler term 可近似寫成
 
 $$
-{\color{red}
 f_{rot}(t) \approx \frac{2v_p}{\lambda}\omega_{rot}t
-}
 $$
 
 因此 paper notation 中的 rotation-induced Doppler rate 為
 
 $$
-{\color{red}
 k_{rot} = \frac{d f_{rot}(t)}{dt} \approx \frac{2v_p\omega_{rot}}{\lambda}
-}
 $$
 
 另一方面，若
@@ -230,22 +215,18 @@ $$
 將它代回 $f_D(t)$，可得平台幾何造成的 azimuth FM rate
 
 $$
-{\color{red}
 k_a =
 \frac{d f_D}{dt}
 \approx
 -\frac{2v_p^2}{\lambda R_0}
-}
 $$
 
 因此在 TOPS 的 paper parameterization 中，最核心的一組 rate relation 就是
 
 $$
-{\color{red}
 k_a \approx -\frac{2v_p^2}{\lambda R_0},
 \qquad
 k_{rot} \approx \frac{2v_p\omega_{rot}}{\lambda}
-}
 $$
 
 這一步的重要性在於：它把 folded / broadened azimuth spectrum 的驅動因素，從幾何語言轉成 paper 常用的 Doppler-rate 語言。之後若要討論 TOPS 為什麼比 stripmap 更容易出現 folded spectrum，就可以直接用 $k_a$ 與 $k_{rot}$ 來描述。
@@ -268,16 +249,13 @@ $$
 在 TOPSAR 幾何下，目標相對掃描波束中心的有效離軸角為
 
 $$
-{\color{red}
 \theta_{eff}(\eta) =
 \frac{V_r}{R_0}(\eta-\eta_0)-\omega_s\eta
-}
 $$
 
 將 $\theta=\theta_{eff}(\eta)$ 代入雙程方向圖，可得 TOPSAR 時域照明函數
 
 $$
-{\color{red}
 w_a(\eta;\omega_s) =
 \mathrm{sinc}^2\left[
 \frac{L_a}{\lambda}
@@ -285,7 +263,6 @@ w_a(\eta;\omega_s) =
 \frac{V_r}{R_0}(\eta-\eta_0)-\omega_s\eta
 \right)
 \right]
-}
 $$
 
 因此第 1 步的完整時域模型也可改寫成
@@ -358,7 +335,6 @@ $$
 D(f_\eta,V_r) =
 \sqrt{
 1-\frac{c^2f_\eta^2}{4V_r^2f_0^2}
-}
 $$
 
 以及
@@ -431,18 +407,15 @@ $$
 將卷積與 impulse train 展開後，可得 folded 頻譜的 compact closed form
 
 $$
-{\color{red}
 S_1(\tau,f_\eta;\omega_s) =
 \mathrm{PRF}
 \sum_{k=-\infty}^{\infty}
 S_{1,c}(\tau,f_\eta-k\cdot\mathrm{PRF};\omega_s)
-}
 $$
 
 再把第 3 步的連續頻譜代入，可得 folded 頻譜的 fully expanded closed form
 
 $$
-{\color{red}
 S_1(\tau,f_\eta;\omega_s) =
 \mathrm{PRF}
 \sum_{k=-\infty}^{\infty}
@@ -456,17 +429,14 @@ W_a(f_\eta-k\cdot\mathrm{PRF};\omega_s) \cdot
 \exp\left(
 \Phi_{az}(f_\eta-k\cdot\mathrm{PRF})
 \right)
-}
 $$
 
 若只抽出 envelope 結構，則 folded 包絡為
 
 $$
-{\color{red}
 W_{fold}(f_\eta;\omega_s) =
 \sum_{k=-\infty}^{\infty}
 W_a(f_\eta-k\cdot\mathrm{PRF};\omega_s)
-}
 $$
 
 因此在 envelope 與 phase 緩變近似下，folded 頻譜也可寫成
@@ -516,7 +486,6 @@ $$
 這裡的因果順序必須保持清楚：
 
 $$
-{\color{red}
 \omega_s
 \Longrightarrow
 w_a(\eta;\omega_s)
@@ -524,7 +493,6 @@ w_a(\eta;\omega_s)
 W_a(f_\eta;\omega_s)
 \Longrightarrow
 W_{fold}(f_\eta;\omega_s)
-}
 $$
 
 也就是說：
@@ -573,7 +541,6 @@ $$
 TOPSAR 時域照明函數：
 
 $$
-{\color{red}
 w_a(\eta;\omega_s) =
 \mathrm{sinc}^2\left[
 \frac{L_a}{\lambda}
@@ -581,7 +548,6 @@ w_a(\eta;\omega_s) =
 \frac{V_r}{R_0}(\eta-\eta_0)-\omega_s\eta
 \right)
 \right]
-}
 $$
 
 連續方位頻譜：
@@ -603,28 +569,23 @@ $$
 folded 包絡：
 
 $$
-{\color{red}
 W_{fold}(f_\eta;\omega_s) =
 \sum_{k=-\infty}^{\infty}
 W_a(f_\eta-k\cdot\mathrm{PRF};\omega_s)
-}
 $$
 
 folded 方位頻譜：
 
 $$
-{\color{red}
 S_1(\tau,f_\eta;\omega_s) =
 \mathrm{PRF}
 \sum_{k=-\infty}^{\infty}
 S_{1,c}(\tau,f_\eta-k\cdot\mathrm{PRF};\omega_s)
-}
 $$
 
 fully expanded folded 方位頻譜：
 
 $$
-{\color{red}
 S_1(\tau,f_\eta;\omega_s) =
 \mathrm{PRF}
 \sum_{k=-\infty}^{\infty}
@@ -638,7 +599,6 @@ W_a(f_\eta-k\cdot\mathrm{PRF};\omega_s) \cdot
 \exp\left(
 \Phi_{az}(f_\eta-k\cdot\mathrm{PRF})
 \right)
-}
 $$
 
 近似 folded envelope form：
@@ -715,7 +675,6 @@ E(\theta) \simeq
 \right)
 }{
 +jk\sin\theta
-}
 $$
 
 進一步整理為
@@ -728,7 +687,6 @@ k\frac{L_a}{2}\sin\theta
 \right)
 }{
 k\sin\theta
-}
 $$
 
 代入 $k=2\pi/\lambda$，可得
@@ -742,7 +700,6 @@ L_a\,
 \right)
 }{
 \pi\frac{L_a}{\lambda}\sin\theta
-}
 $$
 
 因此歸一化單程方向圖為
@@ -757,12 +714,10 @@ $$
 在小角度近似 $\sin\theta\approx\theta$ 下，
 
 $$
-{\color{red}
 G_{1\text{-way}}(\theta) \approx
 \mathrm{sinc}\left(
 \frac{L_a}{\lambda}\theta
 \right)
-}
 $$
 
 對單站雷達而言，發射與接收方向圖相乘，因此雙程方向圖為
@@ -818,17 +773,14 @@ $$
 因此目標相對波束中心的有效離軸角為
 
 $$
-{\color{red}
 \theta_{eff}(\eta) =
 \theta_{tar}(\eta)-\theta_{beam}(\eta) =
 \frac{V_r}{R_0}(\eta-\eta_0)-\omega_s\eta
-}
 $$
 
 把此結果代回 Appendix A 的雙程方向圖，可得
 
 $$
-{\color{red}
 w_a(\eta;\omega_s) =
 \mathrm{sinc}^2\left[
 \frac{L_a}{\lambda}
@@ -836,7 +788,6 @@ w_a(\eta;\omega_s) =
 \frac{V_r}{R_0}(\eta-\eta_0)-\omega_s\eta
 \right)
 \right]
-}
 $$
 
 ---
@@ -876,13 +827,11 @@ $$
 則副本可被映射到近似展平的表示。概念上可寫成
 
 $$
-{\color{red}
 W_{fold}
 \xrightarrow{\ \text{known chirp phase law}\ }
 \{\tilde{W}_k\}
 \xrightarrow{\ \text{unfold / shift}\ }
 \hat{W}_{true}
-}
 $$
 
 因此：

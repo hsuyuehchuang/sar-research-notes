@@ -62,7 +62,6 @@
 ## 1. Input Signal
 
 $$
-{\color{red}
 s_1(\tau,\eta) =
 A_1\,
 \mathrm{sinc}\left[
@@ -75,7 +74,6 @@ w_a(\eta;\omega_s) \cdot
 -j\frac{4\pi f_0R(\eta)}{c}
 \right) \cdot
 \sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)
-}
 $$
 
 ## 2. Azimuth Frequency Folding
@@ -99,7 +97,6 @@ $$
 因此 folded signal 的 fully expanded closed form 為
 
 $$
-{\color{red}
 S_2(\tau,f_\eta) =
 \mathrm{PRF}
 \sum_{k=-\infty}^{\infty}
@@ -113,7 +110,6 @@ W_a(f_\eta-k\cdot\mathrm{PRF};\omega_s) \cdot
 \exp\left(
 -j\frac{4\pi R_0f_0}{c}D(f_\eta-k\cdot\mathrm{PRF},V_r) - j2\pi(f_\eta-k\cdot\mathrm{PRF})\eta_0
 \right)
-}
 $$
 
 ## 3. Mosaicking
@@ -121,7 +117,6 @@ $$
 將 replicas 攤到 extended-frequency axis 後，
 
 $$
-{\color{red}
 S_3(\tau,f_\eta) =
 \sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}}
 A_3\,
@@ -140,7 +135,6 @@ B_r\left(
 +\psi_{2,m}(f_\eta-f_{\mathrm{ref}})^2
 \right]
 \right)
-}
 $$
 
 ## 4. Deramping
@@ -157,7 +151,6 @@ $$
 乘上後得到
 
 $$
-{\color{red}
 S_4(\tau,f_\eta) =
 \sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}}
 A_4\,
@@ -178,7 +171,6 @@ B_r\left(
 \right)(f_\eta-f_{\mathrm{ref}})^2
 \right]
 \right)
-}
 $$
 
 ## 5. Low Pass Filter
@@ -210,13 +202,11 @@ $$
 $$
 
 $$
-{\color{red}
 S_5(\tau,u) =
 \mathcal{F}_{u}^{-1}\left[
 \widetilde{S}_4(\tau,\nu_u)\,
 \widetilde{M}_{\mathrm{LPF}}(\nu_u)
 \right]
-}
 $$
 
 也就是說，這一步要分成兩層來理解：
@@ -229,7 +219,6 @@ LPF 完成後，再進入 resampling；resampling 不是 LPF 本身的一部分�
 因此 LPF output 的 fully expanded closed form 為
 
 $$
-{\color{red}
 S_5(\tau,f_\eta) =
 \sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}}
 A_5\,
@@ -253,7 +242,6 @@ B_r\left(
 \right)(f_\eta-f_{\mathrm{ref}})^2
 \right]
 \right)
-}
 $$
 
 ## 6. Reramping
@@ -270,7 +258,6 @@ $$
 因此 frequency-UFR output 的 fully expanded closed form 為
 
 $$
-{\color{red}
 S_6(\tau,f_\eta) =
 \sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}}
 A_6\,
@@ -292,7 +279,6 @@ B_r\left(
 +\psi_{2,m}(f_\eta-f_{\mathrm{ref}})^2
 \right]
 \right)
-}
 $$
 
 ## Physical Meaning
@@ -306,7 +292,6 @@ $$
 ## Final Result
 
 $$
-{\color{red}
 s_1(\tau,\eta)
 \rightarrow
 S_2(\tau,f_\eta)
@@ -318,5 +303,4 @@ S_4(\tau,f_\eta)
 S_5(\tau,f_\eta)
 \rightarrow
 S_6(\tau,f_\eta)
-}
 $$

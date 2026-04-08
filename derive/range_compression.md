@@ -49,7 +49,6 @@
 單點目標的 raw echo fully expanded closed form 為
 
 $$
-{\color{red}
 s_0(\tau,\eta) =
 A_0\,
 \mathrm{rect}\left(
@@ -65,7 +64,6 @@ w_a(\eta;\omega_s) \cdot
 -j\frac{4\pi f_0R(\eta)}{c}
 \right) \cdot
 \sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)
-}
 $$
 
 ## 2. Range Matched Filter
@@ -73,12 +71,10 @@ $$
 range matched filter 為
 
 $$
-{\color{red}
 h_r(\tau) =
 \exp\left(
 -j\pi K_r\tau^2
 \right)
-}
 $$
 
 ## 3. Range-Compressed Signal
@@ -93,7 +89,6 @@ $$
 其 fully expanded closed form 為
 
 $$
-{\color{red}
 s_1(\tau,\eta) =
 A_1\,
 \mathrm{sinc}\left[
@@ -106,7 +101,6 @@ w_a(\eta;\omega_s) \cdot
 -j\frac{4\pi f_0R(\eta)}{c}
 \right) \cdot
 \sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)
-}
 $$
 
 ## Physical Meaning
@@ -118,9 +112,7 @@ $$
 ## Final Result
 
 $$
-{\color{red}
 s_0(\tau,\eta)
 \xrightarrow{\text{range compression}}
 s_1(\tau,\eta)
-}
 $$

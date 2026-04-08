@@ -32,7 +32,7 @@
 摘要中最重要的關鍵公式為
 
 $$
-{\color{red} S_3(\tau,f_\eta)} \approx
+S_3(\tau,f_\eta) \approx
 \sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}}
 A_2\,
 \mathrm{sinc}\left[
@@ -57,13 +57,11 @@ $$
 以及
 
 $$
-{\color{red}
 S_4(\tau,f_\eta) \approx
 S_3(\tau,f_\eta) \cdot
 \mathrm{rect}\left(
 \frac{f_\eta-f_{\mathrm{LPF}}}{B_{\mathrm{LPF}}}
 \right)
-}
 $$
 
 ---
@@ -163,7 +161,6 @@ $$
 因此本步結束後，總訊號的 fully expanded closed form 為
 
 $$
-{\color{red}
 S_2(\tau,f_\eta) =
 \sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}}
 A_2\,
@@ -178,7 +175,6 @@ B_r\left(
 \exp\left(
 -j\psi_m(f_\eta)
 \right)
-}
 $$
 
 這一步只回答：mosaicking 後的訊號長什麼樣。它還沒有把 replica 內部的 phase curvature 拿掉。
@@ -315,7 +311,6 @@ $$
 因此 deramping 後的總訊號 fully expanded closed form 為
 
 $$
-{\color{red}
 S_3(\tau,f_\eta) \approx
 \sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}}
 A_2\,
@@ -335,7 +330,6 @@ B_r\left(
 \right)(f_\eta-f_{\mathrm{ref}})^2
 \right]
 \right)
-}
 $$
 
 對主 replica 而言，因為 $\psi_{2,\mathrm{ref}}=\psi_{2,m_0}$，所以其殘餘二次項近似為零。這就是 deramping 真正的物理作用：它不是把 replicas 消失，而是把主 replica 的 quadratic curvature 拿掉。
@@ -389,7 +383,6 @@ $$
 因此 LPF 後的總訊號 fully expanded closed form 為
 
 $$
-{\color{red}
 S_4(\tau,f_\eta) \approx
 \sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}}
 A_2\,
@@ -412,7 +405,6 @@ B_r\left(
 \mathrm{rect}\left(
 \frac{f_\eta-f_{\mathrm{LPF}}}{B_{\mathrm{LPF}}}
 \right)
-}
 $$
 
 若只保留主 replica $m=m_0$ 的近似，則輸出可再寫成
@@ -476,13 +468,11 @@ $$
 最後做 inverse FFT：
 
 $$
-{\color{red}
 S_4(\tau,u) =
 \mathcal{F}_{u}^{-1}\left[
 \widetilde{S}_3(\tau,\nu_u)\,
 \widetilde{M}_{\mathrm{LPF}}(\nu_u)
 \right]
-}
 $$
 
 因此這裡要明確區分兩層：
@@ -537,7 +527,6 @@ $$
 deramping 後：
 
 $$
-{\color{red}
 S_3(\tau,f_\eta) \approx
 \sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}}
 A_2\,
@@ -557,7 +546,6 @@ B_r\left(
 \right)(f_\eta-f_{\mathrm{ref}})^2
 \right]
 \right)
-}
 $$
 
 LPF：
@@ -572,7 +560,6 @@ $$
 LPF 後：
 
 $$
-{\color{red}
 S_4(\tau,f_\eta) \approx
 \sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}}
 A_2\,
@@ -595,7 +582,6 @@ B_r\left(
 \mathrm{rect}\left(
 \frac{f_\eta-f_{\mathrm{LPF}}}{B_{\mathrm{LPF}}}
 \right)
-}
 $$
 
 ---

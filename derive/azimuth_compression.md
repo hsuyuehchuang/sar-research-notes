@@ -57,7 +57,6 @@
 ## 1. Input Signal
 
 $$
-{\color{red}
 S_6(\tau,f_\eta) =
 \sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}}
 A_6\,
@@ -79,7 +78,6 @@ B_r\left(
 +\psi_{2,m}(f_\eta-f_{\mathrm{ref}})^2
 \right]
 \right)
-}
 $$
 
 ## 2. Azimuth Matched Filter
@@ -87,23 +85,19 @@ $$
 標準 reference matched filter 寫成
 
 $$
-{\color{red}
 H_{\mathrm{az}}(f_\eta) =
 \exp\left(
 +j\phi_{\mathrm{az,ref}}(f_\eta)
 \right)
-}
 $$
 
 若在 frequency-UFR 結束後，主 replica 已被 reramp 回 reference curvature，則其 reference azimuth phase law 可局部寫成
 
 $$
-{\color{red}
 \phi_{\mathrm{az,ref}}(f_\eta) =
 \phi_{\mathrm{az},0}
 +\phi_{\mathrm{az},1}(f_\eta-f_{\mathrm{ref}})
 +\phi_{\mathrm{az},2}(f_\eta-f_{\mathrm{ref}})^2
-}
 $$
 
 ---
@@ -123,33 +117,27 @@ $$
 以及
 
 $$
-{\color{red}
 \alpha = 1-\frac{k_{rot}}{k_a},
 \qquad
 k_t = \frac{k_{rot}}{\alpha} =
 \frac{k_a k_{rot}}{k_a-k_{rot}}
-}
 $$
 
 在 local quadratic-FM approximation 下，reference replica 的 azimuth-time phase 可寫成
 
 $$
-{\color{red}
 \phi_{\mathrm{ref}}(\eta) \approx
 2\pi f_{\mathrm{DC}}(\eta-\eta_c)
 -\pi k_t(\eta-\eta_c)^2
-}
 $$
 
 對應地，其 frequency-domain matched filter 可寫成
 
 $$
-{\color{red}
 H_{\mathrm{az}}(f_\eta) \approx
 \exp\left(
 +j\pi\frac{(f_\eta-f_{\mathrm{DC}})^2}{k_t}
 \right)
-}
 $$
 
 這裡省略了與聚焦主瓣位置無關的常數幅度與常數相位。重要的是：TOPS azimuth compression filter 的 reference curvature，現在可以直接由 $k_t$ 來記憶，而 $k_t$ 又由 $k_a$ 與 $k_{rot}$ 組合而成。
@@ -157,18 +145,15 @@ $$
 因此每個 replica 在 matched filtering 前的 local phase 可寫成
 
 $$
-{\color{red}
 \phi_{\mathrm{az},m}(f_\eta) =
 \psi_{0,m}
 +\psi_{1,m}(f_\eta-f_{\mathrm{ref}})
 +\psi_{2,m}(f_\eta-f_{\mathrm{ref}})^2
-}
 $$
 
 將 $S_6(\tau,f_\eta)$ 乘上 $H_{\mathrm{az}}(f_\eta)$ 之後，可得壓縮前的 fully expanded filtered spectrum
 
 $$
-{\color{red}
 S_{6,\mathrm{mf}}(\tau,f_\eta) =
 \sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}}
 A_6\,
@@ -188,13 +173,11 @@ B_r\left(
 \phi_{\mathrm{az},m}(f_\eta)-\phi_{\mathrm{az,ref}}(f_\eta)
 \right]
 \right)
-}
 $$
 
 若將 phase mismatch 也顯式展開，則
 
 $$
-{\color{red}
 S_{6,\mathrm{mf}}(\tau,f_\eta) =
 \sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}}
 A_6\,
@@ -216,7 +199,6 @@ B_r\left(
 +\Delta\phi_{2,m}(f_\eta-f_{\mathrm{ref}})^2
 \right]
 \right)
-}
 $$
 
 其中
@@ -247,7 +229,6 @@ $$
 其對應的 fully expanded closed form 可寫成
 
 $$
-{\color{red}
 s_7(\tau,\eta) \approx
 \sum_{m=-N_{t,\mathrm{neg}}}^{N_{t,\mathrm{pos}}}
 A_7\,
@@ -268,7 +249,6 @@ B_{\mathrm{az},m}\left(
 +\chi_{2,m}(\eta-\eta_{c,m})^2
 \right]
 \right)
-}
 $$
 
 其中主 replica 若滿足 matched-filter 完全對準，則
@@ -284,7 +264,6 @@ $$
 若只保留主 replica $m=m_0$，則
 
 $$
-{\color{red}
 s_{7,\mathrm{main}}(\tau,\eta) \approx
 A_{7,\mathrm{main}}\,
 \mathrm{sinc}\left[
@@ -295,7 +274,6 @@ B_r\left(
 \mathrm{sinc}\left[
 B_{\mathrm{az,main}}(\eta-\eta_c)
 \right]
-}
 $$
 
 ## Physical Meaning
@@ -309,9 +287,7 @@ $$
 ## Final Result
 
 $$
-{\color{red}
 S_6(\tau,f_\eta)
 \xrightarrow{\text{azimuth compression}}
 s_7(\tau,\eta)
-}
 $$

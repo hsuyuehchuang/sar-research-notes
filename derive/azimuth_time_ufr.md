@@ -61,7 +61,6 @@
 azimuth-compressed input 的 fully expanded closed form 為
 
 $$
-{\color{red}
 s_7(\tau,\eta) \approx
 \sum_{m=-N_{t,\mathrm{neg}}}^{N_{t,\mathrm{pos}}}
 A_7\,
@@ -78,7 +77,6 @@ B_{\mathrm{az},m}\left(
 \exp\left(
 -j\chi_m(\eta)
 \right)
-}
 $$
 
 ## 2. Mosaicking
@@ -86,7 +84,6 @@ $$
 將 time replicas 攤到 extended azimuth-time axis 後，得到
 
 $$
-{\color{red}
 I_8(\tau,\eta) =
 \sum_{m=-N_{t,\mathrm{neg}}}^{N_{t,\mathrm{pos}}}
 A_8\,
@@ -110,7 +107,6 @@ B_{\mathrm{az},m}\left(
 +\chi_{2,m}(\eta-\eta_{\mathrm{ref}})^2
 \right]
 \right)
-}
 $$
 
 ## 3. Deramping
@@ -127,7 +123,6 @@ $$
 因此 deramped signal 的 fully expanded closed form 為
 
 $$
-{\color{red}
 I_9(\tau,\eta) =
 \sum_{m=-N_{t,\mathrm{neg}}}^{N_{t,\mathrm{pos}}}
 A_9\,
@@ -153,7 +148,6 @@ B_{\mathrm{az},m}\left(
 \right)(\eta-\eta_{\mathrm{ref}})^2
 \right]
 \right)
-}
 $$
 
 ## 4. Low Pass Filter
@@ -185,13 +179,11 @@ $$
 $$
 
 $$
-{\color{red}
 I_{10}(\tau,\eta) =
 \mathcal{F}_{\eta}^{-1}\left[
 \widetilde{I}_9(\tau,\nu_\eta)\,
 \widetilde{M}_{\mathrm{LPF}}(\nu_\eta)
 \right]
-}
 $$
 
 因此這一步也要分成兩層：
@@ -204,7 +196,6 @@ LPF 完成後，再進入 resampling；resampling 不是 LPF 本身的一部分�
 因此 LPF output 的 fully expanded closed form 為
 
 $$
-{\color{red}
 I_{10}(\tau,\eta) =
 \sum_{m=-N_{t,\mathrm{neg}}}^{N_{t,\mathrm{pos}}}
 A_{10}\,
@@ -233,7 +224,6 @@ B_{\mathrm{az},m}\left(
 \right)(\eta-\eta_{\mathrm{ref}})^2
 \right]
 \right)
-}
 $$
 
 ## 5. Reramping
@@ -250,7 +240,6 @@ $$
 因此 reramped output 的 fully expanded closed form 為
 
 $$
-{\color{red}
 I_{11}(\tau,\eta) =
 \sum_{m=-N_{t,\mathrm{neg}}}^{N_{t,\mathrm{pos}}}
 A_{11}\,
@@ -277,7 +266,6 @@ B_{\mathrm{az},m}\left(
 +\chi_{2,m}(\eta-\eta_{\mathrm{ref}})^2
 \right]
 \right)
-}
 $$
 
 ## 6. Focused Output
@@ -285,7 +273,6 @@ $$
 若只保留主 replica $m=m_0$，則 focused image 的 fully expanded closed form 為
 
 $$
-{\color{red}
 I_{\mathrm{focus}}(\tau,\eta) \approx
 A_f\,
 \mathrm{sinc}\left[
@@ -296,7 +283,6 @@ B_r\left(
 \mathrm{sinc}\left[
 B_{\mathrm{az,keep}}(\eta-\eta_c)
 \right]
-}
 $$
 
 ## Physical Meaning
@@ -310,7 +296,6 @@ $$
 ## Final Result
 
 $$
-{\color{red}
 s_7(\tau,\eta)
 \rightarrow
 I_8(\tau,\eta)
@@ -322,5 +307,4 @@ I_{10}(\tau,\eta)
 I_{11}(\tau,\eta)
 \rightarrow
 I_{\mathrm{focus}}(\tau,\eta)
-}
 $$

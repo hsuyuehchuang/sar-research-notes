@@ -70,7 +70,6 @@
 摘要中最重要的關鍵公式為
 
 $$
-{\color{red}
 S_6(\tau,f_\eta) \approx
 \sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}}
 A_6\,
@@ -92,13 +91,11 @@ B_r\left(
 +\psi_{2,m}(f_\eta-f_{\mathrm{ref}})^2
 \right]
 \right)
-}
 $$
 
 以及
 
 $$
-{\color{red}
 I_{\mathrm{focus}}(\tau,\eta) \approx
 A_f\,
 \mathrm{sinc}\left[
@@ -109,7 +106,6 @@ B_r\left(
 \mathrm{sinc}\left[
 B_{\mathrm{az,keep}}(\eta-\eta_c)
 \right]
-}
 $$
 
 ## Signal Definitions
@@ -175,7 +171,6 @@ $$
 raw TOPS burst data 的 fully expanded closed form 為
 
 $$
-{\color{red}
 s_0(\tau,\eta) =
 A_0\,
 \mathrm{rect}\left(
@@ -191,7 +186,6 @@ w_a(\eta;\omega_s) \cdot
 -j\frac{4\pi f_0R(\eta)}{c}
 \right) \cdot
 \sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)
-}
 $$
 
 ## 2. Range Compression
@@ -208,7 +202,6 @@ $$
 與之對應的 range-compressed output 的 fully expanded closed form 為
 
 $$
-{\color{red}
 s_1(\tau,\eta) =
 A_1\,
 \mathrm{sinc}\left[
@@ -221,7 +214,6 @@ w_a(\eta;\omega_s) \cdot
 -j\frac{4\pi f_0R(\eta)}{c}
 \right) \cdot
 \sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)
-}
 $$
 
 ## 3. Azimuth Frequency Unfolding And Resampling (UFR)
@@ -249,7 +241,6 @@ $$
 因此 folded azimuth-frequency signal 的 fully expanded closed form 為
 
 $$
-{\color{red}
 S_2(\tau,f_\eta) =
 \mathrm{PRF}
 \sum_{k=-\infty}^{\infty}
@@ -263,7 +254,6 @@ W_a(f_\eta-k\cdot\mathrm{PRF};\omega_s) \cdot
 \exp\left(
 -j\frac{4\pi R_0f_0}{c}D(f_\eta-k\cdot\mathrm{PRF},V_r) - j2\pi(f_\eta-k\cdot\mathrm{PRF})\eta_0
 \right)
-}
 $$
 
 ### 3.2. Mosaicking
@@ -271,7 +261,6 @@ $$
 把 folded replicas 攤到 extended axis 後，可寫成
 
 $$
-{\color{red}
 S_3(\tau,f_\eta) =
 \sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}}
 A_3\,
@@ -290,7 +279,6 @@ B_r\left(
 +\psi_{2,m}(f_\eta-f_{\mathrm{ref}})^2
 \right]
 \right)
-}
 $$
 
 ### 3.3. Deramping
@@ -307,7 +295,6 @@ $$
 因此 deramped signal 的 fully expanded closed form 為
 
 $$
-{\color{red}
 S_4(\tau,f_\eta) =
 \sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}}
 A_4\,
@@ -328,7 +315,6 @@ B_r\left(
 \right)(f_\eta-f_{\mathrm{ref}})^2
 \right]
 \right)
-}
 $$
 
 ### 3.4. Low Pass Filter
@@ -345,7 +331,6 @@ $$
 因此 LPF output 的 fully expanded closed form 為
 
 $$
-{\color{red}
 S_5(\tau,f_\eta) =
 \sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}}
 A_5\,
@@ -369,7 +354,6 @@ B_r\left(
 \right)(f_\eta-f_{\mathrm{ref}})^2
 \right]
 \right)
-}
 $$
 
 ### 3.5. Reramping
@@ -386,7 +370,6 @@ $$
 因此 reramped output 的 fully expanded closed form 為
 
 $$
-{\color{red}
 S_6(\tau,f_\eta) =
 \sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}}
 A_6\,
@@ -408,7 +391,6 @@ B_r\left(
 +\psi_{2,m}(f_\eta-f_{\mathrm{ref}})^2
 \right]
 \right)
-}
 $$
 
 ## 4. Azimuth Compression
@@ -427,7 +409,6 @@ $$
 則在主 replica 已回到標準 reference curvature 的條件下，azimuth-compressed output 的 fully expanded closed form 可寫成
 
 $$
-{\color{red}
 s_7(\tau,\eta) \approx
 \sum_{m=-N_{t,\mathrm{neg}}}^{N_{t,\mathrm{pos}}}
 A_7\,
@@ -444,7 +425,6 @@ B_{\mathrm{az},m}\left(
 \exp\left(
 -j\chi_m(\eta)
 \right)
-}
 $$
 
 這裡 $\eta_{c,m}$ 表示因 circular convolution 或窗口週期延拓而出現的時間 replica center。
@@ -466,7 +446,6 @@ time-domain wrap-around 的現象本身由 [Azimuth Time Folding](./azimuth_time
 把 azimuth-time replicas 攤到 extended time axis 後，可寫成
 
 $$
-{\color{red}
 I_8(\tau,\eta) =
 \sum_{m=-N_{t,\mathrm{neg}}}^{N_{t,\mathrm{pos}}}
 A_8\,
@@ -490,7 +469,6 @@ B_{\mathrm{az},m}\left(
 +\chi_{2,m}(\eta-\eta_{\mathrm{ref}})^2
 \right]
 \right)
-}
 $$
 
 ### 5.3. Deramping
@@ -507,7 +485,6 @@ $$
 因此 time-domain deramped signal 的 fully expanded closed form 為
 
 $$
-{\color{red}
 I_9(\tau,\eta) =
 \sum_{m=-N_{t,\mathrm{neg}}}^{N_{t,\mathrm{pos}}}
 A_9\,
@@ -533,7 +510,6 @@ B_{\mathrm{az},m}\left(
 \right)(\eta-\eta_{\mathrm{ref}})^2
 \right]
 \right)
-}
 $$
 
 ### 5.4. Low Pass Filter
@@ -550,7 +526,6 @@ $$
 因此 LPF output 的 fully expanded closed form 為
 
 $$
-{\color{red}
 I_{10}(\tau,\eta) =
 \sum_{m=-N_{t,\mathrm{neg}}}^{N_{t,\mathrm{pos}}}
 A_{10}\,
@@ -579,7 +554,6 @@ B_{\mathrm{az},m}\left(
 \right)(\eta-\eta_{\mathrm{ref}})^2
 \right]
 \right)
-}
 $$
 
 ### 5.5. Reramping
@@ -596,7 +570,6 @@ $$
 因此 reramped output 的 fully expanded closed form 為
 
 $$
-{\color{red}
 I_{11}(\tau,\eta) =
 \sum_{m=-N_{t,\mathrm{neg}}}^{N_{t,\mathrm{pos}}}
 A_{11}\,
@@ -623,7 +596,6 @@ B_{\mathrm{az},m}\left(
 +\chi_{2,m}(\eta-\eta_{\mathrm{ref}})^2
 \right]
 \right)
-}
 $$
 
 ## 6. Focused Image
@@ -631,7 +603,6 @@ $$
 若只保留主 replica $m=m_0$，則最終 focused image 的 fully expanded closed form 為
 
 $$
-{\color{red}
 I_{\mathrm{focus}}(\tau,\eta) \approx
 A_f\,
 \mathrm{sinc}\left[
@@ -642,7 +613,6 @@ B_r\left(
 \mathrm{sinc}\left[
 B_{\mathrm{az,keep}}(\eta-\eta_c)
 \right]
-}
 $$
 
 ## Physical Meaning
@@ -656,7 +626,6 @@ $$
 ## Final Result
 
 $$
-{\color{red}
 s_0(\tau,\eta)
 \rightarrow
 s_1(\tau,\eta)
@@ -682,5 +651,4 @@ I_{10}(\tau,\eta)
 I_{11}(\tau,\eta)
 \rightarrow
 I_{\mathrm{focus}}(\tau,\eta)
-}
 $$
