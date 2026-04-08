@@ -1,23 +1,16 @@
 # Frequency-Time Deramping
 
-## Navigation
-
-- [Overall](./tops_azimuth_overall.md)
-- Main flow:
-  [Azimuth Frequency UFR](./azimuth_freq_ufr.md),
-  [Azimuth Time UFR](./azimuth_time_ufr.md)
-- Related support note: [Azimuth Deramp LPF](./azimuth_deramp_LPF.md)
-
-## Table of Contents
+## Hierarchy
 
 - [Summary](#summary)
 - [Problem Definition](#problem-definition)
 - [Derivation Highlights](#derivation-highlights)
 - [Symbols And Assumptions](#symbols-and-assumptions)
-- [1. Local Frequency-Time Mapping](#1-local-frequency-time-mapping)
-- [2. Frequency-Domain Deramping Filter Design](#2-frequency-domain-deramping-filter-design)
-- [3. Time-Domain Deramping Filter Design](#3-time-domain-deramping-filter-design)
-- [4. Relation To The TOPS SAR Main Flow](#4-relation-to-the-tops-sar-main-flow)
+- Main Flow
+  - [1. Local Frequency-Time Mapping](#1-local-frequency-time-mapping)
+  - [2. Frequency-Domain Deramping Filter Design](#2-frequency-domain-deramping-filter-design)
+  - [3. Time-Domain Deramping Filter Design](#3-time-domain-deramping-filter-design)
+  - [4. Relation To The TOPS SAR Main Flow](#4-relation-to-the-tops-sar-main-flow)
 - [Physical Meaning](#physical-meaning)
 - [Final Result](#final-result)
 

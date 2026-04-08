@@ -1,22 +1,16 @@
 # Azimuth Compression
 
-## Navigation
-
-- [Overall](./tops_azimuth_overall.md)
-- Previous processing step: [Azimuth Frequency UFR](./azimuth_freq_ufr.md)
-- Next phenomenon: [Azimuth Time Folding](./azimuth_time_folding.md)
-- Next: [Azimuth Time UFR](./azimuth_time_ufr.md)
-
-## Table of Contents
+## Hierarchy
 
 - [Summary](#summary)
 - [Problem Definition](#problem-definition)
 - [Derivation Highlights](#derivation-highlights)
 - [Symbols And Assumptions](#symbols-and-assumptions)
-- [1. Input Signal](#1-input-signal)
-- [2. Azimuth Matched Filter](#2-azimuth-matched-filter)
-- [3. Paper Parameterization Of The Reference Chirp](#3-paper-parameterization-of-the-reference-chirp)
-- [4. Azimuth-Compressed Output](#4-azimuth-compressed-output)
+- Main Flow
+  - [1. Input Signal](#1-input-signal)
+  - [2. Azimuth Matched Filter](#2-azimuth-matched-filter)
+  - [3. Paper Parameterization Of The Reference Chirp](#3-paper-parameterization-of-the-reference-chirp)
+  - [4. Azimuth-Compressed Output](#4-azimuth-compressed-output)
 - [Physical Meaning](#physical-meaning)
 - [Final Result](#final-result)
 

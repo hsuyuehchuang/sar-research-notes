@@ -1,22 +1,17 @@
 # Azimuth Deramp LPF
 
-## Navigation
-
-- [Overall](./tops_azimuth_overall.md)
-- Main flow: [Azimuth Frequency UFR](./azimuth_freq_ufr.md)
-- Filter design support: [Frequency-Time Deramping](./freq_time_deramping.md)
-
-## Table of Contents
+## Hierarchy
 
 - [Summary](#summary)
 - [Problem Definition](#problem-definition)
 - [Derivation Highlights](#derivation-highlights)
 - [Symbols And Assumptions](#symbols-and-assumptions)
-- [1. Starting Point: Mosaicked Signal](#1-starting-point-mosaicked-signal)
-- [2. Local Quadratic Phase Model](#2-local-quadratic-phase-model)
-- [3. Deramping](#3-deramping)
-- [4. Ideal LPF Model](#4-ideal-lpf-model)
-- [5. FFT-Based LPF Implementation](#5-fft-based-lpf-implementation)
+- Main Flow
+  - [1. Starting Point: Mosaicked Signal](#1-starting-point-mosaicked-signal)
+  - [2. Local Quadratic Phase Model](#2-local-quadratic-phase-model)
+  - [3. Deramping](#3-deramping)
+  - [4. Ideal LPF Model](#4-ideal-lpf-model)
+  - [5. FFT-Based LPF Implementation](#5-fft-based-lpf-implementation)
 - [Physical Meaning](#physical-meaning)
 - [Final Result](#final-result)
 

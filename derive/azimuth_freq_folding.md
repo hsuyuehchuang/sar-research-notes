@@ -1,24 +1,18 @@
 # Azimuth Frequency Folding
 
-## Navigation
-
-- [Overall](./tops_azimuth_overall.md)
-- Previous main step: [Range Compression](./range_compression.md)
-- Next main step: [Azimuth Frequency UFR](./azimuth_freq_ufr.md)
-- Next support note: [Frequency-Time Deramping](./freq_time_deramping.md)
-
-## Table of Contents
+## Hierarchy
 
 - [Summary](#summary)
 - [Problem Definition](#problem-definition)
 - [Derivation Highlights](#derivation-highlights)
 - [Symbols And Assumptions](#symbols-and-assumptions)
-- [1. Geometry And Full Time-Domain Model](#1-geometry-and-full-time-domain-model)
-- [2. Doppler Relations And Paper Parameterization](#2-doppler-relations-and-paper-parameterization)
-- [3. TOPSAR Illumination Function](#3-topsar-illumination-function)
-- [4. Continuous Azimuth Signal And Continuous Frequency Envelope](#4-continuous-azimuth-signal-and-continuous-frequency-envelope)
-- [5. Folded Spectrum From The Sampling Comb](#5-folded-spectrum-from-the-sampling-comb)
-- [6. Why TOPSAR Especially Tends To Produce Folded Spectrum](#6-why-topsar-especially-tends-to-produce-folded-spectrum)
+- Main Flow
+  - [1. Geometry And Full Time-Domain Model](#1-geometry-and-full-time-domain-model)
+  - [2. Doppler Relations And Paper Parameterization](#2-doppler-relations-and-paper-parameterization)
+  - [3. TOPSAR Illumination Function](#3-topsar-illumination-function)
+  - [4. Continuous Azimuth Signal And Continuous Frequency Envelope](#4-continuous-azimuth-signal-and-continuous-frequency-envelope)
+  - [5. Folded Spectrum From The Sampling Comb](#5-folded-spectrum-from-the-sampling-comb)
+  - [6. Why TOPSAR Especially Tends To Produce Folded Spectrum](#6-why-topsar-especially-tends-to-produce-folded-spectrum)
 - [Physical Meaning](#physical-meaning)
 - [Final Result](#final-result)
 

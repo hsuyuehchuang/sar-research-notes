@@ -1,23 +1,18 @@
 # Azimuth Time UFR
 
-## Navigation
-
-- [Overall](./tops_azimuth_overall.md)
-- Previous: [Azimuth Compression](./azimuth_compression.md)
-- Support note: [Azimuth Time Folding](./azimuth_time_folding.md)
-
-## Table of Contents
+## Hierarchy
 
 - [Summary](#summary)
 - [Problem Definition](#problem-definition)
 - [Derivation Highlights](#derivation-highlights)
 - [Symbols And Assumptions](#symbols-and-assumptions)
-- [1. Input Signal](#1-input-signal)
-- [2. Mosaicking](#2-mosaicking)
-- [3. Deramping](#3-deramping)
-- [4. Low Pass Filter](#4-low-pass-filter)
-- [5. Reramping](#5-reramping)
-- [6. Focused Output](#6-focused-output)
+- Main Flow
+  - [1. Input Signal](#1-input-signal)
+  - [2. Mosaicking](#2-mosaicking)
+  - [3. Deramping](#3-deramping)
+  - [4. Low Pass Filter](#4-low-pass-filter)
+  - [5. Reramping](#5-reramping)
+  - [6. Focused Output](#6-focused-output)
 - [Physical Meaning](#physical-meaning)
 - [Final Result](#final-result)
 

@@ -1,27 +1,18 @@
 # Azimuth Frequency UFR
 
-## Navigation
-
-- [Overall](./tops_azimuth_overall.md)
-- Previous: [Range Compression](./range_compression.md)
-- Next: [Azimuth Compression](./azimuth_compression.md)
-- Support notes:
-  - [Azimuth Frequency Folding](./azimuth_freq_folding.md)
-  - [Frequency-Time Deramping](./freq_time_deramping.md)
-  - [Azimuth Deramp LPF](./azimuth_deramp_LPF.md)
-
-## Table of Contents
+## Hierarchy
 
 - [Summary](#summary)
 - [Problem Definition](#problem-definition)
 - [Derivation Highlights](#derivation-highlights)
 - [Symbols And Assumptions](#symbols-and-assumptions)
-- [1. Input Signal](#1-input-signal)
-- [2. Azimuth Frequency Folding](#2-azimuth-frequency-folding)
-- [3. Mosaicking](#3-mosaicking)
-- [4. Deramping](#4-deramping)
-- [5. Low Pass Filter](#5-low-pass-filter)
-- [6. Reramping](#6-reramping)
+- Main Flow
+  - [1. Input Signal](#1-input-signal)
+  - [2. Azimuth Frequency Folding](#2-azimuth-frequency-folding)
+  - [3. Mosaicking](#3-mosaicking)
+  - [4. Deramping](#4-deramping)
+  - [5. Low Pass Filter](#5-low-pass-filter)
+  - [6. Reramping](#6-reramping)
 - [Physical Meaning](#physical-meaning)
 - [Final Result](#final-result)
 

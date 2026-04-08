@@ -1,16 +1,5 @@
 # TOPS SAR Azimuth Overall
 
-## Navigation
-
-- [Flowchart](#flowchart)
-- [Reading Order](#reading-order)
-- [Table of Contents](#table-of-contents)
-- Stage notes:
-  - [Range Compression](./range_compression.md)
-  - [Azimuth Frequency UFR](./azimuth_freq_ufr.md)
-  - [Azimuth Compression](./azimuth_compression.md)
-  - [Azimuth Time UFR](./azimuth_time_ufr.md)
-
 ## Flowchart
 
 - [Raw Data](#1-raw-data)
@@ -30,33 +19,31 @@
   - [Reramping](#55-reramping)
 - [Focused Image](#6-focused-image)
 
-## Reading Order
-
-1. [Range Compression](./range_compression.md)
-2. [Azimuth Frequency Folding](./azimuth_freq_folding.md)
-3. [Azimuth Frequency UFR](./azimuth_freq_ufr.md)
-4. [Azimuth Compression](./azimuth_compression.md)
-5. [Azimuth Time Folding](./azimuth_time_folding.md)
-6. [Azimuth Time UFR](./azimuth_time_ufr.md)
-7. Support derivations:
-   [Frequency-Time Deramping](./freq_time_deramping.md),
-   [Azimuth Deramp LPF](./azimuth_deramp_LPF.md)
-
-## Table of Contents
+## Hierarchy
 
 - [Summary](#summary)
 - [Signal Definitions](#signal-definitions)
 - [Problem Definition](#problem-definition)
 - [Derivation Highlights](#derivation-highlights)
 - [Symbols And Assumptions](#symbols-and-assumptions)
-- [1. Raw Data](#1-raw-data)
-- [2. Range Compression](#2-range-compression)
-- [3. Azimuth Frequency Unfolding And Resampling (UFR)](#3-azimuth-frequency-unfolding-and-resampling-ufr)
-- [3.1. Azimuth Frequency Folding (Explain)](#31-azimuth-frequency-folding-explain)
-- [4. Azimuth Compression](#4-azimuth-compression)
-- [5. Azimuth Time Unfolding And Resampling (UFR)](#5-azimuth-time-unfolding-and-resampling-ufr)
-- [5.1. Azimuth Time Folding (Explain)](#51-azimuth-time-folding-explain)
-- [6. Focused Image](#6-focused-image)
+- Main Flow
+  - [1. Raw Data](#1-raw-data)
+  - [2. Range Compression](#2-range-compression)
+  - [3. Azimuth Frequency Unfolding And Resampling (UFR)](#3-azimuth-frequency-unfolding-and-resampling-ufr)
+    - [3.1. Azimuth Frequency Folding (Explain)](#31-azimuth-frequency-folding-explain)
+  - [4. Azimuth Compression](#4-azimuth-compression)
+  - [5. Azimuth Time Unfolding And Resampling (UFR)](#5-azimuth-time-unfolding-and-resampling-ufr)
+    - [5.1. Azimuth Time Folding (Explain)](#51-azimuth-time-folding-explain)
+  - [6. Focused Image](#6-focused-image)
+- Reading Order
+  - [Range Compression](./range_compression.md)
+  - [Azimuth Frequency Folding](./azimuth_freq_folding.md)
+  - [Azimuth Frequency UFR](./azimuth_freq_ufr.md)
+  - [Azimuth Compression](./azimuth_compression.md)
+  - [Azimuth Time Folding](./azimuth_time_folding.md)
+  - [Azimuth Time UFR](./azimuth_time_ufr.md)
+  - [Frequency-Time Deramping](./freq_time_deramping.md)
+  - [Azimuth Deramp LPF](./azimuth_deramp_LPF.md)
 - [Physical Meaning](#physical-meaning)
 - [Final Result](#final-result)
 

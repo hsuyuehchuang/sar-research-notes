@@ -1,19 +1,15 @@
 # Range Compression
 
-## Navigation
-
-- [Overall](./tops_azimuth_overall.md)
-- Next: [Azimuth Frequency UFR](./azimuth_freq_ufr.md)
-
-## Table of Contents
+## Hierarchy
 
 - [Summary](#summary)
 - [Problem Definition](#problem-definition)
 - [Derivation Highlights](#derivation-highlights)
 - [Symbols And Assumptions](#symbols-and-assumptions)
-- [1. Raw Echo Model](#1-raw-echo-model)
-- [2. Range Matched Filter](#2-range-matched-filter)
-- [3. Range-Compressed Signal](#3-range-compressed-signal)
+- Main Flow
+  - [1. Raw Echo Model](#1-raw-echo-model)
+  - [2. Range Matched Filter](#2-range-matched-filter)
+  - [3. Range-Compressed Signal](#3-range-compressed-signal)
 - [Physical Meaning](#physical-meaning)
 - [Final Result](#final-result)
 

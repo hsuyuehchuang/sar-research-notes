@@ -1,24 +1,19 @@
 # Azimuth Time Folding
 
-## Navigation
-
-- [Overall](./tops_azimuth_overall.md)
-- Previous main step: [Azimuth Compression](./azimuth_compression.md)
-- Next main step: [Azimuth Time UFR](./azimuth_time_ufr.md)
-
-## Table of Contents
+## Hierarchy
 
 - [Summary](#summary)
 - [Problem Definition](#problem-definition)
 - [Derivation Highlights](#derivation-highlights)
 - [Symbols And Assumptions](#symbols-and-assumptions)
-- [1. Geometric Starting Point: Ground Motion Of The Beam Footprint](#1-geometric-starting-point-ground-motion-of-the-beam-footprint)
-- [2. From Ground Span To Equivalent Azimuth-Time Span](#2-from-ground-span-to-equivalent-azimuth-time-span)
-- [3. Paper Parameterization Of The Stretch Factor](#3-paper-parameterization-of-the-stretch-factor)
-- [4. Required Length For Linear Convolution](#4-required-length-for-linear-convolution)
-- [5. Unambiguous Time Window In FFT Implementation](#5-unambiguous-time-window-in-fft-implementation)
-- [6. Why Finite-Length FFT Becomes Circular Convolution](#6-why-finite-length-fft-becomes-circular-convolution)
-- [7. Wrap-Around Location Formula](#7-wrap-around-location-formula)
+- Main Flow
+  - [1. Geometric Starting Point: Ground Motion Of The Beam Footprint](#1-geometric-starting-point-ground-motion-of-the-beam-footprint)
+  - [2. From Ground Span To Equivalent Azimuth-Time Span](#2-from-ground-span-to-equivalent-azimuth-time-span)
+  - [3. Paper Parameterization Of The Stretch Factor](#3-paper-parameterization-of-the-stretch-factor)
+  - [4. Required Length For Linear Convolution](#4-required-length-for-linear-convolution)
+  - [5. Unambiguous Time Window In FFT Implementation](#5-unambiguous-time-window-in-fft-implementation)
+  - [6. Why Finite-Length FFT Becomes Circular Convolution](#6-why-finite-length-fft-becomes-circular-convolution)
+  - [7. Wrap-Around Location Formula](#7-wrap-around-location-formula)
 - [Physical Meaning](#physical-meaning)
 - [Final Result](#final-result)
 
