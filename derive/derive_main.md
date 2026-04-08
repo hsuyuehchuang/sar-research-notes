@@ -205,8 +205,7 @@ $$
 接下來對 $s_1(\tau,\eta)$ 在 azimuth 方向 $\eta$ 做 Fourier transform
 $$
 \color{red}{
-S_{1,c}(\tau,f_\eta;\omega_s)
-=
+S_{1,c}(\tau,f_\eta;\omega_s) =
 \mathcal{F}_{\eta}\left\{s_1(\tau,\eta)\right\}
 }
 $$
@@ -348,8 +347,7 @@ $$
 寫到和 filter 相同的 reference center $f_{\eta_c}$：
 
 $$
-\phi_{\mathrm{main}}(f_\eta)
-=
+\phi_{\mathrm{main}}(f_\eta) =
 \phi_{0,\mathrm{main}}
 +\phi_{1,\mathrm{main}}(f_\eta-f_{\eta_c})
 +\pi\frac{1}{k_s}(f_\eta-f_{\eta_c})^2
@@ -372,8 +370,7 @@ $$
 \exp\left(
 -j\phi_{\mathrm{main}}(f_\eta)
 \right)
-H_{\mathrm{de},f}(f_\eta)
-=
+H_{\mathrm{de},f}(f_\eta) =
 \exp\left(
 -j\left[
 \phi_{0,\mathrm{main}}
@@ -384,8 +381,7 @@ $$
 
 $$
 \color{red}{
-\phi_{\mathrm{after}}(f_\eta)
-=
+\phi_{\mathrm{after}}(f_\eta) =
 \phi_{0,\mathrm{main}}
 +\phi_{1,\mathrm{main}}(f_\eta-f_{\eta_c})
 }
@@ -650,8 +646,7 @@ time-domain 要證明 deramping 會把主 replica 拉平，也必須先把主 re
 在 $\eta_c$ 附近寫成 reference chirp：
 
 $$
-\phi_{\mathrm{main}}(\eta)
-=
+\phi_{\mathrm{main}}(\eta) =
 \phi_{0,\mathrm{main}}
 +\pi k_t(\eta-\eta_c)^2
 +2\pi f_{\eta_c}\eta
@@ -674,8 +669,7 @@ $$
 \exp\left(
 -j\phi_{\mathrm{main}}(\eta)
 \right)
-H_{\mathrm{de},t}(\eta)
-=
+H_{\mathrm{de},t}(\eta) =
 \exp\left(
 -j\phi_{0,\mathrm{main}}
 \right)
