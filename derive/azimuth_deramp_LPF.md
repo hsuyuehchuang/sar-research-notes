@@ -19,6 +19,7 @@
 
 * mosaicking 之後的 $S_2(\tau,f_\eta)$ 只把 replicas 攤開到 extended azimuth-frequency axis，並不會自動拿掉每個 replica 內部的二次 phase curvature。
 * deramping 的核心作用，是對主 replica 乘上一個 reference quadratic phase 的共軛補償，使其殘餘二次項由 $\psi_{2,m}$ 變成 $\psi_{2,m}-\psi_{2,\mathrm{ref}}$。
+* 若把主 replica 的 phase 與 deramping filter 寫在同一個 reference center 下，則可以直接看到 quadratic term 的 cancellation，並嚴格證明主 replica 被拉平。
 * LPF 之所以有效，不是因為它會自己辨認主 replica，而是因為主 replica 已先在 deramping 後被展平成接近 baseband 的窄頻表示。
 * 理想數學模型可以寫成固定通帶的 `rect` 窗，但實作上採用 FFT-based sharp-cut filtering：Forward FFT、將不需要的 bins 直接設為 0、Inverse FFT。
 * 整個處理鏈必須拆成起點訊號、局部 phase model、deramping、理想 LPF 模型、FFT-based LPF 實作五個模組，並且每一步都寫出 fully expanded closed form。
@@ -36,7 +37,7 @@ B_r\left(
 \right)
 \right] \cdot
 \mathrm{rect}\left(
-\frac{f_\eta-m\cdot\mathrm{PRF}-k_s\eta_c}{B_{\max}}
+\frac{f_\eta-m\cdot\mathrm{PRF}-f_{\eta_c}}{B_{\max}}
 \right) \cdot
 \exp\left(
 -j\left[
@@ -90,6 +91,8 @@ $$
 * $S_{4,m}(\tau,f_\eta)$：第 $m$ 個 LPF 後 replica
 * $m_0$：欲保留之主 replica 索引
 * $f_{\mathrm{ref}}$：主 replica 的 reference frequency
+* $f_{\eta_c}$：主 replica 的 reference center frequency
+* $k_s$：主 replica 的 local chirp slope；若以 chirp-rate 記號表示，則在同一 reference center 下有 $\psi_{2,\mathrm{ref}}=\pi/k_s$
 * $\psi_m(f_\eta)$：第 $m$ 個 replica exponent 中的實數 phase function
 * $\psi_{0,m},\psi_{1,m},\psi_{2,m}$：$\psi_m(f_\eta)$ 在 $f_{\mathrm{ref}}$ 附近的局部係數
 * $\psi_{2,\mathrm{ref}}$：reference quadratic curvature
@@ -131,7 +134,7 @@ B_r\left(
 \right)
 \right] \cdot
 \mathrm{rect}\left(
-\frac{f_\eta-m\cdot\mathrm{PRF}-k_s\eta_c}{B_{\max}}
+\frac{f_\eta-m\cdot\mathrm{PRF}-f_{\eta_c}}{B_{\max}}
 \right) \cdot
 \exp\left(
 -j\psi_m(f_\eta)
@@ -165,7 +168,7 @@ B_r\left(
 \right)
 \right] \cdot
 \mathrm{rect}\left(
-\frac{f_\eta-m\cdot\mathrm{PRF}-k_s\eta_c}{B_{\max}}
+\frac{f_\eta-m\cdot\mathrm{PRF}-f_{\eta_c}}{B_{\max}}
 \right) \cdot
 \exp\left(
 -j\psi_m(f_\eta)
@@ -211,7 +214,7 @@ B_r\left(
 \right)
 \right] \cdot
 \mathrm{rect}\left(
-\frac{f_\eta-m\cdot\mathrm{PRF}-k_s\eta_c}{B_{\max}}
+\frac{f_\eta-m\cdot\mathrm{PRF}-f_{\eta_c}}{B_{\max}}
 \right) \cdot
 \exp\left(
 -j\left[
@@ -233,7 +236,7 @@ B_r\left(
 \right)
 \right] \cdot
 \mathrm{rect}\left(
-\frac{f_\eta-m\cdot\mathrm{PRF}-k_s\eta_c}{B_{\max}}
+\frac{f_\eta-m\cdot\mathrm{PRF}-f_{\eta_c}}{B_{\max}}
 \right) \cdot
 \exp\left(
 -j\left[
@@ -273,6 +276,81 @@ H_{\mathrm{de}}(f_\eta) =
 \right)
 $$
 
+若要把 deramping 的效果寫成一眼就能看出 **cancellation** 的數學證據，必須把主 replica
+在同一個 reference center $f_{\mathrm{ref}}$ 下寫成
+
+$$
+\psi_{\mathrm{main}}(f_\eta) =
+\psi_{0,\mathrm{main}}
++\psi_{1,\mathrm{main}}(f_\eta-f_{\mathrm{ref}})
++\psi_{2,\mathrm{ref}}(f_\eta-f_{\mathrm{ref}})^2
+$$
+
+則主 replica 經過 deramping 後有
+
+$$
+\exp\left(
+-j\psi_{\mathrm{main}}(f_\eta)
+\right)
+\cdot
+H_{\mathrm{de}}(f_\eta)
+=
+\exp\left(
+-j\left[
+\psi_{0,\mathrm{main}}
++\psi_{1,\mathrm{main}}(f_\eta-f_{\mathrm{ref}})
++\psi_{2,\mathrm{ref}}(f_\eta-f_{\mathrm{ref}})^2
+\right]
+\right)
+\cdot
+\exp\left(
++j\psi_{2,\mathrm{ref}}(f_\eta-f_{\mathrm{ref}})^2
+\right)
+$$
+
+$$
+\boxed{
+\exp\left(
+-j\psi_{\mathrm{main}}(f_\eta)
+\right)
+\cdot
+H_{\mathrm{de}}(f_\eta)
+=
+\exp\left(
+-j\left[
+\psi_{0,\mathrm{main}}
++\psi_{1,\mathrm{main}}(f_\eta-f_{\mathrm{ref}})
+\right]
+\right)
+}
+$$
+
+這個 boxed equation 就是最關鍵的數學證據：主 replica 的 quadratic phase term
+$\psi_{2,\mathrm{ref}}(f_\eta-f_{\mathrm{ref}})^2$ 在乘完 deramping filter 後**完全 cancellation**，
+只剩常數項與線性項。
+
+因此主 replica deramp 後的 phase 可寫成
+
+$$
+\boxed{
+\psi_{\mathrm{after}}(f_\eta)=
+\psi_{0,\mathrm{main}}
++\psi_{1,\mathrm{main}}(f_\eta-f_{\mathrm{ref}})
+}
+$$
+
+所以
+
+$$
+\boxed{
+\frac{d^2\psi_{\mathrm{after}}(f_\eta)}{df_\eta^2}=0
+}
+$$
+
+二階導數為零表示 curvature 被完全拿掉。從 time-frequency diagram 的角度看，
+原本帶有 quadratic phase 的主 replica 會被拉直，主能量脊線在適當座標下會趨近水平或垂直；
+也正因如此，後面的 LPF 才能用固定通帶去保留它。
+
 第 $m$ 個 replica 經過 deramping 後為
 
 $$
@@ -291,7 +369,7 @@ B_r\left(
 \right)
 \right] \cdot
 \mathrm{rect}\left(
-\frac{f_\eta-m\cdot\mathrm{PRF}-k_s\eta_c}{B_{\max}}
+\frac{f_\eta-m\cdot\mathrm{PRF}-f_{\eta_c}}{B_{\max}}
 \right) \cdot
 \exp\left(
 -j\left[
@@ -315,19 +393,19 @@ B_r\left(
 \right)
 \right] \cdot
 \mathrm{rect}\left(
-\frac{f_\eta-m\cdot\mathrm{PRF}-k_s\eta_c}{B_{\max}}
+\frac{f_\eta-m\cdot\mathrm{PRF}-f_{\eta_c}}{B_{\max}}
 \right) \cdot
 \exp\left(
 -j\left[
 \psi_{0,m} + \psi_{1,m}(f_\eta-f_{\mathrm{ref}})
-+\left(
++\boxed{\left(
 \psi_{2,m}-\psi_{2,\mathrm{ref}}
-\right)(f_\eta-f_{\mathrm{ref}})^2
+\right)(f_\eta-f_{\mathrm{ref}})^2}
 \right]
 \right)
 $$
 
-對主 replica 而言，因為 $\psi_{2,\mathrm{ref}}=\psi_{2,m_0}$，所以其殘餘二次項近似為零。這就是 deramping 真正的物理作用：它不是把 replicas 消失，而是把主 replica 的 quadratic curvature 拿掉。
+**對主 replica 而言，因為 $\psi_{2,\mathrm{ref}}=\psi_{2,m_0}$，所以其殘餘二次項近似為零。這就是 deramping 真正的物理作用：它不是把 replicas 消失，而是把主 replica 的 quadratic curvature 拿掉。**
 
 ---
 
@@ -360,7 +438,7 @@ B_r\left(
 \right)
 \right] \cdot
 \mathrm{rect}\left(
-\frac{f_\eta-m\cdot\mathrm{PRF}-k_s\eta_c}{B_{\max}}
+\frac{f_\eta-m\cdot\mathrm{PRF}-f_{\eta_c}}{B_{\max}}
 \right) \cdot
 \exp\left(
 -j\left[
@@ -387,7 +465,7 @@ B_r\left(
 \right)
 \right] \cdot
 \mathrm{rect}\left(
-\frac{f_\eta-m\cdot\mathrm{PRF}-k_s\eta_c}{B_{\max}}
+\frac{f_\eta-m\cdot\mathrm{PRF}-f_{\eta_c}}{B_{\max}}
 \right) \cdot
 \exp\left(
 -j\left[
@@ -413,7 +491,7 @@ B_r\left(
 \right)
 \right] \cdot
 \mathrm{rect}\left(
-\frac{f_\eta-m_0\cdot\mathrm{PRF}-k_s\eta_c}{B_{\max}}
+\frac{f_\eta-m_0\cdot\mathrm{PRF}-f_{\eta_c}}{B_{\max}}
 \right) \cdot
 \exp\left(
 -j\left[
@@ -503,7 +581,7 @@ B_r\left(
 \right)
 \right] \cdot
 \mathrm{rect}\left(
-\frac{f_\eta-m\cdot\mathrm{PRF}-k_s\eta_c}{B_{\max}}
+\frac{f_\eta-m\cdot\mathrm{PRF}-f_{\eta_c}}{B_{\max}}
 \right) \cdot
 \exp\left(
 -j\psi_m(f_\eta)
@@ -531,7 +609,7 @@ B_r\left(
 \right)
 \right] \cdot
 \mathrm{rect}\left(
-\frac{f_\eta-m\cdot\mathrm{PRF}-k_s\eta_c}{B_{\max}}
+\frac{f_\eta-m\cdot\mathrm{PRF}-f_{\eta_c}}{B_{\max}}
 \right) \cdot
 \exp\left(
 -j\left[
@@ -564,7 +642,7 @@ B_r\left(
 \right)
 \right] \cdot
 \mathrm{rect}\left(
-\frac{f_\eta-m\cdot\mathrm{PRF}-k_s\eta_c}{B_{\max}}
+\frac{f_\eta-m\cdot\mathrm{PRF}-f_{\eta_c}}{B_{\max}}
 \right) \cdot
 \exp\left(
 -j\left[

@@ -111,6 +111,7 @@ $$
 R(\eta) =
 \sqrt{
 R_0^2+V_r^2(\eta-\eta_0)^2
+}
 $$
 
 若保留距離包絡、天線照明與慢時間取樣 comb，則離散慢時間回波可寫成
@@ -329,6 +330,7 @@ $$
 D(f_\eta,V_r) =
 \sqrt{
 1-\frac{c^2f_\eta^2}{4V_r^2f_0^2}
+}
 $$
 
 以及
@@ -432,6 +434,9 @@ W_{fold}(f_\eta;\omega_s) =
 \sum_{k=-\infty}^{\infty}
 W_a(f_\eta-k\cdot\mathrm{PRF};\omega_s)
 $$
+
+這個式子就是 azimuth spectrum folding 的明確數學表達：  
+連續包絡 $W_a$ 被以 `PRF` 為間隔週期性複製，形成 $W_{fold}$。
 
 因此在 envelope 與 phase 緩變近似下，folded 頻譜也可寫成
 
@@ -669,6 +674,7 @@ E(\theta) \simeq
 \right)
 }{
 +jk\sin\theta
+}
 $$
 
 進一步整理為
@@ -681,6 +687,7 @@ k\frac{L_a}{2}\sin\theta
 \right)
 }{
 k\sin\theta
+}
 $$
 
 代入 $k=2\pi/\lambda$，可得
@@ -694,6 +701,7 @@ L_a\,
 \right)
 }{
 \pi\frac{L_a}{\lambda}\sin\theta
+}
 $$
 
 因此歸一化單程方向圖為

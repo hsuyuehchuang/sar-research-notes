@@ -107,6 +107,24 @@ $$
 
 將 replicas 攤到 extended-frequency axis 後，
 
+這一步之所以會引入
+
+- $\psi_{0,m}$：常數項
+- $\psi_{1,m}$：一階導數對應的線性項
+- $\psi_{2,m}$：二階導數對應的曲率項
+
+是因為 mosaicking 之後，我們不再把第 $m$ 個 replica 的 phase 保留成完整 closed form，而是改在 reference frequency $f_{\mathrm{ref}}$ 附近做局部二次展開。也就是說，若第 $m$ 個 replica 的原始 phase 記為 $\phi_m(f_\eta)$，則在局部通帶內用
+
+$$
+\phi_m(f_\eta)
+\approx
+\psi_{0,m}
++\psi_{1,m}(f_\eta-f_{\mathrm{ref}})
++\psi_{2,m}(f_\eta-f_{\mathrm{ref}})^2
+$$
+
+來近似。這三個係數分別代表 phase offset、局部線性 phase slope、以及局部 quadratic curvature。這樣做的目的不是引入新的物理模型，而是把每個 replica 的 phase 壓縮成後續 deramping / LPF / reramping 可直接操作的局部模型。特別是 deramping 真正要消掉的，就是主 replica 所對應的二次曲率項。
+
 $$
 S_3(\tau,f_\eta) =
 \sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}}
@@ -127,6 +145,11 @@ B_r\left(
 \right]
 \right)
 $$
+
+因此這裡的 polynomial-phase notation 有兩個直接用途：
+
+1. 讓每個 replica 都能用同一套記號被描述，方便主流程書寫。
+2. 讓 deramping 可以明確寫成「對主 replica 的 quadratic curvature 做補償」。
 
 ## 4. Deramping
 

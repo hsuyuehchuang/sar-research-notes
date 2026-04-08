@@ -6,7 +6,6 @@ Simulation and derivation workspace for TOPS (Terrain Observation with Progressi
 
 - [Flowchart](#flowchart)
 - [Overview](#overview)
-- [Reading Path](#reading-path)
 - [Repository Structure](#repository-structure)
 - [Documentation Standard](#documentation-standard)
 - [Project Status](#project-status)
@@ -46,22 +45,22 @@ graph TD
     class E1,E2,E3,E4 time;
 ```
 
-- [Raw Data](derive/tops_azimuth_overall.md#1-raw-data)
-- [Range Compression](derive/tops_azimuth_overall.md#2-range-compression)
-- [Azimuth Frequency Unfolding And Resampling (UFR)](derive/tops_azimuth_overall.md#3-azimuth-frequency-unfolding-and-resampling-ufr)
-  - [Azimuth Frequency Folding (Explain)](derive/tops_azimuth_overall.md#31-azimuth-frequency-folding-explain)
-  - [Mosaicking](derive/tops_azimuth_overall.md#32-mosaicking)
-  - [Deramping](derive/tops_azimuth_overall.md#33-deramping)
-  - [Low Pass Filter](derive/tops_azimuth_overall.md#34-low-pass-filter)
-  - [Reramping](derive/tops_azimuth_overall.md#35-reramping)
-- [Azimuth Compression](derive/tops_azimuth_overall.md#4-azimuth-compression)
-- [Azimuth Time Unfolding And Resampling (UFR)](derive/tops_azimuth_overall.md#5-azimuth-time-unfolding-and-resampling-ufr)
-  - [Azimuth Time Folding (Explain)](derive/tops_azimuth_overall.md#51-azimuth-time-folding-explain)
-  - [Mosaicking](derive/tops_azimuth_overall.md#52-mosaicking)
-  - [Deramping](derive/tops_azimuth_overall.md#53-deramping)
-  - [Low Pass Filter](derive/tops_azimuth_overall.md#54-low-pass-filter)
-  - [Reramping](derive/tops_azimuth_overall.md#55-reramping)
-- [Focused Image](derive/tops_azimuth_overall.md#6-focused-image)
+- [Raw Data](derive/derive_main.md#1-raw-data)
+- [Range Compression](derive/derive_main.md#2-range-compression)
+- [Azimuth Frequency Unfolding And Resampling (UFR)](derive/derive_main.md#3-azimuth-frequency-unfolding-and-resampling-ufr)
+  - [Azimuth Frequency Folding (Explain)](derive/derive_main.md#31-azimuth-frequency-folding-explain)
+  - [Mosaicking](derive/derive_main.md#32-mosaicking)
+  - [Deramping](derive/derive_main.md#33-deramping)
+  - [Low Pass Filter](derive/derive_main.md#34-low-pass-filter)
+  - [Reramping](derive/derive_main.md#35-reramping)
+- [Azimuth Compression](derive/derive_main.md#4-azimuth-compression)
+- [Azimuth Time Unfolding And Resampling (UFR)](derive/derive_main.md#5-azimuth-time-unfolding-and-resampling-ufr)
+  - [Azimuth Time Folding (Explain)](derive/derive_main.md#51-azimuth-time-folding-explain)
+  - [Mosaicking](derive/derive_main.md#52-mosaicking)
+  - [Deramping](derive/derive_main.md#53-deramping)
+  - [Low Pass Filter](derive/derive_main.md#54-low-pass-filter)
+  - [Reramping](derive/derive_main.md#55-reramping)
+- [Focused Image](derive/derive_main.md#6-focused-image)
 
 ## Overview
 
@@ -74,28 +73,13 @@ The documentation is organized so that a reader can move between:
 - teaching-style notebooks that visualize intermediate results
 - repository-local writing rules for math-heavy technical notes
 
-## Reading Path
-
-If you are new to this repository, the cleanest path is:
-
-1. [TOPS Azimuth Overall](derive/tops_azimuth_overall.md)
-2. [Range Compression](derive/range_compression.md)
-3. [Azimuth Deramp LPF](derive/azimuth_deramp_LPF.md)
-4. [Azimuth Compression](derive/azimuth_compression.md)
-5. [Azimuth Frequency Folding](derive/azimuth_freq_folding.md)
-6. [Azimuth Frequency UFR](derive/azimuth_freq_ufr.md)
-7. [Azimuth Time Folding](derive/azimuth_time_folding.md)
-8. [Azimuth Time UFR](derive/azimuth_time_ufr.md)
-9. [Explain UFR3 Notebook](derive/explain_ufr3.ipynb)
-10. [Explain UFR4 Notebook](derive/explain_ufr4.ipynb)
-
 ## Repository Structure
 
 ```text
 sar_tops_mode/
 ├── README.md
 ├── derive/
-│   ├── tops_azimuth_overall.md
+│   ├── derive_main.md
 │   ├── range_compression.md
 │   ├── azimuth_compression.md
 │   ├── azimuth_deramp_LPF.md
