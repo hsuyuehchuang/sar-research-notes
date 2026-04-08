@@ -191,8 +191,7 @@ $$
 
 $$
 \alpha =
-\frac{v_p+v_{\mathrm{scan}}}{v_p}
-=
+\frac{v_p+v_{\mathrm{scan}}}{v_p} =
 1+\frac{v_{\mathrm{scan}}}{v_p}
 $$
 
@@ -209,10 +208,8 @@ $$
 $$
 \frac{k_{rot}}{k_a} =
 \frac{\frac{2v_p\omega_{rot}}{\lambda}}
--\frac{2v_p^2}{\lambda R_0}
-=
--\frac{R_0\omega_{rot}}{v_p}
-=
+-\frac{2v_p^2}{\lambda R_0} =
+-\frac{R_0\omega_{rot}}{v_p} =
 -\frac{v_{\mathrm{scan}}}{v_p}
 $$
 
@@ -220,8 +217,7 @@ $$
 
 $$
 \alpha =
-1-\frac{k_{rot}}{k_a}
-=
+1-\frac{k_{rot}}{k_a} =
 \frac{k_a-k_{rot}}{k_a}
 $$
 
@@ -236,10 +232,8 @@ $$
 若再把 effective TOPS chirp rate 寫成 paper 常用形式，則
 
 $$
-k_t = \frac{k_{rot}}{\alpha}
-=
-\frac{k_{rot}}{1-\frac{k_{rot}}{k_a}}
-=
+k_t = \frac{k_{rot}}{\alpha} =
+\frac{k_{rot}}{1-\frac{k_{rot}}{k_a}} =
 \frac{k_a k_{rot}}{k_a-k_{rot}}
 $$
 
@@ -414,8 +408,7 @@ paper-style stretch factor：
 
 $$
 \alpha =
-1+\frac{v_{\mathrm{scan}}}{v_p}
-=
+1+\frac{v_{\mathrm{scan}}}{v_p} =
 1-\frac{k_{rot}}{k_a}
 $$
 

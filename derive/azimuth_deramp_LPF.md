@@ -293,8 +293,7 @@ $$
 -j\psi_{\mathrm{main}}(f_\eta)
 \right)
 \cdot
-H_{\mathrm{de}}(f_\eta)
-=
+H_{\mathrm{de}}(f_\eta) =
 \exp\left(
 -j\left[
 \psi_{0,\mathrm{main}}
@@ -309,13 +308,12 @@ H_{\mathrm{de}}(f_\eta)
 $$
 
 $$
-\boxed{
+\color{red}{
 \exp\left(
 -j\psi_{\mathrm{main}}(f_\eta)
 \right)
 \cdot
-H_{\mathrm{de}}(f_\eta)
-=
+H_{\mathrm{de}}(f_\eta) =
 \exp\left(
 -j\left[
 \psi_{0,\mathrm{main}}
@@ -325,14 +323,14 @@ H_{\mathrm{de}}(f_\eta)
 }
 $$
 
-這個 boxed equation 就是最關鍵的數學證據：主 replica 的 quadratic phase term
+這個 red-highlighted equation 就是最關鍵的數學證據：主 replica 的 quadratic phase term
 $\psi_{2,\mathrm{ref}}(f_\eta-f_{\mathrm{ref}})^2$ 在乘完 deramping filter 後**完全 cancellation**，
 只剩常數項與線性項。
 
 因此主 replica deramp 後的 phase 可寫成
 
 $$
-\boxed{
+\color{red}{
 \psi_{\mathrm{after}}(f_\eta)=
 \psi_{0,\mathrm{main}}
 +\psi_{1,\mathrm{main}}(f_\eta-f_{\mathrm{ref}})
@@ -342,7 +340,7 @@ $$
 所以
 
 $$
-\boxed{
+\color{red}{
 \frac{d^2\psi_{\mathrm{after}}(f_\eta)}{df_\eta^2}=0
 }
 $$
@@ -398,7 +396,7 @@ B_r\left(
 \exp\left(
 -j\left[
 \psi_{0,m} + \psi_{1,m}(f_\eta-f_{\mathrm{ref}})
-+\boxed{\left(
++\color{red}{\left(
 \psi_{2,m}-\psi_{2,\mathrm{ref}}
 \right)(f_\eta-f_{\mathrm{ref}})^2}
 \right]
