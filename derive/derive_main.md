@@ -31,9 +31,17 @@
   - [2. Range Compression](#2-range-compression)
   - [3. Azimuth Frequency Unfolding And Resampling (UFR)](#3-azimuth-frequency-unfolding-and-resampling-ufr)
     - [3.1. Azimuth Frequency Folding (Explain)](#31-azimuth-frequency-folding-explain)
+    - [3.2. Mosaicking](#32-mosaicking)
+    - [3.3. Deramping](#33-deramping)
+    - [3.4. Low Pass Filter](#34-low-pass-filter)
+    - [3.5. Reramping](#35-reramping)
   - [4. Azimuth Compression](#4-azimuth-compression)
   - [5. Azimuth Time Unfolding And Resampling (UFR)](#5-azimuth-time-unfolding-and-resampling-ufr)
     - [5.1. Azimuth Time Folding (Explain)](#51-azimuth-time-folding-explain)
+    - [5.2. Mosaicking](#52-mosaicking)
+    - [5.3. Deramping](#53-deramping)
+    - [5.4. Low Pass Filter](#54-low-pass-filter)
+    - [5.5. Reramping](#55-reramping)
   - [6. Focused Image](#6-focused-image)
 - [Physical Meaning](#physical-meaning)
 - [Final Result](#final-result)
@@ -703,7 +711,7 @@ time-domain folding 與 wrap-around location 的完整說明可參考：
 
 - Deramping 的目標是消除主 replica 的 quadratic phase curvature，讓後續 time-domain LPF 可用固定 keep window 保留主能量。
 - 因此先取主 replica $m_0$，把 5.2 的相位多項式
-  $ \chi_{0,m}+\chi_{1,m}(\eta-\eta_{\mathrm{ref}})+\chi_{2,m}(\eta-\eta_{\mathrm{ref}})^2 $
+  $\chi_{0,m}+\chi_{1,m}(\eta-\eta_{\mathrm{ref}})+\chi_{2,m}(\eta-\eta_{\mathrm{ref}})^2$
   在 $\eta_c$ 附近重寫成 reference chirp：
 
 $$
@@ -787,12 +795,12 @@ $$
 H_{\mathrm{LPF},t}(\eta) = \mathrm{rect}\biggl( \frac{\eta-\eta_{\mathrm{LPF}}}{T_{\mathrm{LPF}}} \biggr)
 $$
 
-- 其中 $ \eta_{\mathrm{LPF}} $ 是 keep window 的中心時間， $ T_{\mathrm{LPF}} $ 是 keep window 的時間長度。
+- 其中 $\eta_{\mathrm{LPF}}$ 是 keep window 的中心時間，$T_{\mathrm{LPF}}$ 是 keep window 的時間長度。
 
 #### FFT-based 實作與保留主項
 
 - 在 FFT-based time LPF 實作中，等價於在 slow-time samples 上套用固定 keep window。
-- 當視窗中心對準 deramped 主 replica 且 $ T_{\mathrm{LPF}} $ 選得足夠窄（相對 replica 間距 $ T_{\mathrm{window}} $），則主要保留 $ m=m_0 $（通常可取 $ m_0=0 $）附近能量， $ m\neq m_0 $ 項被抑制。
+- 當視窗中心對準 deramped 主 replica 且 $T_{\mathrm{LPF}}$ 選得足夠窄（相對 replica 間距 $T_{\mathrm{window}}$），則主要保留 $m=m_0$（通常可取 $m_0=0$）附近能量，$m\neq m_0$ 項被抑制。
 
 $$
 \eta_{\mathrm{LPF}} \approx \eta_c
@@ -802,7 +810,7 @@ $$
 T_{\mathrm{LPF}} \approx T_{\mathrm{keep}}
 $$
 
-因此 $ T_{\mathrm{LPF}} < T_{\mathrm{window}} $ 時，可避免同時納入相鄰 replicas。
+因此 $T_{\mathrm{LPF}} < T_{\mathrm{window}}$ 時，可避免同時納入相鄰 replicas。
 
 #### 完整輸出式（保留多 replica 表示）
 
@@ -822,7 +830,7 @@ $$
 I_{10}(\tau,\eta)\approx I_{9,m_0}(\tau,\eta)\,H_{\mathrm{LPF},t}(\eta)
 $$
 
-若 $ m_0=0 $ 且主項已在 5.3 被拉直，則可寫成
+若 $m_0=0$ 且主項已在 5.3 被拉直，則可寫成
 
 $$
 I_{10}(\tau,\eta)\approx A_{10}\,
@@ -860,7 +868,7 @@ $$
 
 #### 單主 replica 近似式
 
-當 LPF 已主要保留主項 $ m_0 $（通常 $ m_0=0 $）時，可近似寫成
+當 LPF 已主要保留主項 $m_0$（通常 $m_0=0$）時，可近似寫成
 
 $$
 I_{11}(\tau,\eta)\approx I_{10,m_0}(\tau,\eta)\,H_{\mathrm{re},t}(\eta)
@@ -878,10 +886,10 @@ $$
 - Deramping + LPF + Reramping 可理解為：先把主帶拉直以利固定視窗裁切，再把保留下來的主帶送回目標相位曲率座標。
 - 因為 LPF 已抑制多數非主 replicas，reramping 後主要保留的是主項的有效時域包絡，供最後聚焦使用。
 
-#### 小總結（到 $ I_{11} $ 為止）
+#### 小總結（到 $I_{11}$ 為止）
 
-- 在「mosaicking $ \rightarrow $ deramping $ \rightarrow $ LPF $ \rightarrow $ reramping」完成後，可近似視為只剩主時間帶 $ m=m_0 $ 對應的有效訊號。
-- 目前式子中的 $ \mathrm{rect}\biggl( \frac{\eta-\eta_{\mathrm{LPF}}}{T_{\mathrm{LPF}}} \biggr) $ 代表最終保留的主時間視窗；其他 replicas 因不在 keep window 內而被抑制。
+- 在「mosaicking $\rightarrow$ deramping $\rightarrow$ LPF $\rightarrow$ reramping」完成後，可近似視為只剩主時間帶 $m=m_0$ 對應的有效訊號。
+- 目前式子中的 $\mathrm{rect}\biggl( \frac{\eta-\eta_{\mathrm{LPF}}}{T_{\mathrm{LPF}}} \biggr)$ 代表最終保留的主時間視窗；其他 replicas 因不在 keep window 內而被抑制。
 - 目前主項 phase term 可理解為「常數項 + 線性項 + 被 reramping 乘回的目標二次曲率項」；它已回到後續聚焦可直接匹配的 phase 座標系。
 
 ## 6. Focused Image
@@ -894,13 +902,13 @@ $$
 \mathrm{sinc}\biggl[ B_{\mathrm{az,keep}}(\eta-\eta_c) \biggr]}}
 $$
 
-#### 6.1 Focused Image 是怎麼來的（總結）
+#### 總結
 
-- 這個 $ I_{\mathrm{focus}} $ 的形成，核心上是「兩次解 wrap-around」後再取主項。
-- 第一次是 frequency-domain：在 $ S_2(\tau,f_\eta) $ 的 folded replicas 上做 $ S_2 \rightarrow S_3 \rightarrow S_4 \rightarrow S_5 \rightarrow S_6 $ ，用 mosaicking + deramping + LPF + reramping 把主頻帶拆出並回到 reference phase。
-- 第二次是 time-domain：在 $ s_7(\tau,\eta) $ 之後，處理 $ I_{\mathrm{circ}}(\tau,\eta)=\sum_m I_{\mathrm{lin}}(\tau,\eta-mT_{\mathrm{window}}) $ 的 time folding，經 $ I_8 \rightarrow I_9 \rightarrow I_{10} \rightarrow I_{11} $ 再次做 UFR，把主時間帶保留下來。
-- 因此最後的近似可寫成「只保留主 replica $ m=m_0 $」：range 向由 $ \mathrm{sinc}\bigl[ B_r(\tau-2R_0/c) \bigr] $ 決定，azimuth 向由 $ \mathrm{sinc}\bigl[ B_{\mathrm{az,keep}}(\eta-\eta_c) \bigr] $ 決定。
-- 判讀重點是：若前面的兩次 UFR 沒有把 folded replicas 壓到主帶，最終式子不會收斂成這個單一雙-sinc 形式，而會保留多個 $ m $ 項的疊加。
+- 這個 $I_{\mathrm{focus}}$ 的形成，核心上是「兩次解 wrap-around」後再取主項。
+- 第一次是 frequency-domain：在 $S_2(\tau,f_\eta)$ 的 folded replicas 上做 $S_2 \rightarrow S_3 \rightarrow S_4 \rightarrow S_5 \rightarrow S_6$，用 mosaicking + deramping + LPF + reramping 把主頻帶拆出並回到 reference phase。
+- 第二次是 time-domain：在 $s_7(\tau,\eta)$ 之後，處理 $I_{\mathrm{circ}}(\tau,\eta)=\sum_m I_{\mathrm{lin}}(\tau,\eta-mT_{\mathrm{window}})$ 的 time folding，經 $I_8 \rightarrow I_9 \rightarrow I_{10} \rightarrow I_{11}$ 再次做 UFR，把主時間帶保留下來。
+- 因此最後的近似可寫成「只保留主 replica $m=m_0$」：range 向由 $\mathrm{sinc}\bigl[ B_r(\tau-2R_0/c) \bigr]$ 決定，azimuth 向由 $\mathrm{sinc}\bigl[ B_{\mathrm{az,keep}}(\eta-\eta_c) \bigr]$ 決定。
+- 判讀重點是：若前面的兩次 UFR 沒有把 folded replicas 壓到主帶，最終式子不會收斂成這個單一雙-sinc 形式，而會保留多個 $m$ 項的疊加。
 
 ## Physical Meaning
 
