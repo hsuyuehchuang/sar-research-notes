@@ -295,7 +295,7 @@ $$
 
 #### 重排原理與實作對應
 
-- 在 $S_2(\tau,f_\eta)$ 中，$f_\eta$ 仍是 folded frequency axis 上的座標；到 $S_3(\tau,f_\eta)$ 時，$f_\eta$ 必須重新解釋成 extended axis 上的座標。
+- 在 $S_2(\tau,f_\eta)$ 中， $f_\eta$ 仍是 folded frequency axis 上的座標；到 $S_3(\tau,f_\eta)$ 時，$f_\eta$ 必須重新解釋成 extended axis 上的座標。
 - mosaicking 的本質是先依 replica index 重新指定 extended-axis 座標，再做組裝。
 - 其中 $m$ 表示第 $m$ 個 mosaicked replica；$m$ 同時決定該 replica 在 extended axis 上的頻率位移（以 `PRF` 為間隔）與 support 位置。
 
