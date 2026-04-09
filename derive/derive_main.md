@@ -200,7 +200,7 @@ $$
 
 $$
 S_{1,c}(\tau,f_\eta;\omega_s) =
-F_{\eta}\left\{s_{1, cont}(\tau,\eta)\right\}
+F_{\eta} { s_{1, cont}(\tau,\eta) }
 $$
 
 若把 $S_{1,c}$ 寫開，則
