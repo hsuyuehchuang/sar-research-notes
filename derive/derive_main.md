@@ -157,9 +157,9 @@ $$
 \exp\left[-j\phi_{az}(f_\eta)\right]
 $$
 
-- 其中， $ \phi_{az}(f_\eta) = \frac{4\pi R_0f_0}{c}D(f_\eta,V_r)+2\pi f_\eta\eta_0 $
+- 其中，  $ \phi_{az}(f_\eta) = \frac{4\pi R_0f_0}{c}D(f_\eta,V_r)+2\pi f_\eta\eta_0 $
 
-- 其中， $ W_a(f_\eta;\omega_s) = \mathcal{F}_{\eta}\left[ w_a(\eta;\omega_s) \right] $ 互為 Fourier pair
+- 其中，   $ W_a(f_\eta;\omega_s) = \mathcal{F}_{\eta}\left[ w_a(\eta;\omega_s) \right] $ 互為 Fourier pair
 
 - 下一步再將 slow-time sampling 的效果帶進 frequency domain。由於 $s_1(\tau,\eta)$ 是 continuous signal 與 impulse train 的乘積，因此其 azimuth Fourier transform 可逐步寫成
 
