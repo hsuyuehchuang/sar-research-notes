@@ -51,44 +51,44 @@
 
 - 這份推導把 TOPS SAR 的完整訊號 從 raw data 一路推到 focused image。
 - 每一個 stage signal 都必須寫成自己的 fully expanded closed form，不能只用操作符代替。
-- 對應的主鏈訊號依序為 $s_0(\tau,\eta)$、$s_1(\tau,\eta)$、$S_2(\tau,f_\eta)$、$S_3(\tau,f_\eta)$、$S_4(\tau,f_\eta)$、$S_5(\tau,f_\eta)$、$S_6(\tau,f_\eta)$、$s_7(\tau,\eta)$、$I_8(\tau,\eta)$、$I_9(\tau,\eta)$、$I_{10}(\tau,\eta)$、$I_{11}(\tau,\eta)$ 與 $I_{\mathrm{focus}}(\tau,\eta)$。
+- 對應的主鏈訊號依序為 $s_0(\tau,\eta)$ 、 $s_1(\tau,\eta)$ 、 $S_2(\tau,f_\eta)$ 、 $S_3(\tau,f_\eta)$ 、 $S_4(\tau,f_\eta)$ 、 $S_5(\tau,f_\eta)$ 、 $S_6(\tau,f_\eta)$ 、 $s_7(\tau,\eta)$ 、 $I_8(\tau,\eta)$ 、 $I_9(\tau,\eta)$ 、 $I_{10}(\tau,\eta)$ 、 $I_{11}(\tau,\eta)$ 與 $I_{\mathrm{focus}}(\tau,\eta)$ 。
 
 ## Signal Definitions
 
-- $s_0(\tau,\eta)$：raw data
-- $s_1(\tau,\eta)$：range-compressed data
-- $S_2(\tau,f_\eta)$：folded azimuth-frequency signal
-- $S_3(\tau,f_\eta)$：mosaicked azimuth-frequency signal
-- $S_4(\tau,f_\eta)$：frequency-domain deramped signal
-- $S_5(\tau,f_\eta)$：frequency-domain LPF output
-- $S_6(\tau,f_\eta)$：frequency-domain reramped output
-- $s_7(\tau,\eta)$：azimuth-compressed output
-- $I_8(\tau,\eta)$：mosaicked azimuth-time signal
-- $I_9(\tau,\eta)$：time-domain deramped signal
-- $I_{10}(\tau,\eta)$：time-domain LPF output
-- $I_{11}(\tau,\eta)$：time-domain reramped output
-- $I_{\mathrm{focus}}(\tau,\eta)$：focused image
+- $s_0(\tau,\eta)$ ： raw data
+- $s_1(\tau,\eta)$ ： range-compressed data
+- $S_2(\tau,f_\eta)$ ： folded azimuth-frequency signal
+- $S_3(\tau,f_\eta)$ ： mosaicked azimuth-frequency signal
+- $S_4(\tau,f_\eta)$ ： frequency-domain deramped signal
+- $S_5(\tau,f_\eta)$ ： frequency-domain LPF output
+- $S_6(\tau,f_\eta)$ ： frequency-domain reramped output
+- $s_7(\tau,\eta)$ ： azimuth-compressed output
+- $I_8(\tau,\eta)$ ： mosaicked azimuth-time signal
+- $I_9(\tau,\eta)$ ： time-domain deramped signal
+- $I_{10}(\tau,\eta)$ ： time-domain LPF output
+- $I_{11}(\tau,\eta)$ ： time-domain reramped output
+- $I_{\mathrm{focus}}(\tau,\eta)$ ： focused image
 
 ## Symbols And Assumptions
 
-- $\tau$：range fast time
-- $\eta$：azimuth slow time
-- $f_\eta$：azimuth frequency
-- $R(\eta)=\sqrt{R_0^2+V_r^2(\eta-\eta_0)^2}$：瞬時斜距
-- $K_r$：range chirp rate
-- $B_r$：range bandwidth
-- $T_r$：range pulse duration
-- $T_p=1/\mathrm{PRF}$：slow-time sampling interval
-- $f_{\eta_c}$：reference slow time $\eta_c$ 對應的 azimuth frequency
-- $k_s$：frequency-domain local chirp slope，滿足 $f_\eta = k_s\eta + f_{\eta_c}$
-- $k_t$：time-domain local chirp slope，滿足 $f_\eta(\eta)=k_t(\eta-\eta_c)+f_{\eta_c}$
-- $w_a(\eta;\omega_s)$：TOPS azimuth illumination
-- $W_a(f_\eta;\omega_s)$：其 azimuth-frequency envelope
-- $\psi_m(f_\eta)$：frequency-UFR 中第 $m$ 個 replica 的 phase
-- $\chi_m(\eta)$：time-UFR 中第 $m$ 個 replica 的 phase
-- $B_{\mathrm{LPF}}$：frequency-UFR keep band
-- $T_{\mathrm{LPF}}$：time-UFR keep window
-- $B_{\mathrm{az,keep}}$：最終保留的 azimuth effective bandwidth
+- $\tau$ ： range fast time
+- $\eta$ ： azimuth slow time
+- $f_\eta$ ： azimuth frequency
+- $R(\eta)=\sqrt{R_0^2+V_r^2(\eta-\eta_0)^2}$ ： 瞬時斜距
+- $K_r$ ： range chirp rate
+- $B_r$ ： range bandwidth
+- $T_r$ ： range pulse duration
+- $T_p=1/\mathrm{PRF}$ ： slow-time sampling interval
+- $f_{\eta_c}$ ： reference slow time $\eta_c$ 對應的 azimuth frequency
+- $k_s$ ： frequency-domain local chirp slope，滿足 $f_\eta = k_s\eta + f_{\eta_c}$
+- $k_t$ ： time-domain local chirp slope，滿足 $f_\eta(\eta)=k_t(\eta-\eta_c)+f_{\eta_c}$
+- $w_a(\eta;\omega_s)$ ： TOPS azimuth illumination
+- $W_a(f_\eta;\omega_s)$ ： 其 azimuth-frequency envelope
+- $\psi_m(f_\eta)$ ： frequency-UFR 中第 $m$ 個 replica 的 phase
+- $\chi_m(\eta)$ ： time-UFR 中第 $m$ 個 replica 的 phase
+- $B_{\mathrm{LPF}}$ ： frequency-UFR keep band
+- $T_{\mathrm{LPF}}$ ： time-UFR keep window
+- $B_{\mathrm{az,keep}}$ ： 最終保留的 azimuth effective bandwidth
 
 ## 1. Raw Data
 
@@ -257,7 +257,7 @@ S_{2}(\tau,f_\eta) =
 S_{1,c}(\tau,f_\eta-k\cdot\mathrm{PRF};\omega_s)
 $$
 
-也就是說，$S_2$ 不是另一個獨立定義出來的訊號，而是把連續 azimuth spectrum $S_{1,c}$ 的所有 `PRF`-spaced replicas 全部加總之後得到的 folded azimuth-frequency signal。
+也就是說， $S_2$ 不是另一個獨立定義出來的訊號，而是把連續 azimuth spectrum $S_{1,c}$ 的所有 `PRF`-spaced replicas 全部加總之後得到的 folded azimuth-frequency signal。
 
 把上式中的 $S_{1,c}$ 完整展開之後，就得到
 
@@ -280,7 +280,7 @@ $$
 這裡要特別注意：
 
 - $n$ 是 time domain 裡的 slow-time sample index，來自 $\eta=nT_p$
-- 做完 azimuth FFT 之後，$n$ 不再顯式出現
+- 做完 azimuth FFT 之後， $n$ 不再顯式出現
 - 它的效果會變成 frequency domain 中每隔 `PRF` 出現一次的 spectrum replicas
 - 因此後面改用 $k$ 來編號那些 folded copies，而不是再用 $n$
 
@@ -289,7 +289,7 @@ $$
 - [azimuth_freq_folding.md 第 5 節](./azimuth_freq_folding.md#5-folded-spectrum-from-the-sampling-comb)
 
 
-這裡的 $k$ 不是 slow-time sample index，而是取樣後在頻域中每隔 `PRF` 出現一次的 **replica index**。也就是說，$k$ 就是 azimuth frequency folding 之後，第 $k$ 個 replica 的編號。
+這裡的 $k$ 不是 slow-time sample index，而是取樣後在頻域中每隔 `PRF` 出現一次的 **replica index**。也就是說， $k$ 就是 azimuth frequency folding 之後，第 $k$ 個 replica 的編號。
 
 所以$f_\eta-k\cdot\mathrm{PRF}$
 就是把連續 azimuth spectrum 以 `PRF` 為間隔做平移後所得到的第 $k$ 個 spectral replica，也就是第 $k$ 個 folded copy。
@@ -327,7 +327,7 @@ S_3(\tau,f_\eta) = \sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}} S_{3,m}(\ta
 }}
 $$
 
-這裡的重點是，$S_2(\tau,f_\eta)$ 中的 $f_\eta$ 仍然是 folded frequency axis 上的座標；而到了 $S_3(\tau,f_\eta)$，$f_\eta$ 已經要被重新解釋成 extended axis 上的座標。也就是說，mosaicking 真正做的事情，不只是把多個 replicas 分開，而是先依 replica index $m$ 重新定義其對應的 frequency support，再把它們放回 extended axis 的正確位置。
+這裡的重點是， $S_2(\tau,f_\eta)$ 中的 $f_\eta$ 仍然是 folded frequency axis 上的座標；而到了 $S_3(\tau,f_\eta)$ ， $f_\eta$ 已經要被重新解釋成 extended axis 上的座標。也就是說， mosaicking 真正做的事情，不只是把多個 replicas 分開，而是先依 replica index $m$ 重新定義其對應的 frequency support，再把它們放回 extended axis 的正確位置。
 
 因此，第 $m$ 個 mosaicked replica 可寫成
 
@@ -365,7 +365,7 @@ $$
 }}
 $$
 
-明確表示第 $m$ 個 replica 已經被放到其在 extended axis 上對應的 support region。這也是為什麼 $S_3(\tau,f_\eta)$ 才是表達 mosaicking 的關鍵 signal：在 $S_2(\tau,f_\eta)$ 中，多個 folded copies 還共用同一個 folded coordinate；在 $S_3(\tau,f_\eta)$ 中，每個 replica 已經擁有自己的 support 與自己的索引 $m$。
+明確表示第 $m$ 個 replica 已經被放到其在 extended axis 上對應的 support region。這也是為什麼 $S_3(\tau,f_\eta)$ 才是表達 mosaicking 的關鍵 signal：在 $S_2(\tau,f_\eta)$ 中，多個 folded copies 還共用同一個 folded coordinate；在 $S_3(\tau,f_\eta)$ 中， 每個 replica 已經擁有自己的 support 與自己的索引 $m$ 。
 
 接著，為了讓後續 deramping filter 能直接作用在主 replica 的局部 chirp curvature 上，我們不再保留 $\phi_m(f_\eta)$ 的完整 closed form，而是在 $f_{\mathrm{ref}}$ 附近把它寫成局部二次形式：
 
@@ -376,7 +376,7 @@ $$
 +\psi_{2,m}(f_\eta-f_{\mathrm{ref}})^2
 $$
 
-其中 $\psi_{0,m}$ 是 phase offset，$\psi_{1,m}$ 是局部線性 slope，而 $\psi_{2,m}$ 是第 $m$ 個 replica 的 local quadratic curvature。這一步之所以必要，是因為後面的 deramping 本質上就是消掉某個 replica 的 local quadratic phase curvature，因此必須先把每個 replica 的 phase 改寫成可以直接讀出 quadratic term 的形式。
+其中 $\psi_{0,m}$ 是 phase offset， $\psi_{1,m}$ 是局部線性 slope，而 $\psi_{2,m}$ 是第 $m$ 個 replica 的 local quadratic curvature。這一步之所以必要，是因為後面的 deramping 本質上就是消掉某個 replica 的 local quadratic phase curvature，因此必須先把每個 replica 的 phase 改寫成可以直接讀出 quadratic term 的形式。
 
 將這個局部 phase model 代回之後，mosaicked signal 的完整解析式可寫成
 
@@ -403,7 +403,7 @@ B_r\left(
 }}
 $$
 
-在離散實作中，這件事可以直接對應為：把每個 replica 對應的 $(\tau,f_\eta)$ sub-matrix，依照其 extended frequency support 重新排列並組裝成一個較大的 matrix。只要每個 sub-matrix 都真的對應一個明確的 replica index $m$，那麼這個離散的重排與組裝操作，就正是連續數學上形成 $S_3(\tau,f_\eta)$ 的資料結構對應。換句話說，資料結構上能直接做 matrix assembly，成立的前提不是單純「把矩陣相加」，而是每個 replica 的 $f_\eta$ 座標已經先被重新定義到 extended axis 上。
+在離散實作中，這件事可以直接對應為：把每個 replica 對應的 $(\tau,f_\eta)$ sub-matrix，依照其 extended frequency support 重新排列並組裝成一個較大的 matrix。只要每個 sub-matrix 都真的對應一個明確的 replica index $m$ ，那麼這個離散的重排與組裝操作，就正是連續數學上形成 $S_3(\tau,f_\eta)$ 的資料結構對應。換句話說，資料結構上能直接做 matrix assembly，成立的前提不是單純「把矩陣相加」，而是每個 replica 的 $f_\eta$ 座標已經先被重新定義到 extended axis 上。
 
 更完整的 mosaicking 與 local phase model，可直接看：
 - [azimuth_freq_ufr.md](./azimuth_freq_ufr.md)
@@ -412,7 +412,7 @@ $$
 ### 3.3. Deramping
 
 要嚴格證明 deramping 會把主 replica 拉平，必須先把主 replica 的 phase
-寫到和 filter 相同的 reference center $f_{\eta_c}$：
+寫到和 filter 相同的 reference center $f_{\eta_c}$ ：
 
 $$
 \phi_{\mathrm{main}}(f_\eta) =
@@ -461,7 +461,7 @@ $$
 \]
 在乘完 deramp filter 後 **完全 cancellation**，只剩常數項與線性項。
 
-對主 replica 而言，因為 $\psi_{2,\mathrm{ref}}=\psi_{2,m_0}$，所以其殘餘二次項近似為零。這就是 deramping 真正的物理作用：它不是把 replicas 消失，而是把主 replica 的 quadratic curvature 拿掉。
+對主 replica 而言，因為 $\psi_{2,\mathrm{ref}}=\psi_{2,m_0}$ ，所以其殘餘二次項近似為零。這就是 deramping 真正的物理作用：它不是把 replicas 消失，而是把主 replica 的 quadratic curvature 拿掉。
 
 這一段若要看更完整的 phase-model、deramping 與 LPF 銜接細節，可直接看
 [azimuth_deramp_LPF.md](./azimuth_deramp_LPF.md)。
@@ -660,12 +660,12 @@ $$
 
 After mosaicking onto the extended time axis, the signal can be written as
 
-這一步真正表達 time-domain mosaicking 的 $equation$，就是下面的 $I_8(\tau,\eta)$。
+這一步真正表達 time-domain mosaicking 的 $equation$ ，就是下面的 $I_8(\tau,\eta)$ 。
 
 原因是：
 
 - 在 folding 階段，time replicas 還是以週期延拓的方式折回主時間窗口
-- 到了 $I_8$，每個 replica 已經改用 $m$ 編號，並被放到 extended time axis 的對應位置
+- 到了 $I_8$ ， 每個 replica 已經改用 $m$ 編號，並被放到 extended time axis 的對應位置
 - 式子中的
   $$
   \mathrm{rect}\left(
@@ -674,7 +674,7 @@ After mosaicking onto the extended time axis, the signal can be written as
   $$
   就是在表示第 $m$ 個 time replica 佔據自己被重排後的時間區段
 
-所以最白話地講，$I_8$ 不再是 wrap-around copies 疊在同一個主時間窗口裡，而是每個 time replica 已經被拆開、排開，這就是 time-domain UFR 的 mosaicking。
+所以最白話地講， $I_8$ 不再是 wrap-around copies 疊在同一個主時間窗口裡，而是每個 time replica 已經被拆開、排開，這就是 time-domain UFR 的 mosaicking。
 
 $$
 \color{red}{
@@ -757,7 +757,7 @@ $$
 \chi_{0,m}+\chi_{1,m}(\eta-\eta_{\mathrm{ref}})
 +\chi_{2,m}(\eta-\eta_{\mathrm{ref}})^2
 \]
-的形式，則可等價地理解成：因為 $\chi_{2,\mathrm{ref}}=\chi_{2,m_0}$，所以主 replica 的殘餘二次項近似為零。這就是 time-domain deramping 真正的物理作用：它不是把 replicas 消失，而是把主 replica 的 chirp curvature 拿掉。
+的形式，則可等價地理解成：因為 $\chi_{2,\mathrm{ref}}=\chi_{2,m_0}$ ，所以主 replica 的殘餘二次項近似為零。這就是 time-domain deramping 真正的物理作用：它不是把 replicas 消失，而是把主 replica 的 chirp curvature 拿掉。
 
 等價地看 instantaneous Doppler，原本主 replica 的局部 Doppler 為
 
@@ -925,11 +925,11 @@ $$
 
 ## Physical Meaning
 
-- $s_0 \rightarrow s_1$：把 raw range chirp 變成 range-compressed pulse。
-- $s_1 \rightarrow S_6$：把 azimuth frequency folded replicas 攤開、展平、裁切，再補回 reference curvature。
-- $S_6 \rightarrow s_7$：做主聚焦。
-- $s_7 \rightarrow I_{11}$：把壓縮後 time-domain 的 replicas 再做一次 UFR。
-- $I_{11} \rightarrow I_{\mathrm{focus}}$：保留主 replica，得到 focused image。
+- $s_0 \rightarrow s_1$ ： 把 raw range chirp 變成 range-compressed pulse。
+- $s_1 \rightarrow S_6$ ： 把 azimuth frequency folded replicas 攤開、展平、裁切，再補回 reference curvature。
+- $S_6 \rightarrow s_7$ ： 做主聚焦。
+- $s_7 \rightarrow I_{11}$ ： 把壓縮後 time-domain 的 replicas 再做一次 UFR。
+- $I_{11} \rightarrow I_{\mathrm{focus}}$ ： 保留主 replica，得到 focused image。
 
 ## Final Result
 
