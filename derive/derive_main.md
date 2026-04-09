@@ -97,8 +97,8 @@ The received signal of TOPS SAR is:
 
 $$
 s_0(\tau,\eta) = A_0\,
-\mathrm{rect}\left( \frac{\tau-\frac{2R(\eta)}{c}}{T_r} \right)\cdot w_a(\eta;\omega_s)\cdot
-\exp\left[ +j\pi K_r\left( \tau-\frac{2R(\eta)}{c} \right)^2 \right]\cdot \exp\left[ -j\frac{4\pi f_0R(\eta)}{c} \right]\cdot
+\mathrm{rect}\biggl( \frac{\tau-\frac{2R(\eta)}{c}}{T_r} \biggr)\cdot w_a(\eta;\omega_s)\cdot
+\exp\biggl[ +j\pi K_r\biggl( \tau-\frac{2R(\eta)}{c} \biggr)^2 \biggr]\cdot \exp\biggl[ -j\frac{4\pi f_0R(\eta)}{c} \biggr]\cdot
 {\color{red}{\sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)}}
 $$
 
@@ -113,14 +113,14 @@ $$
 
 Range matched filter 為
 
-$$ h_r(\tau) = \exp\left( -j\pi K_r\tau^2 \right) $$
+$$ h_r(\tau) = \exp\biggl( -j\pi K_r\tau^2 \biggr) $$
 
 After range compression, we obtain
 
 $$
 s_1(\tau,\eta) = A_1\,
-\mathrm{sinc}\left[ B_r\left( \tau-\frac{2R(\eta)}{c} \right) \right]\cdot w_a(\eta;\omega_s)\cdot
-\exp\left[ -j\frac{4\pi f_0R(\eta)}{c} \right]\cdot
+\mathrm{sinc}\biggl[ B_r\biggl( \tau-\frac{2R(\eta)}{c} \biggr) \biggr]\cdot w_a(\eta;\omega_s)\cdot
+\exp\biggl[ -j\frac{4\pi f_0R(\eta)}{c} \biggr]\cdot
 {\color{red}{\sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)}}
 $$
 
@@ -134,41 +134,41 @@ $$
 
 $$
 s_1(\tau,\eta) = A_1\,
-\mathrm{sinc}\left[ B_r\left( \tau-\frac{2R(\eta)}{c} \right) \right]\cdot w_a(\eta;\omega_s)\cdot
-\exp\left( -j\frac{4\pi f_0R(\eta)}{c} \right)\cdot
+\mathrm{sinc}\biggl[ B_r\biggl( \tau-\frac{2R(\eta)}{c} \biggr) \biggr]\cdot w_a(\eta;\omega_s)\cdot
+\exp\biggl( -j\frac{4\pi f_0R(\eta)}{c} \biggr)\cdot
 {\color{red}{\sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)}}
 $$
 
 $$ s_1(\tau,\eta) = s_{1,\mathrm{cont}}(\tau,\eta)\cdot \sum_{n=-\infty}^{\infty}\delta(\eta-nT_p) $$
 
 - 其中 $s_{1,\mathrm{cont}}(\tau,\eta) = A_1\,
-\mathrm{sinc}\left[ B_r\left( \tau-\frac{2R(\eta)}{c} \right) \right]\cdot w_a(\eta;\omega_s)\cdot
-\exp\left[ -j\frac{4\pi f_0R(\eta)}{c} \right]$
+\mathrm{sinc}\biggl[ B_r\biggl( \tau-\frac{2R(\eta)}{c} \biggr) \biggr]\cdot w_a(\eta;\omega_s)\cdot
+\exp\biggl[ -j\frac{4\pi f_0R(\eta)}{c} \biggr]$
 - 也就是說， $s_{1,\mathrm{cont}}(\tau,\eta)$ 是連續訊號，而 $s_1(\tau,\eta)$ 則是透過 impulse train 取樣後得到的訊號。
 
 #### Azimuth FFT
 
 - 先對連續訊號 $s_{1,\mathrm{cont}}(\tau,\eta)$ 在 azimuth 方向做 Fourier transform：
 
-$$ S_{1,c}(\tau,f_\eta;\omega_s) = \mathcal{F}_{\eta}\left[ s_{1,\mathrm{cont}}(\tau,\eta) \right] $$
+$$ S_{1,c}(\tau,f_\eta;\omega_s) = \mathcal{F}_{\eta}\biggl[ s_{1,\mathrm{cont}}(\tau,\eta) \biggr] $$
 
 $$
 = A_2\,
-\mathrm{sinc}\left[ B_r\left( \tau-\frac{2R_0}{cD(f_\eta,V_r)} \right) \right]\cdot W_a(f_\eta;\omega_s)\cdot
-\exp\left[-j\phi_{az}(f_\eta)\right]
+\mathrm{sinc}\biggl[ B_r\biggl( \tau-\frac{2R_0}{cD(f_\eta,V_r)} \biggr) \biggr]\cdot W_a(f_\eta;\omega_s)\cdot
+\exp\biggl[-j\phi_{az}(f_\eta)\biggr]
 $$
 
 - 其中， $\phi_{az}(f_\eta) = \frac{4\pi R_0f_0}{c}D(f_\eta,V_r)+2\pi f_\eta\eta_0$
 
-- 其中， $W_a(f_\eta;\omega_s) = \mathcal{F}_{\eta}\left[ w_a(\eta;\omega_s) \right]$ 互為 Fourier pair
+- 其中， $W_a(f_\eta;\omega_s) = \mathcal{F}_{\eta}\biggl[ w_a(\eta;\omega_s) \biggr]$ 互為 Fourier pair
 
 - 下一步再將 slow-time sampling 的效果帶進 frequency domain。由於 $s_1(\tau,\eta)$ 是 continuous signal 與 impulse train 的乘積，因此其 azimuth Fourier transform 可逐步寫成
 
-$$ S_{2}(\tau,f_\eta) = \mathcal{F}_{\eta}\left[ s_{1,\mathrm{cont}}(\tau,\eta)\cdot \sum_{n=-\infty}^{\infty}\delta(\eta-nT_p) \right] $$
+$$ S_{2}(\tau,f_\eta) = \mathcal{F}_{\eta}\biggl[ s_{1,\mathrm{cont}}(\tau,\eta)\cdot \sum_{n=-\infty}^{\infty}\delta(\eta-nT_p) \biggr] $$
 
-$$ = \mathcal{F}_{\eta}\left[ s_{1,\mathrm{cont}}(\tau,\eta) \right]\ast \mathcal{F}_{\eta}\left[ \sum_{n=-\infty}^{\infty}\delta(\eta-nT_p) \right] $$
+$$ = \mathcal{F}_{\eta}\biggl[ s_{1,\mathrm{cont}}(\tau,\eta) \biggr]\ast \mathcal{F}_{\eta}\biggl[ \sum_{n=-\infty}^{\infty}\delta(\eta-nT_p) \biggr] $$
 
-$$ = S_{1,c}(\tau,f_\eta;\omega_s)\ast \left[ \mathrm{PRF}\sum_{k=-\infty}^{\infty}\delta(f_\eta-k\cdot\mathrm{PRF}) \right] $$
+$$ = S_{1,c}(\tau,f_\eta;\omega_s)\ast \biggl[ \mathrm{PRF}\sum_{k=-\infty}^{\infty}\delta(f_\eta-k\cdot\mathrm{PRF}) \biggr] $$
 
 $$ = \mathrm{PRF}\sum_{k=-\infty}^{\infty} S_{1,c}(\tau,f_\eta-k\cdot\mathrm{PRF};\omega_s) $$
 
@@ -182,8 +182,8 @@ $$ \phi_k(f_\eta) = \frac{4\pi R_0f_0}{c}D(f_\eta-k\cdot\mathrm{PRF},V_r) + 2\pi
 
 $$
 S_2(\tau,f_\eta) = \mathrm{PRF}\sum_{k=-\infty}^{\infty} A_2\,
-\mathrm{sinc}\left[ B_r\left( \tau-\frac{2R_0}{cD(f_\eta-k\cdot\mathrm{PRF},V_r)} \right) \right]\cdot
-W_a(f_\eta-k\cdot\mathrm{PRF};\omega_s)\cdot \exp\left[-j\phi_k(f_\eta)\right]
+\mathrm{sinc}\biggl[ B_r\biggl( \tau-\frac{2R_0}{cD(f_\eta-k\cdot\mathrm{PRF},V_r)} \biggr) \biggr]\cdot
+W_a(f_\eta-k\cdot\mathrm{PRF};\omega_s)\cdot \exp\biggl[-j\phi_k(f_\eta)\biggr]
 $$
 
 - $n$ 是 slow-time sample index，滿足 $\eta=nT_p$ ，做完 azimuth FFT 之後， $n$ 不再顯式出現；其取樣效果改以頻域中每隔 `PRF` 出現的 spectral replicas表示。
@@ -196,15 +196,15 @@ $$
 - 這些 folded copies 的來源，是 slow-time 上的離散取樣 $\sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)$ 在做 azimuth FFT 之後，於 frequency domain 變成一個以 `PRF` 為間隔的 impulse train，因而使原本的連續 spectrum $S_{1,c}$ 被週期性複製。
 
 $$
-{\color{red}{\mathcal{F}_{\eta}\left[ \sum_{n=-\infty}^{\infty}\delta(\eta-nT_p) \right] = 
-\left[ \mathrm{PRF}\sum_{k=-\infty}^{\infty}\delta(f_\eta-k\cdot\mathrm{PRF}) \right]}}
+{\color{red}{\mathcal{F}_{\eta}\biggl[ \sum_{n=-\infty}^{\infty}\delta(\eta-nT_p) \biggr] = 
+\biggl[ \mathrm{PRF}\sum_{k=-\infty}^{\infty}\delta(f_\eta-k\cdot\mathrm{PRF}) \biggr]}}
 $$
 
 - 而 folding 可以從下面這個式子直接看出來：
 
 $$ W_{\mathrm{fold}}(f_\eta;\omega_s) = \sum_{k=-\infty}^{\infty} W_a(f_\eta-k\cdot\mathrm{PRF};\omega_s) $$
 
-- 其中 $W_a(f_\eta;\omega_s) \approx \mathrm{sinc}^2\left[ \frac{L_a}{\lambda}\left( -\frac{\lambda}{2V_r}f_\eta - \omega_s\left( \eta_0-\frac{\lambda R_0}{2V_r^2}f_\eta \right) \right) \right]$ 若要看這一步的完整推導，可直接參考 [azimuth_freq_folding.md](./azimuth_freq_folding.md)。
+- 其中 $W_a(f_\eta;\omega_s) \approx \mathrm{sinc}^2\biggl[ \frac{L_a}{\lambda}\biggl( -\frac{\lambda}{2V_r}f_\eta - \omega_s\biggl( \eta_0-\frac{\lambda R_0}{2V_r^2}f_\eta \biggr) \biggr) \biggr]$ 若要看這一步的完整推導，可直接參考 [azimuth_freq_folding.md](./azimuth_freq_folding.md)。
 
 
 ### 3.2. Mosaicking
@@ -229,12 +229,12 @@ $$
 
 $$
 S_2(\tau,f_\eta^{\mathrm{fold}})
-= \mathrm{PRF}\sum_{k=-\infty}^{\infty}S_{1,c}\!\left(\tau,f_\eta^{\mathrm{fold}}-k\cdot\mathrm{PRF}\right)
+= \mathrm{PRF}\sum_{k=-\infty}^{\infty}S_{1,c}\!\biggl(\tau,f_\eta^{\mathrm{fold}}-k\cdot\mathrm{PRF}\biggr)
 $$
 
 $$
 S_2^{(m)}(\tau,f_\eta^{\mathrm{fold}})
-:= \mathrm{PRF}\,S_{1,c}\!\left(\tau,f_\eta^{\mathrm{fold}}-m\cdot\mathrm{PRF}\right)
+:= \mathrm{PRF}\,S_{1,c}\!\biggl(\tau,f_\eta^{\mathrm{fold}}-m\cdot\mathrm{PRF}\biggr)
 $$
 
 2) 再把座標從 folded axis 重新解釋到 extended axis
@@ -245,7 +245,7 @@ $$
 
 $$
 \widetilde S_{3,m}(\tau,f_\eta^{\mathrm{ext}})
-:= S_2^{(m)}\!\left(\tau,f_\eta^{\mathrm{ext}}-m\cdot\mathrm{PRF}\right)
+:= S_2^{(m)}\!\biggl(\tau,f_\eta^{\mathrm{ext}}-m\cdot\mathrm{PRF}\biggr)
 $$
 
 3) 最後乘上第 $m$ 個 support mask 並對 $m$ 加總
@@ -253,7 +253,7 @@ $$
 $$
 S_{3,m}(\tau,f_\eta^{\mathrm{ext}})
 = \widetilde S_{3,m}(\tau,f_\eta^{\mathrm{ext}})\cdot
-\mathrm{rect}\left(\frac{f_\eta^{\mathrm{ext}}-m\cdot\mathrm{PRF}-f_{\eta_c}}{B_{\max}}\right)
+\mathrm{rect}\biggl(\frac{f_\eta^{\mathrm{ext}}-m\cdot\mathrm{PRF}-f_{\eta_c}}{B_{\max}}\biggr)
 $$
 
 - 這裡的 $\mathrm{rect}(\cdot)$ 是第 $m$ 個 replica 在 extended axis 上的 support mask（指示函數），不是新增的物理訊號項。
@@ -266,7 +266,7 @@ $$
 - 為了凸顯 mosaicking 的分帶重排，以下採用
 $$
 W_a(f_\eta-m\cdot\mathrm{PRF};\omega_s)\approx
-\mathrm{rect}\left(\frac{f_\eta-m\cdot\mathrm{PRF}-f_{\eta_c}}{B_{\max}}\right)
+\mathrm{rect}\biggl(\frac{f_\eta-m\cdot\mathrm{PRF}-f_{\eta_c}}{B_{\max}}\biggr)
 $$
 作為有效 support 的近似表示。
 
@@ -274,9 +274,9 @@ $$
 
 $$
 S_{3,m}(\tau,f_\eta)=A_3\,
-\mathrm{sinc}\left[B_r\left(\tau-\frac{2R_0}{c\,D_m(f_\eta)}\right)\right]\cdot
-\mathrm{rect}\left(\frac{f_\eta-m\cdot\mathrm{PRF}-f_{\eta_c}}{B_{\max}}\right)\cdot
-\exp\left[-j\phi_m(f_\eta)\right]
+\mathrm{sinc}\biggl[B_r\biggl(\tau-\frac{2R_0}{c\,D_m(f_\eta)}\biggr)\biggr]\cdot
+\mathrm{rect}\biggl(\frac{f_\eta-m\cdot\mathrm{PRF}-f_{\eta_c}}{B_{\max}}\biggr)\cdot
+\exp\biggl[-j\phi_m(f_\eta)\biggr]
 $$
 
 $$
@@ -309,7 +309,7 @@ $$
 - $\phi_{2,\mathrm{main}}$ 不是新假設，而是 3.2 的 $\phi_m(f_\eta)$ 在 $f_{\eta_c}$ 的二階導數：
 
 $$
-\phi_{2,\mathrm{main}} = \left.\frac{d^2\phi_{m_0}(f_\eta)}{df_\eta^2}\right|_{f_\eta=f_{\eta_c}}
+\phi_{2,\mathrm{main}} = \biggl.\frac{d^2\phi_{m_0}(f_\eta)}{df_\eta^2}\biggr|_{f_\eta=f_{\eta_c}}
 $$
 
 $$
@@ -320,15 +320,15 @@ $$
 \Rightarrow\;
 \phi_{2,\mathrm{main}} =
 \frac{4\pi R_0f_0}{c}
-\left.
+\biggl.
 \frac{d^2}{df_\eta^2}D(f_\eta-m_0\cdot\mathrm{PRF},V_r)
-\right|_{f_\eta=f_{\eta_c}}
+\biggr|_{f_\eta=f_{\eta_c}}
 $$
 
 - 若本文不展開 $D''(\cdot)$ 的解析式，也可用一般 RDA 的 closed-form 二次相位來識別主項形式：
 $$
 S_{\mathrm{main}}(f_\eta)\propto
-\exp\left[-j\frac{\pi}{K_a}(f_\eta-f_{\eta_c})^2\right]
+\exp\biggl[-j\frac{\pi}{K_a}(f_\eta-f_{\eta_c})^2\biggr]
 $$
 因此主 replica 的二次係數可等價寫成 $\pi/K_a$（符號正負依 Fourier sign convention 而定）。
 
@@ -348,7 +348,7 @@ $$
 為了對消上式的 quadratic term，frequency-domain deramping filter 設計為
 
 $$
-{\color{red}{H_{\mathrm{de},f}(f_\eta)=\exp\left(+j\pi\frac{1}{k_s}(f_\eta-f_{\eta_c})^2\right)}}
+{\color{red}{H_{\mathrm{de},f}(f_\eta)=\exp\biggl(+j\pi\frac{1}{k_s}(f_\eta-f_{\eta_c})^2\biggr)}}
 $$
 
 #### Cancellation 與 Time-Frequency 拉直
@@ -356,8 +356,8 @@ $$
 主 replica 經過 deramping 後有
 
 $$
-\exp\left(-j\phi_{\mathrm{main}}(f_\eta)\right)\,H_{\mathrm{de},f}(f_\eta) =
-\exp\left(-j\left[\phi_{0,\mathrm{main}}+\phi_{1,\mathrm{main}}(f_\eta-f_{\eta_c})\right]\right)
+\exp\biggl(-j\phi_{\mathrm{main}}(f_\eta)\biggr)\,H_{\mathrm{de},f}(f_\eta) =
+\exp\biggl(-j\biggl[\phi_{0,\mathrm{main}}+\phi_{1,\mathrm{main}}(f_\eta-f_{\eta_c})\biggr]\biggr)
 $$
 
 $$
@@ -376,9 +376,9 @@ $$
 
 $$
 S_4(\tau,f_\eta) = \sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}} A_4\,
-\mathrm{sinc}\left[ B_r\left( \tau-\frac{2R_0}{c\,D_m(f_\eta)} \right) \right]\cdot \mathrm{rect}\left( \frac{f_\eta-m\cdot\mathrm{PRF}-f_{\eta_c}}{B_{\max}} \right)\cdot
-\exp\left( -j\left[ \psi_{0,m}+\psi_{1,m}(f_\eta-f_{\mathrm{ref}})+\psi_{2,m}(f_\eta-f_{\mathrm{ref}})^2 \right] \right)\cdot
-\exp\left( +j\pi\frac{1}{k_s}(f_\eta-f_{\eta_c})^2 \right)
+\mathrm{sinc}\biggl[ B_r\biggl( \tau-\frac{2R_0}{c\,D_m(f_\eta)} \biggr) \biggr]\cdot \mathrm{rect}\biggl( \frac{f_\eta-m\cdot\mathrm{PRF}-f_{\eta_c}}{B_{\max}} \biggr)\cdot
+\exp\biggl( -j\biggl[ \psi_{0,m}+\psi_{1,m}(f_\eta-f_{\mathrm{ref}})+\psi_{2,m}(f_\eta-f_{\mathrm{ref}})^2 \biggr] \biggr)\cdot
+\exp\biggl( +j\pi\frac{1}{k_s}(f_\eta-f_{\eta_c})^2 \biggr)
 $$
 
 - 上式中的 deramping filter 以主 replica 為 reference 設計，因此主項被完全拉直；非主 replicas 一般仍會保留殘餘二次項。
@@ -393,7 +393,7 @@ $$
 frequency-domain keep window 為
 
 $$
-H_{\mathrm{LPF},f}(f_\eta)=\mathrm{rect}\left(\frac{f_\eta-f_{\mathrm{LPF}}}{B_{\mathrm{LPF}}}\right)
+H_{\mathrm{LPF},f}(f_\eta)=\mathrm{rect}\biggl(\frac{f_\eta-f_{\mathrm{LPF}}}{B_{\mathrm{LPF}}}\biggr)
 $$
 
 - 其中 $f_{\mathrm{LPF}}$ 是 keep window 的中心頻率，$B_{\mathrm{LPF}}$ 是 keep window 的頻寬。
@@ -417,9 +417,9 @@ $$
 
 $$
 S_5(\tau,f_\eta) = \sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}} A_5\,
-\mathrm{sinc}\left[ B_r\left( \tau-\frac{2R_0}{c\,D_m(f_\eta)} \right) \right]\cdot \mathrm{rect}\left( \frac{f_\eta-f_{\mathrm{LPF}}}{B_{\mathrm{LPF}}} \right)\cdot
-\mathrm{rect}\left( \frac{f_\eta-m\cdot\mathrm{PRF}-f_{\eta_c}}{B_{\max}} \right)\cdot \exp\left( -j\left[ \psi_{0,m}+\psi_{1,m}(f_\eta-f_{\mathrm{ref}})+\psi_{2,m}(f_\eta-f_{\mathrm{ref}})^2 \right] \right)\cdot
-\exp\left( +j\pi\frac{1}{k_s}(f_\eta-f_{\eta_c})^2 \right)
+\mathrm{sinc}\biggl[ B_r\biggl( \tau-\frac{2R_0}{c\,D_m(f_\eta)} \biggr) \biggr]\cdot \mathrm{rect}\biggl( \frac{f_\eta-f_{\mathrm{LPF}}}{B_{\mathrm{LPF}}} \biggr)\cdot
+\mathrm{rect}\biggl( \frac{f_\eta-m\cdot\mathrm{PRF}-f_{\eta_c}}{B_{\max}} \biggr)\cdot \exp\biggl( -j\biggl[ \psi_{0,m}+\psi_{1,m}(f_\eta-f_{\mathrm{ref}})+\psi_{2,m}(f_\eta-f_{\mathrm{ref}})^2 \biggr] \biggr)\cdot
+\exp\biggl( +j\pi\frac{1}{k_s}(f_\eta-f_{\eta_c})^2 \biggr)
 $$
 
 #### 單主 replica 近似式
@@ -434,9 +434,9 @@ $$
 
 $$
 S_5(\tau,f_\eta)\approx A_5\,
-\mathrm{sinc}\left[B_r\left(\tau-\frac{2R_0}{c\,D_{m_0}(f_\eta)}\right)\right]\cdot
-\mathrm{rect}\left(\frac{f_\eta-f_{\mathrm{LPF}}}{B_{\mathrm{LPF}}}\right)\cdot
-\exp\left(-j\left[\psi_{0,m_0}+\psi_{1,m_0}(f_\eta-f_{\mathrm{ref}})\right]\right)
+\mathrm{sinc}\biggl[B_r\biggl(\tau-\frac{2R_0}{c\,D_{m_0}(f_\eta)}\biggr)\biggr]\cdot
+\mathrm{rect}\biggl(\frac{f_\eta-f_{\mathrm{LPF}}}{B_{\mathrm{LPF}}}\biggr)\cdot
+\exp\biggl(-j\biggl[\psi_{0,m_0}+\psi_{1,m_0}(f_\eta-f_{\mathrm{ref}})\biggr]\biggr)
 $$
 
 #### 物理意義
@@ -458,16 +458,16 @@ LPF 的完整理想模型與 FFT-based 實作，可直接看：
 #### Frequency-Domain Reramping Filter
 
 $$
-H_{\mathrm{re},f}(f_\eta)=\exp\left(-j\pi\frac{1}{k_s}(f_\eta-f_{\eta_c})^2\right)
+H_{\mathrm{re},f}(f_\eta)=\exp\biggl(-j\pi\frac{1}{k_s}(f_\eta-f_{\eta_c})^2\biggr)
 $$
 
 #### 完整輸出式（保留多 replica 表示）
 
 $$
 S_6(\tau,f_\eta) = \sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}} A_6\,
-\mathrm{sinc}\left[ B_r\left( \tau-\frac{2R_0}{c\,D_m(f_\eta)} \right) \right]\cdot \mathrm{rect}\left( \frac{f_\eta-f_{\mathrm{LPF}}}{B_{\mathrm{LPF}}} \right)\cdot
-\mathrm{rect}\left( \frac{f_\eta-m\cdot\mathrm{PRF}-f_{\eta_c}}{B_{\max}} \right)\cdot
-\exp\left( -j\left[ \psi_{0,m}+\psi_{1,m}(f_\eta-f_{\mathrm{ref}})+\psi_{2,m}(f_\eta-f_{\mathrm{ref}})^2 \right] \right)
+\mathrm{sinc}\biggl[ B_r\biggl( \tau-\frac{2R_0}{c\,D_m(f_\eta)} \biggr) \biggr]\cdot \mathrm{rect}\biggl( \frac{f_\eta-f_{\mathrm{LPF}}}{B_{\mathrm{LPF}}} \biggr)\cdot
+\mathrm{rect}\biggl( \frac{f_\eta-m\cdot\mathrm{PRF}-f_{\eta_c}}{B_{\max}} \biggr)\cdot
+\exp\biggl( -j\biggl[ \psi_{0,m}+\psi_{1,m}(f_\eta-f_{\mathrm{ref}})+\psi_{2,m}(f_\eta-f_{\mathrm{ref}})^2 \biggr] \biggr)
 $$
 
 #### 單主 replica 近似式
@@ -480,9 +480,9 @@ $$
 
 $$
 S_6(\tau,f_\eta)\approx A_6\,
-\mathrm{sinc}\left[B_r\left(\tau-\frac{2R_0}{c\,D_{m_0}(f_\eta)}\right)\right]\cdot
-\mathrm{rect}\left(\frac{f_\eta-f_{\mathrm{LPF}}}{B_{\mathrm{LPF}}}\right)\cdot
-\exp\left(-j\left[\psi_{0,m_0}+\psi_{1,m_0}(f_\eta-f_{\mathrm{ref}})+\pi\frac{1}{k_s}(f_\eta-f_{\eta_c})^2\right]\right)
+\mathrm{sinc}\biggl[B_r\biggl(\tau-\frac{2R_0}{c\,D_{m_0}(f_\eta)}\biggr)\biggr]\cdot
+\mathrm{rect}\biggl(\frac{f_\eta-f_{\mathrm{LPF}}}{B_{\mathrm{LPF}}}\biggr)\cdot
+\exp\biggl(-j\biggl[\psi_{0,m_0}+\psi_{1,m_0}(f_\eta-f_{\mathrm{ref}})+\pi\frac{1}{k_s}(f_\eta-f_{\eta_c})^2\biggr]\biggr)
 $$
 
 #### 物理意義
@@ -493,7 +493,7 @@ $$
 #### 小總結（到 $S_6$ 為止）
 
 - 在「mosaicking $\rightarrow$ deramping $\rightarrow$ LPF $\rightarrow$ reramping」完成後，可近似視為只剩主頻帶 $m=0$（或一般記作 $m_0$）對應的有效頻譜。
-- 目前式子中的 $\mathrm{rect}\!\left(\frac{f_\eta-f_{\mathrm{LPF}}}{B_{\mathrm{LPF}}}\right)$ 代表最終保留的主頻帶視窗；其他 replicas 因不在 keep window 內而被抑制。
+- 目前式子中的 $\mathrm{rect}\!\biggl(\frac{f_\eta-f_{\mathrm{LPF}}}{B_{\mathrm{LPF}}}\biggr)$ 代表最終保留的主頻帶視窗；其他 replicas 因不在 keep window 內而被抑制。
 - 目前主項 phase term 可理解為「常數項 + 線性項 + 被 reramping 乘回的目標二次曲率項」；它已回到後續 azimuth compression 可直接匹配的 phase 座標系。
 
 ## 4. Azimuth Compression
@@ -504,16 +504,16 @@ $$
 
 定義
 
-$$ H_{\mathrm{ac}}(f_\eta) = \exp\left(+j\frac{4\pi R_0}{\lambda}D(f_\eta)\right) $$
+$$ H_{\mathrm{ac}}(f_\eta) = \exp\biggl(+j\frac{4\pi R_0}{\lambda}D(f_\eta)\biggr) $$
 
 令 3.5 輸出的主頻帶等效式為
 
 $$
 S_{6,m=0}(\tau,f_\eta) \approx A_6\,
-\mathrm{sinc}\left[B_r\left(\tau-\frac{2R_0}{cD(f_{dc})}\right)\right]\cdot
-\mathrm{rect}\left(\frac{f_\eta-f_{dc}}{F_a}\right)\cdot
-\exp\left(-j\frac{4\pi R_0}{\lambda}D(f_\eta)\right)\cdot
-\exp\left(-j2\pi f_\eta\eta_c\right)
+\mathrm{sinc}\biggl[B_r\biggl(\tau-\frac{2R_0}{cD(f_{dc})}\biggr)\biggr]\cdot
+\mathrm{rect}\biggl(\frac{f_\eta-f_{dc}}{F_a}\biggr)\cdot
+\exp\biggl(-j\frac{4\pi R_0}{\lambda}D(f_\eta)\biggr)\cdot
+\exp\biggl(-j2\pi f_\eta\eta_c\biggr)
 $$
 
 乘上 $H_{\mathrm{ac}}$ 後，方位向主相位項對消：
@@ -521,21 +521,20 @@ $$
 $$
 S_{6,\mathrm{ac}}(\tau,f_\eta) = S_{6,m=0}(\tau,f_\eta)\,H_{\mathrm{ac}}(f_\eta)
 \approx A_7\,
-\mathrm{sinc}\left[B_r\left(\tau-\frac{2R_0}{cD(f_{dc})}\right)\right]\cdot
-\mathrm{rect}\left(\frac{f_\eta-f_{dc}}{F_a}\right)\cdot
-\exp\left(-j2\pi f_\eta\eta_c\right)
+\mathrm{sinc}\biggl[B_r\biggl(\tau-\frac{2R_0}{cD(f_{dc})}\biggr)\biggr]\cdot
+\mathrm{rect}\biggl(\frac{f_\eta-f_{dc}}{F_a}\biggr)\cdot
+\exp\biggl(-j2\pi f_\eta\eta_c\biggr)
 $$
 
 對 $f_\eta$ 做 IFFT，可得到標準 RDA 型式的 azimuth sinc 壓縮結果：
 
-$$ s_7(\tau,\eta) \approx \mathcal{F}^{-1}_{f_\eta}\!\left\{S_{6,\mathrm{ac}}(\tau,f_\eta)\right\} $$
+$$ s_7(\tau,\eta) \approx \mathcal{F}^{-1}_{f_\eta}\!\biggl\{S_{6,\mathrm{ac}}(\tau,f_\eta)\biggr\} $$
 
 $$
-\mathcal{F}^{-1}_{f_\eta}\left\{
-\mathrm{rect}\left(\frac{f_\eta-f_{dc}}{F_a}\right)\exp(-j2\pi f_\eta\eta_c)
-\right\} =
-F_a\,\mathrm{sinc}\!\left[F_a(\eta-\eta_c)\right]\,
-\exp\left(j2\pi f_{dc}(\eta-\eta_c)\right)
+\mathcal{F}^{-1}_{f_\eta} \biggl\{
+\mathrm{rect}\biggl(\frac{f_\eta-f_{dc}}{F_a}\biggr)\exp(-j2\pi f_\eta\eta_c)
+\biggr\} = F_a\,\mathrm{sinc}\!\biggl[F_a(\eta-\eta_c)\biggr]\,
+\exp\biggl(j2\pi f_{dc}(\eta-\eta_c)\biggr)
 $$
 
 因此
@@ -543,9 +542,9 @@ $$
 $$
 {\color{red}{s_7(\tau,\eta)\approx
 A_7\,
-\mathrm{sinc}\left[B_r\left(\tau-\frac{2R_0}{cD(f_{dc})}\right)\right]\cdot
-F_a\,\mathrm{sinc}\left[F_a(\eta-\eta_c)\right]\cdot
-\exp\left(j2\pi f_{dc}(\eta-\eta_c)\right)}}
+\mathrm{sinc}\biggl[B_r\biggl(\tau-\frac{2R_0}{cD(f_{dc})}\biggr)\biggr]\cdot
+F_a\,\mathrm{sinc}\biggl[F_a(\eta-\eta_c)\biggr]\cdot
+\exp\biggl(j2\pi f_{dc}(\eta-\eta_c)\biggr)}}
 $$
 
 若使用有限長 FFT 而未做足夠 zero-padding，實作上仍可能出現 circular wrap-around；其完整數學推導與 replica 表示統一放在 5.1 之後處理。
@@ -559,7 +558,9 @@ $$
 先用最簡單的離散卷積例子看 wrap-around：
 
 若線性卷積長度為
+
 $$ L_{\mathrm{lin}} = N_x + N_h - 1 $$
+
 但實作只用長度 $L$ 的 FFT（且 $L < L_{\mathrm{lin}}$ ），則 IFFT 得到的是 circular convolution：
 $$ y_{\mathrm{circ}}[n] = \sum_{r=-\infty}^{\infty}y_{\mathrm{lin}}[n+rL] $$
 
@@ -606,13 +607,13 @@ $$ I_8(\tau,\eta) = \sum_{m=-N_{t,\mathrm{neg}}}^{N_{t,\mathrm{pos}}} I_{8,m}(\t
 
 $$
 {\color{red}{I_{8,m}(\tau,\eta)=A_8\,
-\mathrm{sinc}\left[ B_r\left( \tau-\frac{2R_0}{c} \right) \right]\cdot \mathrm{rect}\left( \frac{\eta-mT_{\mathrm{window}}-\eta_c}{T_{\mathrm{keep}}} \right)\cdot
-\mathrm{sinc}\left[ B_{\mathrm{az},m}\left( \eta-mT_{\mathrm{window}}-\eta_c \right) \right]\cdot
-\exp\left( -j\left[ \chi_{0,m}+\chi_{1,m}(\eta-\eta_{\mathrm{ref}})+\chi_{2,m}(\eta-\eta_{\mathrm{ref}})^2 \right] \right)}}
+\mathrm{sinc}\biggl[ B_r\biggl( \tau-\frac{2R_0}{c} \biggr) \biggr]\cdot \mathrm{rect}\biggl( \frac{\eta-mT_{\mathrm{window}}-\eta_c}{T_{\mathrm{keep}}} \biggr)\cdot
+\mathrm{sinc}\biggl[ B_{\mathrm{az},m}\biggl( \eta-mT_{\mathrm{window}}-\eta_c \biggr) \biggr]\cdot
+\exp\biggl( -j\biggl[ \chi_{0,m}+\chi_{1,m}(\eta-\eta_{\mathrm{ref}})+\chi_{2,m}(\eta-\eta_{\mathrm{ref}})^2 \biggr] \biggr)}}
 $$
 
 其中
-$$ \mathrm{rect}\left( \frac{\eta-mT_{\mathrm{window}}-\eta_c}{T_{\mathrm{keep}}} \right) $$
+$$ \mathrm{rect}\biggl( \frac{\eta-mT_{\mathrm{window}}-\eta_c}{T_{\mathrm{keep}}} \biggr) $$
 是第 $m$ 個 time replica 的 support window。
 - 這一步之後，replicas 已不是重疊在同一主窗口，而是被索引 $m$ 清楚分離。
 
@@ -630,11 +631,11 @@ $$ \phi_{\mathrm{main}}(\eta) = \phi_{0,\mathrm{main}}+\pi k_t(\eta-\eta_c)^2+2\
 
 對應的 time-domain deramping filter 定義為
 
-$$ {\color{red}{H_{\mathrm{de},t}(\eta) = \exp\left( -j\pi k_t(\eta-\eta_c)^2 - j2\pi f_{\eta_c}\eta \right)}} $$
+$$ {\color{red}{H_{\mathrm{de},t}(\eta) = \exp\biggl( -j\pi k_t(\eta-\eta_c)^2 - j2\pi f_{\eta_c}\eta \biggr)}} $$
 
 主項相位對消可寫成
 
-$$ \exp\left( -j\phi_{\mathrm{main}}(\eta) \right)H_{\mathrm{de},t}(\eta) = \exp\left( -j\phi_{0,\mathrm{main}} \right) $$
+$$ \exp\biggl( -j\phi_{\mathrm{main}}(\eta) \biggr)H_{\mathrm{de},t}(\eta) = \exp\biggl( -j\phi_{0,\mathrm{main}} \biggr) $$
 
 $$ {\color{red}{\phi_{\mathrm{after}}(\eta) = \phi_{0,\mathrm{main}}}} $$
 
@@ -659,25 +660,25 @@ time-domain deramped signal 可寫成
 
 $$
 I_9(\tau,\eta) = \sum_{m=-N_{t,\mathrm{neg}}}^{N_{t,\mathrm{pos}}} A_9\,
-\mathrm{sinc}\left[ B_r\left( \tau-\frac{2R_0}{c} \right) \right]\cdot \mathrm{rect}\left( \frac{\eta-mT_{\mathrm{window}}-\eta_c}{T_{\mathrm{keep}}} \right)\cdot
-\mathrm{sinc}\left[ B_{\mathrm{az},m}\left( \eta-mT_{\mathrm{window}}-\eta_c \right) \right]\cdot \exp\left( -j\left[ \chi_{0,m}+\chi_{1,m}(\eta-\eta_{\mathrm{ref}})+\chi_{2,m}(\eta-\eta_{\mathrm{ref}})^2 \right] \right)\cdot
-\exp\left( -j\pi k_t(\eta-\eta_c)^2 - j2\pi f_{\eta_c}\eta \right)
+\mathrm{sinc}\biggl[ B_r\biggl( \tau-\frac{2R_0}{c} \biggr) \biggr]\cdot \mathrm{rect}\biggl( \frac{\eta-mT_{\mathrm{window}}-\eta_c}{T_{\mathrm{keep}}} \biggr)\cdot
+\mathrm{sinc}\biggl[ B_{\mathrm{az},m}\biggl( \eta-mT_{\mathrm{window}}-\eta_c \biggr) \biggr]\cdot \exp\biggl( -j\biggl[ \chi_{0,m}+\chi_{1,m}(\eta-\eta_{\mathrm{ref}})+\chi_{2,m}(\eta-\eta_{\mathrm{ref}})^2 \biggr] \biggr)\cdot
+\exp\biggl( -j\pi k_t(\eta-\eta_c)^2 - j2\pi f_{\eta_c}\eta \biggr)
 $$
 
 ### 5.4. Low Pass Filter
 
 time-domain keep window 定義為
 
-$$ H_{\mathrm{LPF},t}(\eta) = \mathrm{rect}\left( \frac{\eta-\eta_{\mathrm{LPF}}}{T_{\mathrm{LPF}}} \right) $$
+$$ H_{\mathrm{LPF},t}(\eta) = \mathrm{rect}\biggl( \frac{\eta-\eta_{\mathrm{LPF}}}{T_{\mathrm{LPF}}} \biggr) $$
 
 乘上 LPF 後
 
 $$
 I_{10}(\tau,\eta) = \sum_{m=-N_{t,\mathrm{neg}}}^{N_{t,\mathrm{pos}}} A_{10}\,
-\mathrm{sinc}\left[ B_r\left( \tau-\frac{2R_0}{c} \right) \right]\cdot \mathrm{rect}\left( \frac{\eta-\eta_{\mathrm{LPF}}}{T_{\mathrm{LPF}}} \right)\cdot
-\mathrm{rect}\left( \frac{\eta-mT_{\mathrm{window}}-\eta_c}{T_{\mathrm{keep}}} \right)\cdot \mathrm{sinc}\left[ B_{\mathrm{az},m}\left( \eta-mT_{\mathrm{window}}-\eta_c \right) \right]\cdot
-\exp\left( -j\left[ \chi_{0,m}+\chi_{1,m}(\eta-\eta_{\mathrm{ref}})+\chi_{2,m}(\eta-\eta_{\mathrm{ref}})^2 \right] \right)\cdot
-\exp\left( -j\pi k_t(\eta-\eta_c)^2 - j2\pi f_{\eta_c}\eta \right)
+\mathrm{sinc}\biggl[ B_r\biggl( \tau-\frac{2R_0}{c} \biggr) \biggr]\cdot \mathrm{rect}\biggl( \frac{\eta-\eta_{\mathrm{LPF}}}{T_{\mathrm{LPF}}} \biggr)\cdot
+\mathrm{rect}\biggl( \frac{\eta-mT_{\mathrm{window}}-\eta_c}{T_{\mathrm{keep}}} \biggr)\cdot \mathrm{sinc}\biggl[ B_{\mathrm{az},m}\biggl( \eta-mT_{\mathrm{window}}-\eta_c \biggr) \biggr]\cdot
+\exp\biggl( -j\biggl[ \chi_{0,m}+\chi_{1,m}(\eta-\eta_{\mathrm{ref}})+\chi_{2,m}(\eta-\eta_{\mathrm{ref}})^2 \biggr] \biggr)\cdot
+\exp\biggl( -j\pi k_t(\eta-\eta_c)^2 - j2\pi f_{\eta_c}\eta \biggr)
 $$
 
 - 當 $\eta_{\mathrm{LPF}}$ 對準主項且 $T_{\mathrm{LPF}}$ 小於 replica 間距時，主要保留 $m=m_0$ 附近能量。
@@ -686,15 +687,15 @@ $$
 
 為了回到後續成像所需的 reference phase 座標，定義 reramping filter：
 
-$$ H_{\mathrm{re},t}(\eta) = \exp\left( +j\pi k_t(\eta-\eta_c)^2 + j2\pi f_{\eta_c}\eta \right) $$
+$$ H_{\mathrm{re},t}(\eta) = \exp\biggl( +j\pi k_t(\eta-\eta_c)^2 + j2\pi f_{\eta_c}\eta \biggr) $$
 
 乘回後得到
 
 $$
 I_{11}(\tau,\eta) = \sum_{m=-N_{t,\mathrm{neg}}}^{N_{t,\mathrm{pos}}} A_{11}\,
-\mathrm{sinc}\left[ B_r\left( \tau-\frac{2R_0}{c} \right) \right]\cdot \mathrm{rect}\left( \frac{\eta-\eta_{\mathrm{LPF}}}{T_{\mathrm{LPF}}} \right)\cdot
-\mathrm{rect}\left( \frac{\eta-mT_{\mathrm{window}}-\eta_c}{T_{\mathrm{keep}}} \right)\cdot \mathrm{sinc}\left[ B_{\mathrm{az},m}\left( \eta-mT_{\mathrm{window}}-\eta_c \right) \right]\cdot
-\exp\left( -j\left[ \chi_{0,m}+\chi_{1,m}(\eta-\eta_{\mathrm{ref}})+\chi_{2,m}(\eta-\eta_{\mathrm{ref}})^2 \right] \right)
+\mathrm{sinc}\biggl[ B_r\biggl( \tau-\frac{2R_0}{c} \biggr) \biggr]\cdot \mathrm{rect}\biggl( \frac{\eta-\eta_{\mathrm{LPF}}}{T_{\mathrm{LPF}}} \biggr)\cdot
+\mathrm{rect}\biggl( \frac{\eta-mT_{\mathrm{window}}-\eta_c}{T_{\mathrm{keep}}} \biggr)\cdot \mathrm{sinc}\biggl[ B_{\mathrm{az},m}\biggl( \eta-mT_{\mathrm{window}}-\eta_c \biggr) \biggr]\cdot
+\exp\biggl( -j\biggl[ \chi_{0,m}+\chi_{1,m}(\eta-\eta_{\mathrm{ref}})+\chi_{2,m}(\eta-\eta_{\mathrm{ref}})^2 \biggr] \biggr)
 $$
 
 - 整體上，`deramping + LPF + reramping` 的作用可理解為：
@@ -706,8 +707,8 @@ $$
 
 $$
 {\color{red}{I_{\mathrm{focus}}(\tau,\eta) \approx A_f\,
-\mathrm{sinc}\left[ B_r\left( \tau-\frac{2R_0}{c} \right) \right]\cdot
-\mathrm{sinc}\left[ B_{\mathrm{az,keep}}(\eta-\eta_c) \right]}}
+\mathrm{sinc}\biggl[ B_r\biggl( \tau-\frac{2R_0}{c} \biggr) \biggr]\cdot
+\mathrm{sinc}\biggl[ B_{\mathrm{az,keep}}(\eta-\eta_c) \biggr]}}
 $$
 
 ## Physical Meaning
