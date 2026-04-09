@@ -48,8 +48,6 @@
 
 ## Problem Definition
 
-本文件要把 TOPS SAR 的方位向處理鏈完整寫成一條顯式數學主線，並且回答以下幾個問題：
-
 1. 如何以數學形式證明 azimuth frequency folding (aliasing) 的來源與其機制
 2. 如何以數學形式說明 mosaicking 所執行的重排操作
 3. 如何以數學形式證明 deramping 對主 replica phase curvature 的影響
@@ -202,6 +200,9 @@ $$
 #### Azimuth folded spectrum 的來源
 
 - 這些 folded copies 的來源，是 slow-time 上的離散取樣 $\sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)$ 在做 azimuth FFT 之後，於 frequency domain 變成一個以 `PRF` 為間隔的 impulse train，因而使原本的連續 spectrum $S_{1,c}$ 被週期性複製。
+- 這裡的 folded spectrum 並不是一個完全無法追溯來源的頻譜混疊，因為 TOPS azimuth signal 本質上是 chirp；對 chirp 而言，時間與瞬時頻率之間具有明確的對應關係。
+- 也就是說，在有效成像區間內，某一個 azimuth time $\eta$ 會對應到某一段主要的 Doppler frequency，而反過來，觀察到某一個 folded Doppler 分量時，也可以依據這個 time-frequency mapping 去推回它原本屬於哪一段連續 azimuth spectrum。
+- 因此後面的 un-folding / mosaicking 並不是憑空把頻譜「拆開」，而是利用 chirp 本身的時間-頻率對應，把被 `PRF` 週期性搬移後的 spectral replicas 重新對回其原始位置。
 
 $$
 {\color{red}{\mathcal{F}_{\eta}\biggl[ \sum_{n=-\infty}^{\infty}\delta(\eta-nT_p) \biggr] = 
@@ -223,13 +224,7 @@ $$ W_{\mathrm{fold}}(f_\eta;\omega_s) = \sum_{k=-\infty}^{\infty} W_a(f_\eta-k\c
 
 - Mosaicking 的核心是把 $S_2(\tau,f_\eta)$ 中原本 folded 在同一個基本頻帶內的 replicas，重新排到 extended azimuth-frequency axis 上。
 
-#### 連續數學表示
-
-- 先把 mosaicked signal 寫成 replica summation：
-
-$$
-{\color{red}{S_3(\tau,f_\eta)=\sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}}S_{3,m}(\tau,f_\eta)}}
-$$
+#### Mosaicking 數學表示
 
 - 其中，$S_2 \rightarrow S_{3,m} \rightarrow S_3$ 的連接可明確寫成以下三步：
 
@@ -264,23 +259,25 @@ S_{3,m}(\tau,f_\eta^{\mathrm{ext}})
 \mathrm{rect}\biggl(\frac{f_\eta^{\mathrm{ext}}-m\cdot\mathrm{PRF}-f_{\eta_c}}{B_{\max}}\biggr)
 $$
 
-- 這裡的 $\mathrm{rect}(\cdot)$ 是第 $m$ 個 replica 在 extended axis 上的 support mask（指示函數），不是新增的物理訊號項。
-- 其作用是只保留該 replica 對應頻帶，頻帶外令為 0，避免不同 replicas 在拼接時互相混疊。
+- 這裡的 $\mathrm{rect}(\cdot)$ 是第 $m$ 個 replica 在 extended axis 上的 mask；它用來選出該 replica 對應的有效頻帶。
+
+- 因此，完整的 mosaicked signal 就是所有 replica component 在 extended axis 上的加總：
 
 $$
-S_3(\tau,f_\eta^{\mathrm{ext}})=\sum_m S_{3,m}(\tau,f_\eta^{\mathrm{ext}})
+{\color{red}{S_3(\tau,f_\eta^{\mathrm{ext}})=\sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}}S_{3,m}(\tau,f_\eta^{\mathrm{ext}})}}
 $$
 
-- 為了凸顯 mosaicking 的分帶重排，以下採用
+- 後面為了推導方便，azimuth window function 以下採用近似
 
 $$
 W_a(f_\eta-m\cdot\mathrm{PRF};\omega_s)\approx
 \mathrm{rect}\biggl(\frac{f_\eta-m\cdot\mathrm{PRF}-f_{\eta_c}}{B_{\max}}\biggr)
 $$
 
-作為有效 support 的近似表示。
+- 這樣做的原因是，此處不需要保留完整 window function 的細節，只需要用較簡單的表示來描述每個 replica 的有效頻帶與位置變化即可。
 
-- 以下為同一件事的 closed-form 寫法（為了簡潔，後續省略 ext/fold 上標，統一寫成 $f_\eta$）：
+
+- 後面為了書寫方便，省略 ext/fold 上標，統一記成 $f_\eta$：
 
 $$
 S_{3,m}(\tau,f_\eta)=A_3\,
@@ -296,15 +293,16 @@ $$
 #### 重排原理與實作對應
 
 - 在 $S_2(\tau,f_\eta)$ 中， $f_\eta$ 仍是 folded frequency axis 上的座標；到 $S_3(\tau,f_\eta)$ 時，$f_\eta$ 必須重新解釋成 extended axis 上的座標。
-- mosaicking 的本質是先依 replica index 重新指定 extended-axis 座標，再做組裝。
-- 其中 $m$ 表示第 $m$ 個 mosaicked replica；$m$ 同時決定該 replica 在 extended axis 上的頻率位移（以 `PRF` 為間隔）與 support 位置。
+- 其中 $m$ 表示第 $m$ 個 mosaicked replica；$m$ 同時決定該 replica 在 extended axis 上的頻率位移（以 `PRF` 為間隔）與 mask 位置。
 
 - 在 code 實作上，可直接依照 extended frequency index 重排，將各 replica 的 $(\tau,f_\eta)$ sub-matrix 重新排列並組裝成較大的 matrix。
+- 也就是在 data structure 上，直接把各 replica 對應的 sub-matrix 依 extended-axis 的位置做 tile / 拼接，疊到較大的頻域矩陣中即可。
+- 例如，若原本 folded-domain data matrix 的尺寸是 $N_{\mathrm{az}}\times N_{\mathrm{rg}}$ ，而 extended axis 上需要拼接 3 個 replicas，則可將這 3 塊對應的 sub-matrix 依序排到 extended frequency axis 上，形成約 $3N_{\mathrm{az}}\times N_{\mathrm{rg}}$ 的較大矩陣（此處假設每個 replica 沿 azimuth-frequency 維度的尺寸相同）。
 - 這個 matrix assembly 能成立的原因是：每個 sub-matrix 對應的 $f_\eta$ 已先映射到 extended axis，而非沿用 folded 解釋。
 
 ### 3.3. Deramping
 
-#### 起點：主 replica 的局部相位模型
+#### 主 replica (m = 0) 的局部相位模型
 
 - Deramping 的目標是消除主 replica 的 quadratic phase curvature，讓後續 LPF 可用固定頻帶視窗保留主能量。
 - 因此先取主 replica $m_0$，在 reference frequency $f_{\eta_c}$ 附近做 Taylor 展開（局部工作頻帶近似）：
@@ -314,9 +312,9 @@ $$
 \phi_{0,\mathrm{main}}+\phi_{1,\mathrm{main}}(f_\eta-f_{\eta_c})+\frac{1}{2}\phi_{2,\mathrm{main}}(f_\eta-f_{\eta_c})^2
 $$
 
-#### 二次係數 $\phi_{2,\mathrm{main}}$ 的來源
+#### 二次係數 $\phi_{2,\mathrm{main}}$
 
-- $\phi_{2,\mathrm{main}}$ 不是新假設，而是 3.2 的 $\phi_m(f_\eta)$ 在 $f_{\eta_c}$ 的二階導數：
+- $\phi_{2,\mathrm{main}}$ 是 3.2 的 $\phi_m(f_\eta)$ 在 $f_{\eta_c}$ 的二階導數：
 
 $$
 \phi_{2,\mathrm{main}} = \biggl.\frac{d^2\phi_{m_0}(f_\eta)}{df_\eta^2}\biggr|_{f_\eta=f_{\eta_c}}
@@ -335,16 +333,14 @@ $$
 \biggr|_{f_\eta=f_{\eta_c}}
 $$
 
-- 若本文不展開 $D''(\cdot)$ 的解析式，也可用一般 RDA 的 closed-form 二次相位來識別主項形式：
+- 此處不必直接計算 $D''(\cdot)$ 的複雜解析式；可改用 low-squint-angle case 下 RDA 的 closed-form 二次相位，來判斷該二階導數所對應的數學形式：
 
 $$
 S_{\mathrm{main}}(f_\eta)\propto
 \exp\biggl[-j\frac{\pi}{K_a}(f_\eta-f_{\eta_c})^2\biggr]
 $$
 
-因此主 replica 的二次係數可等價寫成 $\pi/K_a$（符號正負依 Fourier sign convention 而定）。
-
-#### Deramping filter 為何是這個形式
+- 因此主 replica 的二次係數可等價寫成 $\pi/K_a$ 。
 
 - 在本節定義
 
@@ -354,21 +350,19 @@ $$
 
 - 等價於 $k_s=2\pi/\phi_{2,\mathrm{main}}$。若採上述 RDA 記號，則可視為 $k_s\equiv K_a$（或差一個符號）。
 
-主 replica phase 可重寫為
+#### 主 replica phase 可重寫為
 
 $$
 \phi_{\mathrm{main}}(f_\eta)=\phi_{0,\mathrm{main}}+\phi_{1,\mathrm{main}}(f_\eta-f_{\eta_c})+\pi\frac{1}{k_s}(f_\eta-f_{\eta_c})^2
 $$
 
-為了對消上式的 quadratic term，frequency-domain deramping filter 設計為
+- 為了消除上式的 quadratic term，frequency-domain deramping filter 設計為
 
 $$
 {\color{red}{H_{\mathrm{de},f}(f_\eta)=\exp\biggl(+j\pi\frac{1}{k_s}(f_\eta-f_{\eta_c})^2\biggr)}}
 $$
 
-#### Cancellation 與 Time-Frequency 拉直
-
-主 replica 經過 deramping 後有
+- 經過 deramping 後得到
 
 $$
 \exp\biggl(-j\phi_{\mathrm{main}}(f_\eta)\biggr)\,H_{\mathrm{de},f}(f_\eta) =
@@ -380,13 +374,43 @@ $$
 $$
 
 - 上式顯示主 replica 的 quadratic term 完全 cancellation，僅剩常數與線性項。
-- 由
+
+- 若 $\phi(f_\eta)=a_2 f_\eta^2+a_1 f_\eta+a_0$ 則相位對 $f_\eta$ 為二次函數。
+
+- 經過 deramping 後，二次項被消除，可寫成 $\phi_{\mathrm{after}}(f_\eta)=a_1 f_\eta+a_0$ 
+
+- 因此 deramping 的作用，就是將原本的 quadratic phase 轉為 linear phase。
+
+- 更具體地說，若
 
 $$
-\tau_g(f_\eta)\propto\frac{d\phi(f_\eta)}{df_\eta}
+\phi(f_\eta)=a_2 f_\eta^2+a_1 f_\eta+a_0
 $$
 
-可知：補償前 $\tau_g$ 隨 $f_\eta$ 變化（有 curvature）；補償後 $d^2\phi_{\mathrm{after}}/df_\eta^2=0$，主能量脊線被拉直（圖上可表現為近水平或近垂直，取決於座標軸定義）。
+則
+
+$$
+\frac{d\phi(f_\eta)}{df_\eta}=2a_2 f_\eta+a_1
+$$
+
+會隨 $f_\eta$ 改變。
+
+- 這表示不同 azimuth frequency 分量對應到不同的 phase slope，因此在 time-frequency diagram 上，其能量峰值位置會隨 $f_\eta$ 漂移，呈現彎曲軌跡。
+
+- 當 deramping 後只剩
+
+$$
+\phi_{\mathrm{after}}(f_\eta)=a_1 f_\eta+a_0
+$$
+
+則
+
+$$
+\frac{d\phi_{\mathrm{after}}(f_\eta)}{df_\eta}=a_1=\mathrm{const.}
+$$
+
+- 此時各頻率分量具有相同 phase slope，因此其能量峰值位置不再隨 $f_\eta$ 改變，time-frequency diagram 上的軌跡便會被拉直。
+
 - 這就是後續 3.4 可以用固定 LPF 視窗保留主 replica 的原因。
 
 #### Deramped 頻譜表達式
@@ -400,14 +424,14 @@ $$
 
 - 上式中的 deramping filter 以主 replica 為 reference 設計，因此主項被完全拉直；非主 replicas 一般仍會保留殘餘二次項。
 
-這一段若要看更完整的 phase-model、deramping 與 LPF 銜接細節，可直接看
+- 這一段若要看更完整的 phase-model、deramping 與 LPF 銜接細節，可直接看
 [azimuth_deramp_LPF.md](./azimuth_deramp_LPF.md)。
 
 ### 3.4. Low Pass Filter
 
-#### Frequency-Domain LPF 視窗
+#### Frequency-Domain Keep Window
 
-frequency-domain keep window 為
+- 用來保留主 replica 的 frequency-domain window 為
 
 $$
 H_{\mathrm{LPF},f}(f_\eta)=\mathrm{rect}\biggl(\frac{f_\eta-f_{\mathrm{LPF}}}{B_{\mathrm{LPF}}}\biggr)
@@ -415,7 +439,7 @@ $$
 
 - 其中 $f_{\mathrm{LPF}}$ 是 keep window 的中心頻率，$B_{\mathrm{LPF}}$ 是 keep window 的頻寬。
 
-#### FFT-based 實作與保留主項
+#### FFT-based 實作
 
 - 在 FFT-based LPF 實作中，等價於在頻域 bins 上套用固定 keep window。
 - 當視窗中心對準 deramped 主 replica 且 $B_{\mathrm{LPF}}$ 選得足夠窄（相對 replica 間距 `PRF`），則主要保留 $m=m_0$（通常可取 $m_0=0$）附近能量，$m\neq m_0$ 項被抑制。
@@ -428,9 +452,9 @@ $$
 B_{\mathrm{LPF}}\approx B_{\mathrm{doppler}}
 $$
 
-因此 $B_{\mathrm{LPF}}<\mathrm{PRF}$，可避免同時納入相鄰 replicas（間距約為 `PRF`）。
+- 因此 $B_{\mathrm{LPF}}<\mathrm{PRF}$，可避免同時納入相鄰 replicas（間距約為 `PRF`）。
 
-#### 完整輸出式（保留多 replica 表示）
+#### 完整輸出式（保留 replica 表示）
 
 $$
 S_5(\tau,f_\eta) = \sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}} A_5\,
@@ -439,15 +463,15 @@ S_5(\tau,f_\eta) = \sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}} A_5\,
 \exp\biggl( +j\pi\frac{1}{k_s}(f_\eta-f_{\eta_c})^2 \biggr)
 $$
 
-#### 單主 replica 近似式
+#### 主 replica 近似式
 
-當 LPF 主要只保留主帶時，可近似寫成
+- 當 LPF 主只保留主帶後，可近似寫成
 
 $$
 S_5(\tau,f_\eta)\approx S_{4,m_0}(\tau,f_\eta)\,H_{\mathrm{LPF},f}(f_\eta)
 $$
 
-若 $m_0=0$ 且主項 deramping 後二次相位已近似消除，則可寫成
+- 若 $m_0=0$ 且主項 deramping 後二次相位已近似消除，則可寫成
 
 $$
 S_5(\tau,f_\eta)\approx A_5\,
@@ -456,10 +480,8 @@ S_5(\tau,f_\eta)\approx A_5\,
 \exp\biggl(-j\biggl[\psi_{0,m_0}+\psi_{1,m_0}(f_\eta-f_{\mathrm{ref}})\biggr]\biggr)
 $$
 
-#### 物理意義
-
-- Deramping 先把主 replica 在 time-frequency 圖上的能量脊線拉直。
-- LPF 再以固定頻帶視窗擷取這條主能量帶，達到「保主項、抑制旁瓣 replicas」的效果。
+- Deramping 先消除主 replica 的 quadratic phase，使其 time-frequency 軌跡被拉直。
+- 因此後續可用固定頻帶的 LPF 擷取主 replica，並抑制其他 replicas。
 
 LPF 的完整理想模型與 FFT-based 實作，可直接看：
 - [azimuth_deramp_LPF.md 第 4 節](./azimuth_deramp_LPF.md#4-ideal-lpf-model)
@@ -478,7 +500,7 @@ $$
 H_{\mathrm{re},f}(f_\eta)=\exp\biggl(-j\pi\frac{1}{k_s}(f_\eta-f_{\eta_c})^2\biggr)
 $$
 
-#### 完整輸出式（保留多 replica 表示）
+#### 完整輸出式（保留 replica 表示）
 
 $$
 S_6(\tau,f_\eta) = \sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}} A_6\,
@@ -487,9 +509,9 @@ S_6(\tau,f_\eta) = \sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}} A_6\,
 \exp\biggl( -j\biggl[ \psi_{0,m}+\psi_{1,m}(f_\eta-f_{\mathrm{ref}})+\psi_{2,m}(f_\eta-f_{\mathrm{ref}})^2 \biggr] \biggr)
 $$
 
-#### 單主 replica 近似式
+#### 主 replica 近似式
 
-當 LPF 已主要保留主項 $m_0$（通常 $m_0=0$）時，可近似寫成
+- 當 LPF 已主要保留主項 $m_0$（通常 $m_0=0$）時，可近似寫成
 
 $$
 S_6(\tau,f_\eta)\approx S_{5,m_0}(\tau,f_\eta)\,H_{\mathrm{re},f}(f_\eta)
@@ -502,15 +524,13 @@ S_6(\tau,f_\eta)\approx A_6\,
 \exp\biggl(-j\biggl[\psi_{0,m_0}+\psi_{1,m_0}(f_\eta-f_{\mathrm{ref}})+\pi\frac{1}{k_s}(f_\eta-f_{\eta_c})^2\biggr]\biggr)
 $$
 
-#### 物理意義
-
-- Deramping + LPF + Reramping 可理解為：先把主帶拉直以利固定視窗裁切，再把保留下來的主帶送回目標相位曲率座標。
-- 因為 LPF 已抑制多數非主 replicas，reramping 後主要保留的是主項的有效頻譜，供下一步 azimuth compression 使用。
+- Deramping + LPF + reramping 的作用，可理解為：先以 deramping 消除主 replica 的 quadratic phase，讓主頻帶可由固定頻帶視窗擷取；再以 reramping 將保留下來的頻譜恢復到後續處理所需的相位形式。
+- 由於 LPF 已抑制大部分非主 replicas，reramping 後保留下來的主要是主 replica 的有效頻譜，可供下一步 azimuth compression 使用。
 
 #### 小總結（到 $S_6$ 為止）
 
 - 在「mosaicking $\rightarrow$ deramping $\rightarrow$ LPF $\rightarrow$ reramping」完成後，可近似視為只剩主頻帶 $m=0$（或一般記作 $m_0$）對應的有效頻譜。
-- 目前式子中的 $\mathrm{rect}\biggl(\frac{f_\eta-f_{\mathrm{LPF}}}{B_{\mathrm{LPF}}}\biggr)$ 代表最終保留的主頻帶視窗；其他 replicas 因不在 keep window 內而被抑制。
+- 目前式子中的 $\mathrm{rect}\biggl(\frac{f_\eta-f_{\mathrm{LPF}}}{B_{\mathrm{LPF}}}\biggr)$ 代表最終保留的主頻帶視窗；其他 replicas 因不在此窗內而被抑制。
 - 目前主項 phase term 可理解為「常數項 + 線性項 + 被 reramping 乘回的目標二次曲率項」；它已回到後續 azimuth compression 可直接匹配的 phase 座標系。
 
 ## 4. Azimuth Compression
@@ -681,7 +701,7 @@ $$
 \widetilde I_{8,m}(\tau,\eta^{\mathrm{ext}}):=I_{\mathrm{circ}}^{(m)}\biggl(\tau,\eta^{\mathrm{ext}}-mT_{\mathrm{window}}\biggr)
 $$
 
-3. 最後乘上第 $m$ 個 support mask 並對 $m$ 加總
+3. 最後乘上第 $m$ 個 mask 並對 $m$ 加總
 
 $$
 I_{8,m}(\tau,\eta^{\mathrm{ext}})=\widetilde I_{8,m}(\tau,\eta^{\mathrm{ext}})\cdot
@@ -706,7 +726,7 @@ $$
 
 - 在 $I_{\mathrm{circ}}(\tau,\eta)$ 中，$\eta$ 仍是 folded time axis 上的座標；到 $I_8(\tau,\eta)$ 時，$\eta$ 必須重新解釋成 extended axis 上的座標。
 - mosaicking 的本質是先依 replica index 重新指定 extended-axis 座標，再做組裝。
-- 其中 $m$ 表示第 $m$ 個 mosaicked replica；$m$ 同時決定該 replica 在 extended axis 上的時間位移（以 $T_{\mathrm{window}}$ 為間隔）與 support 位置。
+- 其中 $m$ 表示第 $m$ 個 mosaicked replica；$m$ 同時決定該 replica 在 extended axis 上的時間位移（以 $T_{\mathrm{window}}$ 為間隔）與 mask 位置。
 - 在 code 實作上，可直接依照 extended time index 重排，將各 replica 的 $(\tau,\eta)$ sub-matrix 重新排列並組裝成較大的 matrix。
 - 這個 matrix assembly 能成立的原因是：每個 sub-matrix 對應的 $\eta$ 已先映射到 extended axis，而非沿用 folded 解釋。
 
