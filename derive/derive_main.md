@@ -272,10 +272,12 @@ S_3(\tau,f_\eta^{\mathrm{ext}})=\sum_m S_{3,m}(\tau,f_\eta^{\mathrm{ext}})
 $$
 
 - 為了凸顯 mosaicking 的分帶重排，以下採用
+
 $$
 W_a(f_\eta-m\cdot\mathrm{PRF};\omega_s)\approx
 \mathrm{rect}\biggl(\frac{f_\eta-m\cdot\mathrm{PRF}-f_{\eta_c}}{B_{\max}}\biggr)
 $$
+
 作為有效 support 的近似表示。
 
 - 以下為同一件事的 closed-form 寫法（為了簡潔，後續省略 ext/fold 上標，統一寫成 $f_\eta$）：
@@ -334,21 +336,26 @@ $$
 $$
 
 - 若本文不展開 $D''(\cdot)$ 的解析式，也可用一般 RDA 的 closed-form 二次相位來識別主項形式：
+
 $$
 S_{\mathrm{main}}(f_\eta)\propto
 \exp\biggl[-j\frac{\pi}{K_a}(f_\eta-f_{\eta_c})^2\biggr]
 $$
+
 因此主 replica 的二次係數可等價寫成 $\pi/K_a$（符號正負依 Fourier sign convention 而定）。
 
 #### Deramping filter 為何是這個形式
 
 - 在本節定義
+
 $$
 \pi\frac{1}{k_s}:=\frac{1}{2}\phi_{2,\mathrm{main}}
 $$
+
 - 等價於 $k_s=2\pi/\phi_{2,\mathrm{main}}$。若採上述 RDA 記號，則可視為 $k_s\equiv K_a$（或差一個符號）。
 
 主 replica phase 可重寫為
+
 $$
 \phi_{\mathrm{main}}(f_\eta)=\phi_{0,\mathrm{main}}+\phi_{1,\mathrm{main}}(f_\eta-f_{\eta_c})+\pi\frac{1}{k_s}(f_\eta-f_{\eta_c})^2
 $$
@@ -374,9 +381,11 @@ $$
 
 - 上式顯示主 replica 的 quadratic term 完全 cancellation，僅剩常數與線性項。
 - 由
+
 $$
 \tau_g(f_\eta)\propto\frac{d\phi(f_\eta)}{df_\eta}
 $$
+
 可知：補償前 $\tau_g$ 隨 $f_\eta$ 變化（有 curvature）；補償後 $d^2\phi_{\mathrm{after}}/df_\eta^2=0$，主能量脊線被拉直（圖上可表現為近水平或近垂直，取決於座標軸定義）。
 - 這就是後續 3.4 可以用固定 LPF 視窗保留主 replica 的原因。
 
