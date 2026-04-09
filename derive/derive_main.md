@@ -291,7 +291,7 @@ $$
 
 這裡的 $k$ 不是 slow-time sample index，而是取樣後在頻域中每隔 `PRF` 出現一次的 **replica index**。也就是說， $k$ 就是 azimuth frequency folding 之後，第 $k$ 個 replica 的編號。
 
-所以$f_\eta-k\cdot\mathrm{PRF}$
+所以 $f_\eta-k\cdot\mathrm{PRF}$
 就是把連續 azimuth spectrum 以 `PRF` 為間隔做平移後所得到的第 $k$ 個 spectral replica，也就是第 $k$ 個 folded copy。
 
 這些 folded copies 的來源，是 slow-time 上的離散取樣
