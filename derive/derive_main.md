@@ -150,7 +150,7 @@ $$
 
 ## 3. Azimuth Frequency Unfolding And Resampling (UFR)
 
-詳細推導在 [Azimuth Frequency Folding](./azimuth_freq_folding.md)。先證明為什麼會有 folded spectrum ，再進入 `mosaicking -> deramping -> LPF -> reramping` 的處理鏈。
+詳細推導在 [Azimuth Frequency Folding](./azimuth_freq_folding.md)。先證明為什麼會有 folded spectrum ，再進入 $mosaicking \rightarrow deramping \rightarrow LPF \rightarrow reramping$ 的處理鏈。
 
 ### 3.1. Azimuth Frequency Folding (Explain)
 
@@ -321,7 +321,7 @@ $$
 
 ### 3.2. Mosaicking
 
-Mosaicking 的核心不是消除 replicas，而是把 `S_2(\tau,f_\eta)` 中原本 folded 在同一個基本頻帶內的 replicas，重新排到 extended azimuth-frequency axis 上。因此，mosaicking 對應的數學操作不是 filtering，而是 replica-dependent coordinate relabeling 與重新組裝。
+Mosaicking 的核心不是消除 replicas，而是把 $S_2(\tau,f_\eta)$ 中原本 folded 在同一個基本頻帶內的 replicas，重新排到 extended azimuth-frequency axis 上。因此，mosaicking 對應的數學操作不是 filtering，而是 replica-dependent coordinate relabeling 與重新組裝。
 
 在連續表示中，mosaicked signal 可先寫成
 
@@ -331,9 +331,9 @@ S_3(\tau,f_\eta) = \sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}} S_{3,m}(\ta
 }}
 $$
 
-這裡的重點是，`S_2(\tau,f_\eta)` 中的 `f_\eta` 仍然是 folded frequency axis 上的座標；而到了 `S_3(\tau,f_\eta)`，`f_\eta` 已經要被重新解釋成 extended axis 上的座標。也就是說，mosaicking 真正做的事情，不只是把多個 replicas 分開，而是先依 replica index `m` 重新定義其對應的 frequency support，再把它們放回 extended axis 的正確位置。
+這裡的重點是，$S_2(\tau,f_\eta)$ 中的 $f_\eta$ 仍然是 folded frequency axis 上的座標；而到了 $S_3(\tau,f_\eta)$，$f_\eta$ 已經要被重新解釋成 extended axis 上的座標。也就是說，mosaicking 真正做的事情，不只是把多個 replicas 分開，而是先依 replica index $m$ 重新定義其對應的 frequency support，再把它們放回 extended axis 的正確位置。
 
-因此，第 `m` 個 mosaicked replica 可寫成
+因此，第 $m$ 個 mosaicked replica 可寫成
 
 $$
 S_{3,m}(\tau,f_\eta) =
@@ -369,9 +369,9 @@ $$
 }}
 $$
 
-明確表示第 `m` 個 replica 已經被放到其在 extended axis 上對應的 support region。這也是為什麼 `S_3(\tau,f_\eta)` 才是表達 mosaicking 的關鍵 signal：在 `S_2(\tau,f_\eta)` 中，多個 folded copies 還共用同一個 folded coordinate；在 `S_3(\tau,f_\eta)` 中，每個 replica 已經擁有自己的 support 與自己的索引 `m`。
+明確表示第 $m$ 個 replica 已經被放到其在 extended axis 上對應的 support region。這也是為什麼 $S_3(\tau,f_\eta)$ 才是表達 mosaicking 的關鍵 signal：在 $S_2(\tau,f_\eta)$ 中，多個 folded copies 還共用同一個 folded coordinate；在 $S_3(\tau,f_\eta)$ 中，每個 replica 已經擁有自己的 support 與自己的索引 $m$。
 
-接著，為了讓後續 deramping filter 能直接作用在主 replica 的局部 chirp curvature 上，我們不再保留 `\phi_m(f_\eta)` 的完整 closed form，而是在 `f_{\mathrm{ref}}` 附近把它寫成局部二次形式：
+接著，為了讓後續 deramping filter 能直接作用在主 replica 的局部 chirp curvature 上，我們不再保留 $\phi_m(f_\eta)$ 的完整 closed form，而是在 $f_{\mathrm{ref}}$ 附近把它寫成局部二次形式：
 
 $$
 \phi_m(f_\eta) \approx
@@ -380,7 +380,7 @@ $$
 +\psi_{2,m}(f_\eta-f_{\mathrm{ref}})^2
 $$
 
-其中 `\psi_{0,m}` 是 phase offset，`\psi_{1,m}` 是局部線性 slope，而 `\psi_{2,m}` 是第 `m` 個 replica 的 local quadratic curvature。這一步之所以必要，是因為後面的 deramping 本質上就是消掉某個 replica 的 local quadratic phase curvature，因此必須先把每個 replica 的 phase 改寫成可以直接讀出 quadratic term 的形式。
+其中 $\psi_{0,m}$ 是 phase offset，$\psi_{1,m}$ 是局部線性 slope，而 $\psi_{2,m}$ 是第 $m$ 個 replica 的 local quadratic curvature。這一步之所以必要，是因為後面的 deramping 本質上就是消掉某個 replica 的 local quadratic phase curvature，因此必須先把每個 replica 的 phase 改寫成可以直接讀出 quadratic term 的形式。
 
 將這個局部 phase model 代回之後，mosaicked signal 的完整解析式可寫成
 
@@ -407,7 +407,7 @@ B_r\left(
 }}
 $$
 
-在離散實作中，這件事可以直接對應為：把每個 replica 對應的 `(\tau,f_\eta)` sub-matrix，依照其 extended frequency support 重新排列並組裝成一個較大的 matrix。只要每個 sub-matrix 都真的對應一個明確的 replica index `m`，那麼這個離散的重排與組裝操作，就正是連續數學上形成 `S_3(\tau,f_\eta)` 的資料結構對應。換句話說，資料結構上能直接做 matrix assembly，成立的前提不是單純「把矩陣相加」，而是每個 replica 的 `f_\eta` 座標已經先被重新定義到 extended axis 上。
+在離散實作中，這件事可以直接對應為：把每個 replica 對應的 $(\tau,f_\eta)$ sub-matrix，依照其 extended frequency support 重新排列並組裝成一個較大的 matrix。只要每個 sub-matrix 都真的對應一個明確的 replica index $m$，那麼這個離散的重排與組裝操作，就正是連續數學上形成 $S_3(\tau,f_\eta)$ 的資料結構對應。換句話說，資料結構上能直接做 matrix assembly，成立的前提不是單純「把矩陣相加」，而是每個 replica 的 $f_\eta$ 座標已經先被重新定義到 extended axis 上。
 
 更完整的 mosaicking 與 local phase model，可直接看：
 - [azimuth_freq_ufr.md](./azimuth_freq_ufr.md)
@@ -459,7 +459,7 @@ $$
 }
 $$
 
-這個 red-highlighted equation 就是最直接的數學證據：主 replica 的 quadratic term
+這個 red-highlighted $equation$ 就是最直接的數學證據：主 replica 的 quadratic term
 \[
 \pi\frac{1}{k_s}(f_\eta-f_{\eta_c})^2
 \]
@@ -631,17 +631,17 @@ $$
 
 ## 5. Azimuth Time Unfolding And Resampling (UFR)
 
-這一段主流程的前置現象推導是 [Azimuth Time Folding](./azimuth_time_folding.md)。也就是先證明 finite-FFT 為什麼會把線性卷積折回成 time-domain wrap-around，再進入 `mosaicking -> deramping -> LPF -> reramping` 的處理鏈。
+這一段主流程的前置現象推導是 [Azimuth Time Folding](./azimuth_time_folding.md)。也就是先證明 finite-FFT 為什麼會把線性卷積折回成 time-domain wrap-around，再進入 $mosaicking \rightarrow deramping \rightarrow LPF \rightarrow reramping$ 的處理鏈。
 
 ### 5.1. Azimuth Time Folding (Explain)
 
 time-domain wrap-around 的現象本身由 [Azimuth Time Folding](./azimuth_time_folding.md) 單獨說明。主流程在這裡把它列成 explain stage，目的不是重複整份推導，而是明確標出：
 
 - azimuth compression 之後，問題已經從 frequency folding 轉成 time folding
-- `mosaicking -> deramping -> LPF -> reramping` 這條 time-UFR 鏈是為了解開這個 wrap-around 現象
+- $mosaicking \rightarrow deramping \rightarrow LPF \rightarrow reramping$ 這條 time-UFR 鏈是為了解開這個 wrap-around 現象
 - 若不先理解 [Azimuth Time Folding](./azimuth_time_folding.md)，後面的 time-UFR 會只剩操作流程，少掉幾何原因
 
-其中最直接表達 time folding / wrap-around 的 equation 是
+其中最直接表達 time folding / wrap-around 的 $equation$ 是
 
 $$
 \color{red}{
@@ -664,7 +664,7 @@ $$
 
 After mosaicking onto the extended time axis, the signal can be written as
 
-這一步真正表達 time-domain mosaicking 的 equation，就是下面的 $I_8(\tau,\eta)$。
+這一步真正表達 time-domain mosaicking 的 $equation$，就是下面的 $I_8(\tau,\eta)$。
 
 原因是：
 
@@ -753,7 +753,7 @@ $$
 }
 $$
 
-這個 red-highlighted equation 就是 time-domain 的 cancellation 證據：  
+這個 red-highlighted $equation$ 就是 time-domain 的 cancellation 證據：  
 主 replica 的 quadratic chirp phase 與 linear carrier term 在乘完 deramp filter 後都被消掉，只剩常數相位。
 
 對主 replica 而言，若把 time-domain 局部 phase 也寫成
