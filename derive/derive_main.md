@@ -227,16 +227,13 @@ $$
 將其 argument 整理為
 
 $$
--\frac{\lambda}{2V_r}f_\eta-\omega_s\biggl(\eta_0-\frac{\lambda R_0}{2V_r^2}f_\eta\biggr)
-=
-\alpha(\omega_s)f_\eta-\omega_s\eta_0
+-\frac{\lambda}{2V_r}f_\eta-\omega_s\biggl(\eta_0-\frac{\lambda R_0}{2V_r^2}f_\eta\biggr) = \alpha(\omega_s)f_\eta-\omega_s\eta_0
 $$
 
 其中
 
 $$
-\alpha(\omega_s)
-=
+\alpha(\omega_s) =
 -\frac{\lambda}{2V_r}
 +\omega_s\frac{\lambda R_0}{2V_r^2}
 $$
@@ -268,7 +265,7 @@ $$
 \Delta f_\eta(\omega_s)\propto \frac{1}{|\alpha(\omega_s)|}
 $$
 
-由此可知，$W_a(f_\eta;\omega_s)$ 的頻譜中心 $f_{\eta,c}(\omega_s)$ 與頻寬 $\Delta f_\eta(\omega_s)$ 皆為 $\omega_s$ 的函數。
+由此可知， $W_a(f_\eta;\omega_s)$ 的頻譜中心 $f_{\eta,c}(\omega_s)$ 與頻寬 $\Delta f_\eta(\omega_s)$ 皆為 $\omega_s$ 的函數。
 
 另一方面，離散取樣後的 folded spectrum 為
 
