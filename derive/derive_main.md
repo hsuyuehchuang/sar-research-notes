@@ -129,7 +129,7 @@ $$
 
 ### 3.1. Azimuth Frequency Folding (Explain)
 
-做完range compression的訊號可以改寫成
+#### 做完range compression的訊號可表示成
 
 $$
 s_1(\tau,\eta) = A_1\,
@@ -140,38 +140,28 @@ $$
 
 $$ s_1(\tau,\eta) = s_{1,\mathrm{cont}}(\tau,\eta)\cdot \sum_{n=-\infty}^{\infty}\delta(\eta-nT_p) $$
 
-其中
-
-$$
-s_{1,\mathrm{cont}}(\tau,\eta) = A_1\,
+- 其中 $s_{1,\mathrm{cont}}(\tau,\eta) = A_1\,
 \mathrm{sinc}\left[ B_r\left( \tau-\frac{2R(\eta)}{c} \right) \right]\cdot w_a(\eta;\omega_s)\cdot
-\exp\left[ -j\frac{4\pi f_0R(\eta)}{c} \right]
-$$
-
+\exp\left[ -j\frac{4\pi f_0R(\eta)}{c} \right]$
 - 也就是說， $s_{1,\mathrm{cont}}(\tau,\eta)$ 是連續訊號，而 $s_1(\tau,\eta)$ 則是透過 impulse train 取樣後得到的訊號。
 
+#### Azimuth FFT
 
-先對連續訊號 $s_{1,\mathrm{cont}}(\tau,\eta)$ 在 azimuth 方向 $\eta$ 做 Fourier transform：
+- 先對連續訊號 $s_{1,\mathrm{cont}}(\tau,\eta)$ 在 azimuth 方向做 Fourier transform：
 
 $$ S_{1,c}(\tau,f_\eta;\omega_s) = \mathcal{F}_{\eta}\left[ s_{1,\mathrm{cont}}(\tau,\eta) \right] $$
 
-其中，$w_a(\eta;\omega_s)$ 在 azimuth frequency domain 中的對應頻譜定義為
-
-$$ W_a(f_\eta;\omega_s) = \mathcal{F}_{\eta}\left[ w_a(\eta;\omega_s) \right] $$
-
-若把 $S_{1,c}$ 寫開，則
-
 $$
-S_{1,c}(\tau,f_\eta;\omega_s) = A_2\,
+= A_2\,
 \mathrm{sinc}\left[ B_r\left( \tau-\frac{2R_0}{cD(f_\eta,V_r)} \right) \right]\cdot W_a(f_\eta;\omega_s)\cdot
 \exp\left[-j\phi_{az}(f_\eta)\right]
 $$
 
-其中
+- 其中， $ \phi_{az}(f_\eta) = \frac{4\pi R_0f_0}{c}D(f_\eta,V_r)+2\pi f_\eta\eta_0 $
 
-$$ \phi_{az}(f_\eta) = \frac{4\pi R_0f_0}{c}D(f_\eta,V_r)+2\pi f_\eta\eta_0 $$
+- 其中， $ W_a(f_\eta;\omega_s) = \mathcal{F}_{\eta}\left[ w_a(\eta;\omega_s) \right] $ 互為 Fourier pair
 
-接下來把 slow-time sampling 的效果帶進 frequency domain。由於 $s_1(\tau,\eta)$ 是 continuous signal 與 impulse train 的乘積，因此其 azimuth Fourier transform 可逐步寫成
+- 下一步再將 slow-time sampling 的效果帶進 frequency domain。由於 $s_1(\tau,\eta)$ 是 continuous signal 與 impulse train 的乘積，因此其 azimuth Fourier transform 可逐步寫成
 
 $$ S_{2}(\tau,f_\eta) = \mathcal{F}_{\eta}\left[ s_{1,\mathrm{cont}}(\tau,\eta)\cdot \sum_{n=-\infty}^{\infty}\delta(\eta-nT_p) \right] $$
 
@@ -181,13 +171,13 @@ $$ = S_{1,c}(\tau,f_\eta;\omega_s)\ast \left[ \mathrm{PRF}\sum_{k=-\infty}^{\inf
 
 $$ = \mathrm{PRF}\sum_{k=-\infty}^{\infty} S_{1,c}(\tau,f_\eta-k\cdot\mathrm{PRF};\omega_s) $$
 
-也就是說， $S_2$ 不是另一個獨立定義出來的訊號，而是把連續 azimuth spectrum $S_{1,c}$ 的所有 `PRF`-spaced replicas 全部加總之後得到的 folded azimuth-frequency signal。
+- 也就是說， $S_2$ 是以 `PRF` 為間隔展開並加總之後得到的 folded azimuth-frequency spectrum.
 
-若把第 $k$ 個 replica 的 azimuth phase 寫成
+- 若把第 $k$ 個 replica 的 azimuth phase 寫成
 
 $$ \phi_k(f_\eta) = \frac{4\pi R_0f_0}{c}D(f_\eta-k\cdot\mathrm{PRF},V_r) + 2\pi(f_\eta-k\cdot\mathrm{PRF})\eta_0 $$
 
-那麼把上式中的 $S_{1,c}$ 完整展開之後，可寫成
+- 那麼把上式中的 $S_{1,c}$ 完整展開之後，可寫成
 
 $$
 S_2(\tau,f_\eta) = \mathrm{PRF}\sum_{k=-\infty}^{\infty} A_2\,
@@ -195,55 +185,26 @@ S_2(\tau,f_\eta) = \mathrm{PRF}\sum_{k=-\infty}^{\infty} A_2\,
 W_a(f_\eta-k\cdot\mathrm{PRF};\omega_s)\cdot \exp\left[-j\phi_k(f_\eta)\right]
 $$
 
-這裡要特別注意：
-
-- $n$ 是 time domain 裡的 slow-time sample index，來自 $\eta=nT_p$
-- 做完 azimuth FFT 之後， $n$ 不再顯式出現
-- 它的效果會變成 frequency domain 中每隔 `PRF` 出現一次的 spectrum replicas
-- 因此後面改用 $k$ 來編號那些 folded copies，而不是再用 $n$
-
-如果要看這件事的完整推導，可直接看：
-- [azimuth_freq_folding.md 第 4 節](./azimuth_freq_folding.md#4-continuous-azimuth-spectrum)
-- [azimuth_freq_folding.md 第 5 節](./azimuth_freq_folding.md#5-folded-spectrum-from-the-sampling-comb)
+- $n$ 是 slow-time sample index，滿足 $\eta=nT_p$ 
+- 做完 azimuth FFT 之後， $n$ 不再顯式出現；其取樣效果改以頻域中每隔 `PRF` 出現的 spectral replicas表示。
+- 因此後續以 $k$ 表示第 $k$ 個 folded spectral replica 
+- $f_\eta-k\cdot\mathrm{PRF}$ 表示連續 azimuth spectrum 以 `PRF` 為間隔做平移後所得到的第 $k$ 個 spectral replica，也就是第 $k$ 個 folded copy。
 
 
-這裡的 $k$ 不是 slow-time sample index，而是取樣後在頻域中每隔 `PRF` 出現一次的 **replica index**。也就是說， $k$ 就是 azimuth frequency folding 之後，第 $k$ 個 replica 的編號。
+#### Azimuth folded spectrum 的來源
 
-所以 $f_\eta-k\cdot\mathrm{PRF}$
-就是把連續 azimuth spectrum 以 `PRF` 為間隔做平移後所得到的第 $k$ 個 spectral replica，也就是第 $k$ 個 folded copy。
-
-這些 folded copies 的來源，是 slow-time 上的離散取樣
-
-$$ \sum_{n=-\infty}^{\infty}\delta(\eta-nT_p) $$
-
-在做 azimuth FFT 之後，於 frequency domain 變成一個以 `PRF` 為間隔的 impulse train，因而使原本的連續 spectrum $S_{1,c}$ 被週期性複製。
-
-而 folding 可以從下面這個式子直接看出來：
-
-$$ {\color{red}{W_{\mathrm{fold}}(f_\eta;\omega_s) = \sum_{k=-\infty}^{\infty} W_a(f_\eta-k\cdot\mathrm{PRF};\omega_s)}} $$
-
-因為這個式子明確表示同一個連續頻譜 $W_a$ 被複製成許多個 `PRF`-spaced replicas；當這些 replicas 在同一基本頻帶內互相重疊時，就形成 azimuth frequency folding (aliasing)。
-
-其中，$W_a(f_\eta;\omega_s)$ 在本推導中不是單純把 $w_a(\eta;\omega_s)$ 當作一般 Fourier pair 直接變換，而是利用 POSP 把 slow-time antenna weighting 轉寫成 azimuth frequency envelope。也就是說，
-
-$$ W_a(f_\eta;\omega_s) \approx w_a(\eta(f_\eta);\omega_s) $$
-
-其中 stationary-point relation 為
-
-$$ \eta(f_\eta) = \eta_0-\frac{\lambda R_0}{2V_r^2}f_\eta $$
-
-因此
+- 這些 folded copies 的來源，是 slow-time 上的離散取樣 $ \sum_{n=-\infty}^{\infty}\delta(\eta-nT_p) $ 在做 azimuth FFT 之後，於 frequency domain 變成一個以 `PRF` 為間隔的 impulse train，因而使原本的連續 spectrum $S_{1,c}$ 被週期性複製。
 
 $$
-W_a(f_\eta;\omega_s) \approx \mathrm{sinc}^2\left[
-\frac{L_a}{\lambda}\left( -\frac{\lambda}{2V_r}f_\eta
-- \omega_s\left( \eta_0-\frac{\lambda R_0}{2V_r^2}f_\eta \right) \right)
-\right]
+{\color{red}{\mathcal{F}_{\eta}\left[ \sum_{n=-\infty}^{\infty}\delta(\eta-nT_p) \right] = 
+\left[ \mathrm{PRF}\sum_{k=-\infty}^{\infty}\delta(f_\eta-k\cdot\mathrm{PRF}) \right]}}
 $$
 
-也就是說，$\omega_s$ 不會直接生成 folded spectrum；它是先改變 slow-time 照明函數 $w_a(\eta;\omega_s)$，再透過 POSP 對應到連續 azimuth envelope $W_a(f_\eta;\omega_s)$，最後才被以 `PRF` 為間隔複製成 $W_{\mathrm{fold}}(f_\eta;\omega_s)$ 。若要看這一步的完整推導，可直接參考 [azimuth_freq_folding.md](./azimuth_freq_folding.md)。
+- 而 folding 可以從下面這個式子直接看出來：
 
-另外，這裡之所以還能在後續 UFR 中把它還原，是因為 TOPS azimuth signal 本質上是 chirp-like signal，因此在 time 與 frequency 之間保有明確對應關係。也就是說，不同 replicas 雖然在 folded frequency axis 上彼此重疊，但它們仍然對應到不同的 chirp support / local phase law，所以後面才能透過 mosaicking、deramping、LPF 與 reramping，把這些 folded copies 再重新展開與分離。
+$$ W_{\mathrm{fold}}(f_\eta;\omega_s) = \sum_{k=-\infty}^{\infty} W_a(f_\eta-k\cdot\mathrm{PRF};\omega_s) $$
+
+- 其中 $ W_a(f_\eta;\omega_s) \approx \mathrm{sinc}^2\left[ \frac{L_a}{\lambda}\left( -\frac{\lambda}{2V_r}f_\eta - \omega_s\left( \eta_0-\frac{\lambda R_0}{2V_r^2}f_\eta \right) \right) \right] $ 若要看這一步的完整推導，可直接參考 [azimuth_freq_folding.md](./azimuth_freq_folding.md)。
 
 
 ### 3.2. Mosaicking
@@ -461,7 +422,7 @@ $$ {\color{red}{H_{\mathrm{de},t}(\eta) = \exp\left( -j\pi k_t(\eta-\eta_c)^2 - 
 
 $$ \exp\left( -j\phi_{\mathrm{main}}(\eta) \right)H_{\mathrm{de},t}(\eta) = \exp\left( -j\phi_{0,\mathrm{main}} \right) $$
 
-$$ {\color{red}{\phi_{\mathrm{after}}(\eta)=\phi_{0,\mathrm{main}}}} $$
+$$ {\color{red}{\phi_{\mathrm{after}}(\eta) = \phi_{0,\mathrm{main}}}} $$
 
 這個 red-highlighted $equation$ 就是 time-domain 的 cancellation 證據：  
 主 replica 的 quadratic chirp phase 與 linear carrier term 在乘完 deramp filter 後都被消掉，只剩常數相位。
@@ -472,15 +433,15 @@ $$ \chi_{0,m}+\chi_{1,m}(\eta-\eta_{\mathrm{ref}})+\chi_{2,m}(\eta-\eta_{\mathrm
 
 等價地看 instantaneous Doppler，原本主 replica 的局部 Doppler 為
 
-$$ f_{\eta,\mathrm{old}}(\eta)=k_t(\eta-\eta_c)+f_{\eta_c} $$
+$$ f_{\eta,\mathrm{old}}(\eta) = k_t(\eta-\eta_c)+f_{\eta_c} $$
 
 filter 所造成的補償量為
 
-$$ \Delta f_\eta(\eta)= -k_t(\eta-\eta_c)-f_{\eta_c} $$
+$$ \Delta f_\eta(\eta) = -k_t(\eta-\eta_c)-f_{\eta_c} $$
 
 所以
 
-$$ {\color{red}{f_{\eta,\mathrm{new}}(\eta)=f_{\eta,\mathrm{old}}(\eta)+\Delta f_\eta(\eta)=0}} $$
+$$ {\color{red}{f_{\eta,\mathrm{new}}(\eta) = f_{\eta,\mathrm{old}}(\eta)+\Delta f_\eta(\eta) = 0}} $$
 
 這表示主 replica 的 instantaneous Doppler 已由斜線變成常數。從 time-frequency diagram 的角度看，
 原本傾斜的 chirp 軌跡會被展平成近似水平或垂直的主能量帶，這正是後面 time-domain LPF 可以只保留主 replica 的數學原因。
