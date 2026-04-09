@@ -588,7 +588,7 @@ $$
 ![TOPS time expansion](./figures/time_expand.png)
 
 上圖可用來理解為什麼 TOPS 會更容易出現 time folding：  
-在 stripmap 中，天線主波束基本上跟著平台前進，目標被照亮的 slow-time 可近似視為平台飛行時間座標 $\eta$ 的局部區段，常寫成「$\eta \leftrightarrow \eta'$ 幾乎同尺度」。
+在 stripmap 中，天線主波束基本上跟著平台前進，目標被照亮的 slow-time 可近似視為平台飛行時間座標 $\eta$ 的局部區段，常寫成「 $\eta \leftrightarrow \eta'$ 幾乎同尺度」。
 
 但在 TOPS 中，平台前進的同時波束還在方位向掃描（steering），因此目標的等效觀測時間軸 $\eta'$ 會被拉長；也就是說，在相同平台飛行時間跨度 $\eta$ 下，訊號在成像端需要覆蓋更長的有效時間支撐。
 
