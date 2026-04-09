@@ -158,7 +158,8 @@ $$
 
 $$
 \begin{aligned}
-test \\
+test 
+& = test \\
 & = test \\
 & = test
 \end{aligned}
@@ -167,7 +168,7 @@ $$
 $$
 \begin{aligned}
 s_1(\tau,\eta) =
-&\, A_1\,
+& A_1\,
 \mathrm{sinc}\left[
 B_r\left(
 \tau-\frac{2R(\eta)}{c}
@@ -227,32 +228,42 @@ W_a(f_\eta;\omega_s) \cdot
 \right)
 $$
 
-接下來把 slow-time sampling 的效果帶進 frequency domain。由於 $s_1(\tau,\eta)$ 是 continuous signal 與 impulse train 的乘積，因此其 azimuth Fourier transform 可寫成
+接下來把 slow-time sampling 的效果帶進 frequency domain。由於 $s_1(\tau,\eta)$ 是 continuous signal 與 impulse train 的乘積，因此其 azimuth Fourier transform 可逐步寫成
 
 $$
-\begin{aligned}
-S_{2}(\tau,f_\eta)
-= &\, \mathcal{F}_{\eta}\left\{
+S_{2}(\tau,f_\eta) =
+\mathcal{F}_{\eta}\left\{
 s_{1,\mathrm{cont}}(\tau,\eta) \cdot
 \sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)
-\right\} \\
-= &\, \mathcal{F}_{\eta}\left\{
-s_{1,\mathrm{cont}}(\tau,\eta)
 \right\}
-*
+$$
+
+$$
+S_{2}(\tau,f_\eta) =
+\mathcal{F}_{\eta}\left\{
+s_{1,\mathrm{cont}}(\tau,\eta)
+\right\} *
 \mathcal{F}_{\eta}\left\{
 \sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)
-\right\} \\
-= &\, S_{1,c}(\tau,f_\eta;\omega_s)
-*
+\right\}
+$$
+
+$$
+S_{2}(\tau,f_\eta) =
+S_{1,c}(\tau,f_\eta;\omega_s)
+\,
+\ast
 \left[
 \mathrm{PRF}
 \sum_{k=-\infty}^{\infty}\delta(f_\eta-k\cdot\mathrm{PRF})
-\right] \\
-&= \mathrm{PRF}
+\right]
+$$
+
+$$
+S_{2}(\tau,f_\eta) =
+\mathrm{PRF}
 \sum_{k=-\infty}^{\infty}
 S_{1,c}(\tau,f_\eta-k\cdot\mathrm{PRF};\omega_s)
-\end{aligned}
 $$
 
 也就是說，$S_2$ 不是另一個獨立定義出來的訊號，而是把連續 azimuth spectrum $S_{1,c}$ 的所有 `PRF`-spaced replicas 全部加總之後得到的 folded azimuth-frequency signal。
