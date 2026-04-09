@@ -293,8 +293,7 @@ $$
 
 所以
 $$
-\color{red}{
-f_\eta-k\cdot\mathrm{PRF}}
+f_\eta-k\cdot\mathrm{PRF}
 $$
 就是把連續 azimuth spectrum 以 `PRF` 為間隔做平移後所得到的第 $k$ 個 spectral replica，也就是第 $k$ 個 folded copy。
 
