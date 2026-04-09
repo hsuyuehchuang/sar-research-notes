@@ -498,22 +498,18 @@ $$
 
 ## 4. Azimuth Compression
 
-這一步的輸入承接 3.5 的 $S_6(\tau,f_\eta)$。3.2–3.5 的核心任務是把 folded replicas 解開並以 LPF 保留主頻帶，因此到這裡可直接採用 **$m=0$ 主頻帶**（不再寫 replica summation）。
+這一步的輸入承接 3.5 的 `S_6(tau,f_eta)`。3.2–3.5 的核心任務是把 folded replicas 解開並以 LPF 保留主頻帶，因此到這裡可直接採用 **`m=0` 主頻帶**（不再寫 replica summation）。
 
-本節只保留 azimuth compression filter $H_{\mathrm{ac}}$；不另外展開 $H_{\mathrm{SRC}}$、$H_{\mathrm{RCMC}}$。
+本節只保留 azimuth compression filter $H_{\mathrm{ac}}$ ；不另外展開 $H_{\mathrm{SRC}}$ 、 $H_{\mathrm{RCMC}}$ 。
 
 定義
 
-$$
-H_{\mathrm{ac}}(f_\eta)=
-\exp\left(+j\frac{4\pi R_0}{\lambda}D(f_\eta)\right)
-$$
+$$ H_{\mathrm{ac}}(f_\eta) = \exp\left(+j\frac{4\pi R_0}{\lambda}D(f_\eta)\right) $$
 
 令 3.5 輸出的主頻帶等效式為
 
 $$
-S_{6,m=0}(\tau,f_\eta)\approx
-A_6\,
+S_{6,m=0}(\tau,f_\eta) \approx A_6\,
 \mathrm{sinc}\left[B_r\left(\tau-\frac{2R_0}{cD(f_{dc})}\right)\right]\cdot
 \mathrm{rect}\left(\frac{f_\eta-f_{dc}}{F_a}\right)\cdot
 \exp\left(-j\frac{4\pi R_0}{\lambda}D(f_\eta)\right)\cdot
@@ -523,10 +519,8 @@ $$
 乘上 $H_{\mathrm{ac}}$ 後，方位向主相位項對消：
 
 $$
-S_{6,\mathrm{ac}}(\tau,f_\eta)=
-S_{6,m=0}(\tau,f_\eta)\,H_{\mathrm{ac}}(f_\eta)
-\approx
-A_7\,
+S_{6,\mathrm{ac}}(\tau,f_\eta) = S_{6,m=0}(\tau,f_\eta)\,H_{\mathrm{ac}}(f_\eta)
+\approx A_7\,
 \mathrm{sinc}\left[B_r\left(\tau-\frac{2R_0}{cD(f_{dc})}\right)\right]\cdot
 \mathrm{rect}\left(\frac{f_\eta-f_{dc}}{F_a}\right)\cdot
 \exp\left(-j2\pi f_\eta\eta_c\right)
@@ -534,10 +528,7 @@ $$
 
 對 $f_\eta$ 做 IFFT，可得到標準 RDA 型式的 azimuth sinc 壓縮結果：
 
-$$
-s_7(\tau,\eta)\approx
-\mathcal{F}^{-1}_{f_\eta}\!\left\{S_{6,\mathrm{ac}}(\tau,f_\eta)\right\}
-$$
+$$ s_7(\tau,\eta) \approx \mathcal{F}^{-1}_{f_\eta}\!\left\{S_{6,\mathrm{ac}}(\tau,f_\eta)\right\} $$
 
 $$
 \mathcal{F}^{-1}_{f_\eta}\left\{
@@ -561,28 +552,22 @@ $$
 
 ## 5. Azimuth Time Unfolding And Resampling (UFR)
 
-這一段主流程的前置現象推導是 [Azimuth Time Folding](./azimuth_time_folding.md)。也就是先證明 finite-FFT 為什麼會把線性卷積折回成 time-domain wrap-around，再進入 $mosaicking \rightarrow deramping \rightarrow LPF \rightarrow reramping$ 的處理鏈。
+這一段主流程的前置現象推導是 [Azimuth Time Folding](./azimuth_time_folding.md) 。也就是先證明 finite-FFT 為什麼會把線性卷積折回成 time-domain wrap-around，再進入 $mosaicking \rightarrow deramping \rightarrow LPF \rightarrow reramping$ 的處理鏈。
 
 ### 5.1. Azimuth Time Folding (Explain)
 
 先用最簡單的離散卷積例子看 wrap-around：
 
 若線性卷積長度為
-$$
-L_{\mathrm{lin}}=N_x+N_h-1
-$$
-但實作只用長度 $L$ 的 FFT（且 $L<L_{\mathrm{lin}}$），則 IFFT 得到的是 circular convolution：
-$$
-y_{\mathrm{circ}}[n]=\sum_{r=-\infty}^{\infty}y_{\mathrm{lin}}[n+rL]
-$$
+$$ L_{\mathrm{lin}} = N_x + N_h - 1 $$
+但實作只用長度 $L$ 的 FFT（且 $L < L_{\mathrm{lin}}$ ），則 IFFT 得到的是 circular convolution：
+$$ y_{\mathrm{circ}}[n] = \sum_{r=-\infty}^{\infty}y_{\mathrm{lin}}[n+rL] $$
 
 這個式子的意思是：超出 $[0,L-1]$ 的線性卷積尾巴，會以週期 $L$ 折回到前面 index。  
-例如 $L=8$ 時，原本在線性卷積 index $n=9$ 的能量，會折回到 $n=1$（因為 $9=1+1\cdot 8$）。
+例如 $L = 8$ 時，原本在線性卷積 index $n = 9$ 的能量，會折回到 $n = 1$ （因為 $9 = 1 + 1\cdot 8$ ）。
 
 對應到 azimuth 軸，只要把離散 index 週期 $L$ 換成時間週期
-$$
-T_{\mathrm{window}}=\frac{N_a}{\mathrm{PRF}}
-$$
+$$ T_{\mathrm{window}} = \frac{N_a}{\mathrm{PRF}} $$
 就得到 azimuth-time wrap-around 的同一件事。
 
 ![TOPS time expansion](./figures/time_expand.png)
@@ -593,25 +578,19 @@ $$
 但在 TOPS 中，平台前進的同時波束還在方位向掃描（steering），因此目標的等效觀測時間軸 $\eta'$ 會被拉長；也就是說，在相同平台飛行時間跨度 $\eta$ 下，訊號在成像端需要覆蓋更長的有效時間支撐。
 
 因此可寫成
-$$
-T_{\eta',\mathrm{TOPS}} > T_{\eta,\mathrm{platform}}
-$$
+$$ T_{\eta',\mathrm{TOPS}} > T_{\eta,\mathrm{platform}} $$
 這正是後面 FFT 窗長不足時更容易產生 circular wrap-around 的幾何原因。
 
 time-domain wrap-around 的核心式子是
 
-$$
-{\color{red}{I_{\mathrm{circ}}(\eta) = \sum_{m=-\infty}^{\infty} I_{\mathrm{lin}}(\eta-mT_{\mathrm{window}})}}
-$$
+$$ {\color{red}{I_{\mathrm{circ}}(\eta) = \sum_{m=-\infty}^{\infty} I_{\mathrm{lin}}(\eta-mT_{\mathrm{window}})}} $$
 
 - $I_{\mathrm{lin}}(\eta)$ 是理想線性卷積結果。
-- 有限長 FFT 實作得到的是週期延拓後的 $I_{\mathrm{circ}}(\eta)$。
+- 有限長 FFT 實作得到的是週期延拓後的 $I_{\mathrm{circ}}(\eta)$ 。
 - 超出主時間窗口的能量會以 $T_{\mathrm{window}}$ 週期折回，形成 azimuth-time folding。
 
 因此本節後續的 time-UFR 鏈
-$$
-mosaicking \rightarrow deramping \rightarrow LPF \rightarrow reramping
-$$
+$$ mosaicking \rightarrow deramping \rightarrow LPF \rightarrow reramping $$
 本質上就是把這個折回項重新拆開、對齊、裁切，再回到目標相位座標。
 
 若要看完整現象推導，可直接看
@@ -623,9 +602,7 @@ Mosaicking 的目標是把原本在同一時間窗口內折回重疊的 replicas
 
 先寫成分項再加總：
 
-$$
-I_8(\tau,\eta)=\sum_{m=-N_{t,\mathrm{neg}}}^{N_{t,\mathrm{pos}}} I_{8,m}(\tau,\eta)
-$$
+$$ I_8(\tau,\eta) = \sum_{m=-N_{t,\mathrm{neg}}}^{N_{t,\mathrm{pos}}} I_{8,m}(\tau,\eta) $$
 
 $$
 {\color{red}{I_{8,m}(\tau,\eta)=A_8\,
@@ -634,10 +611,8 @@ $$
 \exp\left( -j\left[ \chi_{0,m}+\chi_{1,m}(\eta-\eta_{\mathrm{ref}})+\chi_{2,m}(\eta-\eta_{\mathrm{ref}})^2 \right] \right)}}
 $$
 
-- 其中
-$$
-\mathrm{rect}\left( \frac{\eta-mT_{\mathrm{window}}-\eta_c}{T_{\mathrm{keep}}} \right)
-$$
+其中
+$$ \mathrm{rect}\left( \frac{\eta-mT_{\mathrm{window}}-\eta_c}{T_{\mathrm{keep}}} \right) $$
 是第 $m$ 個 time replica 的 support window。
 - 這一步之後，replicas 已不是重疊在同一主窗口，而是被索引 $m$ 清楚分離。
 
@@ -727,7 +702,7 @@ $$
 
 ## 6. Focused Image
 
-若只保留主 replica $m=m_0$，可得最終聚焦近似：
+若只保留主 replica $m=m_0$ ，可得最終聚焦近似：
 
 $$
 {\color{red}{I_{\mathrm{focus}}(\tau,\eta) \approx A_f\,
