@@ -309,9 +309,7 @@ $$
 - $\phi_{2,\mathrm{main}}$ 不是新假設，而是 3.2 的 $\phi_m(f_\eta)$ 在 $f_{\eta_c}$ 的二階導數：
 
 $$
-\phi_{2,\mathrm{main}}
-=
-\left.\frac{d^2\phi_{m_0}(f_\eta)}{df_\eta^2}\right|_{f_\eta=f_{\eta_c}}
+\phi_{2,\mathrm{main}} = \left.\frac{d^2\phi_{m_0}(f_\eta)}{df_\eta^2}\right|_{f_\eta=f_{\eta_c}}
 $$
 
 $$
@@ -320,8 +318,7 @@ $$
 
 $$
 \Rightarrow\;
-\phi_{2,\mathrm{main}}
-=
+\phi_{2,\mathrm{main}} =
 \frac{4\pi R_0f_0}{c}
 \left.
 \frac{d^2}{df_\eta^2}D(f_\eta-m_0\cdot\mathrm{PRF},V_r)
@@ -359,8 +356,7 @@ $$
 主 replica 經過 deramping 後有
 
 $$
-\exp\left(-j\phi_{\mathrm{main}}(f_\eta)\right)\,H_{\mathrm{de},f}(f_\eta)
-=
+\exp\left(-j\phi_{\mathrm{main}}(f_\eta)\right)\,H_{\mathrm{de},f}(f_\eta) =
 \exp\left(-j\left[\phi_{0,\mathrm{main}}+\phi_{1,\mathrm{main}}(f_\eta-f_{\eta_c})\right]\right)
 $$
 
@@ -546,8 +542,7 @@ $$
 $$
 \mathcal{F}^{-1}_{f_\eta}\left\{
 \mathrm{rect}\left(\frac{f_\eta-f_{dc}}{F_a}\right)\exp(-j2\pi f_\eta\eta_c)
-\right\}
-=
+\right\} =
 F_a\,\mathrm{sinc}\!\left[F_a(\eta-\eta_c)\right]\,
 \exp\left(j2\pi f_{dc}(\eta-\eta_c)\right)
 $$
