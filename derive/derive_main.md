@@ -194,7 +194,7 @@ w_a(\eta;\omega_s) \cdot
 \right)
 $$
 
-也就是說，$s_1(\tau,\eta)$ 是把連續 slow-time 訊號 $s_{1,\mathrm{cont}}(\tau,\eta)$ 乘上一個 impulse train 之後得到的 sampled signal。
+也就是說 $s_1(\tau,\eta)$ 是把連續 slow-time 訊號 $s_{1,\mathrm{cont}}(\tau,\eta)$ 乘上一個 impulse train 之後得到的 sampled signal。
 
 先對連續訊號 $s_{1,\mathrm{cont}}(\tau,\eta)$ 在 azimuth 方向 $\eta$ 做 Fourier transform：
 
