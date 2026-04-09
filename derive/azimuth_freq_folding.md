@@ -308,6 +308,90 @@ w_a(\eta;\omega_s)
 \right]
 $$
 
+在 TOPS SAR 的推導裡，$W_a(f_\eta;\omega_s)$ 更常以 POSP 的方式理解，而不是把 $w_a(\eta;\omega_s)$ 當作一般訊號直接做 Fourier pair。也就是說，連續 azimuth envelope 可近似寫成 stationary point 上的 antenna weighting：
+
+$$
+W_a(f_\eta;\omega_s) \approx
+w_a(\eta(f_\eta);\omega_s)
+$$
+
+令 azimuth phase 為
+
+$$
+\phi(\eta;f_\eta) =
+-\frac{4\pi f_0}{c}R(\eta)-2\pi f_\eta \eta
+$$
+
+由 stationary-phase condition
+
+$$
+\frac{d\phi(\eta;f_\eta)}{d\eta}=0
+$$
+
+可得
+
+$$
+f_\eta =
+-\frac{2f_0}{c}\frac{dR(\eta)}{d\eta}
+$$
+
+若在 broadside 附近採用
+
+$$
+R(\eta) \approx
+R_0+\frac{V_r^2}{2R_0}(\eta-\eta_0)^2
+$$
+
+則
+
+$$
+\frac{dR(\eta)}{d\eta} \approx
+\frac{V_r^2}{R_0}(\eta-\eta_0)
+$$
+
+因此得到 stationary-point relation
+
+$$
+f_\eta =
+-\frac{2V_r^2}{\lambda R_0}(\eta-\eta_0)
+$$
+
+也就是
+
+$$
+\eta(f_\eta) =
+\eta_0-\frac{\lambda R_0}{2V_r^2}f_\eta
+$$
+
+將它代回
+
+$$
+w_a(\eta;\omega_s) =
+\mathrm{sinc}^2\left[
+\frac{L_a}{\lambda}
+\left(
+\frac{V_r}{R_0}(\eta-\eta_0)-\omega_s\eta
+\right)
+\right]
+$$
+
+後，可得
+
+$$
+W_a(f_\eta;\omega_s) \approx
+\mathrm{sinc}^2\left[
+\frac{L_a}{\lambda}
+\left(
+-\frac{\lambda}{2V_r}f_\eta
+-\omega_s\left(
+\eta_0-\frac{\lambda R_0}{2V_r^2}f_\eta
+\right)
+\right)
+\right]
+$$
+
+這個式子表示：TOPS scan rate $\omega_s$ 是先進入 slow-time illumination $w_a(\eta;\omega_s)$，再透過 stationary-point relation 被轉寫成 azimuth frequency domain 中的連續包絡 $W_a(f_\eta;\omega_s)$。
+
 利用駐位相位原理，連續方位頻譜可寫成
 
 $$

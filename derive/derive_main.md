@@ -113,15 +113,16 @@ w_a(\eta;\omega_s) \cdot
 \sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)}
 $$
 
-$\sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)$
+
+- $\sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)$
 此式為 slow-time 上的 impulse train，將連續的 slow-time 訊號，以 $T_p$ 的時間間隔進行取樣。
-新增此項，是為了後續用數學證明 azimuth frequency folding 是由取樣及 azimuth FFT 所造成。
+- 新增此項，是為了後續用數學證明 azimuth frequency folding 是由取樣及 azimuth FFT 所造成。
 
 ## 2. Range Compression
 
-range compression 的完整推導可直接參考 [range_compression.md](./range_compression.md)
+此段落完整推導可參考 [range_compression.md](./range_compression.md)
 
-range matched filter 為
+Range matched filter 為
 
 $$
 h_r(\tau) =
@@ -150,7 +151,7 @@ $$
 
 ## 3. Azimuth Frequency Unfolding And Resampling (UFR)
 
-詳細推導在 [Azimuth Frequency Folding](./azimuth_freq_folding.md)。先證明為什麼會有 folded spectrum ，再進入 $mosaicking \rightarrow deramping \rightarrow LPF \rightarrow reramping$ 的處理鏈。
+此段落完整推導可參考 [Azimuth Frequency Folding](./azimuth_freq_folding.md)
 
 ### 3.1. Azimuth Frequency Folding (Explain)
 
@@ -203,6 +204,13 @@ S_{1,c}(\tau,f_\eta;\omega_s) =
 \mathcal{F}_{\eta}\bigl[s_{1,\mathrm{cont}}(\tau,\eta)\bigr]
 $$
 
+其中，$w_a(\eta;\omega_s)$ 在 azimuth frequency domain 中的對應頻譜定義為
+
+$$
+W_a(f_\eta;\omega_s) =
+\mathcal{F}_{\eta}\bigl[w_a(\eta;\omega_s)\bigr]
+$$
+
 若把 $S_{1,c}$ 寫開，則
 
 $$
@@ -223,26 +231,26 @@ $$
 
 $$
 S_{2}(\tau,f_\eta) =
-\mathcal{F}_{\eta}\bigl[
-s_{1,\mathrm{cont}}(\tau,\eta) \cdot
+\mathcal{F}_{\eta}\left[
+s_{1,\mathrm{cont}}(\tau,\eta)\cdot
 \sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)
-\bigr]
+\right]
 $$
 
 $$
-S_{2}(\tau,f_\eta) =
-\mathcal{F}_{\eta}\bigl[
+=
+\mathcal{F}_{\eta}\left[
 s_{1,\mathrm{cont}}(\tau,\eta)
-\bigr] *
-\mathcal{F}_{\eta}\bigl[
+\right]
+\ast
+\mathcal{F}_{\eta}\left[
 \sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)
-\bigr]
+\right]
 $$
 
 $$
-S_{2}(\tau,f_\eta) =
+=
 S_{1,c}(\tau,f_\eta;\omega_s)
-\,
 \ast
 \left[
 \mathrm{PRF}
@@ -251,7 +259,7 @@ S_{1,c}(\tau,f_\eta;\omega_s)
 $$
 
 $$
-S_{2}(\tau,f_\eta) =
+=
 \mathrm{PRF}
 \sum_{k=-\infty}^{\infty}
 S_{1,c}(\tau,f_\eta-k\cdot\mathrm{PRF};\omega_s)
@@ -305,12 +313,44 @@ $$
 而 folding 可以從下面這個式子直接看出來：
 
 $$
+\color{red}{
 W_{\mathrm{fold}}(f_\eta;\omega_s) =
 \sum_{k=-\infty}^{\infty}
-W_a(f_\eta-k\cdot\mathrm{PRF};\omega_s)
+W_a(f_\eta-k\cdot\mathrm{PRF};\omega_s)}
 $$
 
 因為這個式子明確表示同一個連續頻譜 $W_a$ 被複製成許多個 `PRF`-spaced replicas；當這些 replicas 在同一基本頻帶內互相重疊時，就形成 azimuth frequency folding (aliasing)。
+
+其中，$W_a(f_\eta;\omega_s)$ 在本推導中不是單純把 $w_a(\eta;\omega_s)$ 當作一般 Fourier pair 直接變換，而是利用 POSP 把 slow-time antenna weighting 轉寫成 azimuth frequency envelope。也就是說，
+
+$$
+W_a(f_\eta;\omega_s) \approx
+w_a(\eta(f_\eta);\omega_s)
+$$
+
+其中 stationary-point relation 為
+
+$$
+\eta(f_\eta) =
+\eta_0-\frac{\lambda R_0}{2V_r^2}f_\eta
+$$
+
+因此
+
+$$
+W_a(f_\eta;\omega_s) \approx
+\mathrm{sinc}^2\left[
+\frac{L_a}{\lambda}
+\left(
+-\frac{\lambda}{2V_r}f_\eta
+-\omega_s\left(
+\eta_0-\frac{\lambda R_0}{2V_r^2}f_\eta
+\right)
+\right)
+\right]
+$$
+
+也就是說，$\omega_s$ 不會直接生成 folded spectrum；它是先改變 slow-time 照明函數 $w_a(\eta;\omega_s)$，再透過 POSP 對應到連續 azimuth envelope $W_a(f_\eta;\omega_s)$，最後才被以 `PRF` 為間隔複製成 $W_{\mathrm{fold}}(f_\eta;\omega_s)$ 。若要看這一步的完整推導，可直接參考 [azimuth_freq_folding.md](./azimuth_freq_folding.md)。
 
 另外，這裡之所以還能在後續 UFR 中把它還原，是因為 TOPS azimuth signal 本質上是 chirp-like signal，因此在 time 與 frequency 之間保有明確對應關係。也就是說，不同 replicas 雖然在 folded frequency axis 上彼此重疊，但它們仍然對應到不同的 chirp support / local phase law，所以後面才能透過 mosaicking、deramping、LPF 與 reramping，把這些 folded copies 再重新展開與分離。
 
