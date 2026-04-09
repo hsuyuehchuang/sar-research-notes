@@ -157,18 +157,8 @@ $$
 做完range compression的訊號可以改寫成
 
 $$
-\begin{aligned}
-test 
-& = test \\
-& = test \\
-& = test
-\end{aligned}
-$$
-
-$$
-\begin{aligned}
 s_1(\tau,\eta) =
-& A_1\,
+A_1\,
 \mathrm{sinc}\left[
 B_r\left(
 \tau-\frac{2R(\eta)}{c}
@@ -179,10 +169,13 @@ w_a(\eta;\omega_s) \cdot
 -j\frac{4\pi f_0R(\eta)}{c}
 \right) \cdot
 \color{red}{
-\sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)} \\
-&= s_{1,\mathrm{cont}}(\tau,\eta)\cdot
+\sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)}
+$$
+
+$$
+s_1(\tau,\eta) =
+s_{1,\mathrm{cont}}(\tau,\eta)\cdot
 \sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)
-\end{aligned}
 $$
 
 where
@@ -208,8 +201,7 @@ $$
 $$
 \color{red}{
 S_{1,c}(\tau,f_\eta;\omega_s) =
-\mathcal{F}_{\eta}\left\{s_{1,\mathrm{cont}}(\tau,\eta)\right\}
-}
+\mathcal{F}_{\eta}\left\{s_{1,\mathrm{cont}}(\tau,\eta)\right\}}
 $$
 
 若把 $S_{1,c}$ 寫開，則
