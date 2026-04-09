@@ -158,6 +158,14 @@ $$
 
 $$
 \begin{aligned}
+test \\
+& = test \\
+& = test
+\end{aligned}
+$$
+
+$$
+\begin{aligned}
 s_1(\tau,\eta) =
 &\, A_1\,
 \mathrm{sinc}\left[
