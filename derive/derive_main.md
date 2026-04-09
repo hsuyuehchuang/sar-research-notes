@@ -534,9 +534,9 @@ $$
 
 
 $$
-\mathcal{F}^{-1}_{f_\eta} \biggl\{
+\mathcal{F}^{-1}_{f_\eta} \biggl[
 \mathrm{rect}\biggl(\frac{f_\eta-f_{dc}}{F_a}\biggr)\exp(-j2\pi f_\eta\eta_c)
-\biggr\} = F_a\,\mathrm{sinc}\biggl[F_a(\eta-\eta_c)\biggr]\,
+\biggr] = F_a\,\mathrm{sinc}\biggl[F_a(\eta-\eta_c)\biggr]\,
 \exp\biggl(j2\pi f_{dc}(\eta-\eta_c)\biggr)
 $$
 
