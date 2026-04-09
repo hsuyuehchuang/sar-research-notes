@@ -199,8 +199,10 @@ $$
 先對連續訊號 $s_{1,\mathrm{cont}}(\tau,\eta)$ 在 azimuth 方向 $\eta$ 做 Fourier transform：
 
 $$
+\color{red}{
 S_{1,c}(\tau,f_\eta;\omega_s) =
-\mathcal{F}_{\eta}\left\{s_{1,\mathrm{cont}}(\tau,\eta)\right\}
+\mathcal{F}_{\eta}\left\{s_{1,\mathrm{cont}}(\tau,\eta)\right\
+}}
 $$
 
 若把 $S_{1,c}$ 寫開，則
