@@ -590,13 +590,32 @@ $$ T_{\eta',\mathrm{TOPS}} > T_{\eta,\mathrm{platform}} $$
 
 這正是後面 FFT 窗長不足時更容易產生 circular wrap-around 的幾何原因。
 
-time-domain wrap-around 的核心式子是
+time-domain wrap-around 最直接的 closed-form 表達可先寫成 compact 形式
 
-$$ {\color{red}{I_{\mathrm{circ}}(\eta) = \sum_{m=-\infty}^{\infty} I_{\mathrm{lin}}(\eta-mT_{\mathrm{window}})}} $$
+$$ {\color{red}{I_{\mathrm{circ}}(\tau,\eta) = \sum_{m=-\infty}^{\infty} I_{\mathrm{lin}}(\tau,\eta-mT_{\mathrm{window}})}} $$
 
-- $I_{\mathrm{lin}}(\eta)$ 是理想線性卷積結果。
-- 有限長 FFT 實作得到的是週期延拓後的 $I_{\mathrm{circ}}(\eta)$ 。
-- 超出主時間窗口的能量會以 $T_{\mathrm{window}}$ 週期折回，形成 azimuth-time folding。
+再把第 4 節的 azimuth-compressed 主項代入，可得 5.1 對應的 fully expanded closed form
+
+$$
+I_{\mathrm{circ}}(\tau,\eta)=
+\sum_{m=-\infty}^{\infty}
+A_7\,
+\mathrm{sinc}\biggl[ B_r\biggl( \tau-\frac{2R_0}{cD(f_{dc})} \biggr) \biggr]\cdot
+F_a\,\mathrm{sinc}\biggl[ F_a\bigl(\eta-mT_{\mathrm{window}}-\eta_c\bigr) \biggr]\cdot
+\exp\biggl( j2\pi f_{dc}\bigl(\eta-mT_{\mathrm{window}}-\eta_c\bigr) \biggr)
+$$
+
+在這兩個 closed form 裡，判讀 wrap-around 的關鍵 term 是
+
+$$ {\color{red}{\eta-mT_{\mathrm{window}}}} $$
+
+和外層的
+
+$$ {\color{red}{\sum_{m=-\infty}^{\infty}}} $$
+
+- 若沒有 wrap-around，主式只會剩單一項（固定一個 $m$）。
+- 一旦出現 wrap-around，就會變成所有整數 $m$ 的 shifted copies 疊加。
+- 每一個 $m$ 都代表一個被平移 $mT_{\mathrm{window}}$ 的 replica；當觀測只看主時間窗時，這些平移項就會折回同一個視窗內，形成 folding。
 
 因此本節後續的 time-UFR 鏈
 
@@ -609,25 +628,70 @@ $$ mosaicking \rightarrow deramping \rightarrow LPF \rightarrow reramping $$
 
 ### 5.2. Mosaicking
 
-Mosaicking 的目標是把原本在同一時間窗口內折回重疊的 replicas，重排到 extended azimuth-time axis。
+此段落完整推導可參考： [azimuth_time_folding.md](./azimuth_time_folding.md)
 
-先寫成分項再加總：
+#### Mosaicking 的核心概念
 
-$$ I_8(\tau,\eta) = \sum_{m=-N_{t,\mathrm{neg}}}^{N_{t,\mathrm{pos}}} I_{8,m}(\tau,\eta) $$
+- Mosaicking 的核心是把 5.1 中原本 folded 在同一時間窗口的 replicas，重新排到 extended azimuth-time axis 上。
+
+#### 連續數學表示
+
+- 先把 mosaicked signal 寫成 replica summation：
+
+$$
+{\color{red}{I_8(\tau,\eta)=\sum_{m=-N_{t,\mathrm{neg}}}^{N_{t,\mathrm{pos}}}I_{8,m}(\tau,\eta)}}
+$$
+
+- 其中， $I_{\mathrm{circ}} \rightarrow I_{8,m} \rightarrow I_8$ 的連接可明確寫成以下三步：
+
+1. 先從 folded signal $I_{\mathrm{circ}}$ 取出第 $m$ 個 replica 項
+
+$$
+I_{\mathrm{circ}}(\tau,\eta^{\mathrm{fold}})=\sum_{r=-\infty}^{\infty}I_{\mathrm{lin}}\biggl(\tau,\eta^{\mathrm{fold}}-rT_{\mathrm{window}}\biggr)
+$$
+
+$$
+I_{\mathrm{circ}}^{(m)}(\tau,\eta^{\mathrm{fold}}):=I_{\mathrm{lin}}\biggl(\tau,\eta^{\mathrm{fold}}-mT_{\mathrm{window}}\biggr)
+$$
+
+2. 再把座標從 folded axis 重新解釋到 extended axis
+
+$$
+\eta^{\mathrm{ext}}=\eta^{\mathrm{fold}}+mT_{\mathrm{window}}
+$$
+
+$$
+\widetilde I_{8,m}(\tau,\eta^{\mathrm{ext}}):=I_{\mathrm{circ}}^{(m)}\biggl(\tau,\eta^{\mathrm{ext}}-mT_{\mathrm{window}}\biggr)
+$$
+
+3. 最後乘上第 $m$ 個 support mask 並對 $m$ 加總
+
+$$
+I_{8,m}(\tau,\eta^{\mathrm{ext}})=\widetilde I_{8,m}(\tau,\eta^{\mathrm{ext}})\cdot
+\mathrm{rect}\biggl(\frac{\eta^{\mathrm{ext}}-mT_{\mathrm{window}}-\eta_c}{T_{\mathrm{keep}}}\biggr)
+$$
+
+$$
+I_8(\tau,\eta^{\mathrm{ext}})=\sum_m I_{8,m}(\tau,\eta^{\mathrm{ext}})
+$$
+
+- 為了簡潔，以下省略 ext/fold 上標，統一寫成 $\eta$。closed-form 寫法為
 
 $$
 {\color{red}{I_{8,m}(\tau,\eta)=A_8\,
-\mathrm{sinc}\biggl[ B_r\biggl( \tau-\frac{2R_0}{c} \biggr) \biggr]\cdot \mathrm{rect}\biggl( \frac{\eta-mT_{\mathrm{window}}-\eta_c}{T_{\mathrm{keep}}} \biggr)\cdot
+\mathrm{sinc}\biggl[ B_r\biggl( \tau-\frac{2R_0}{c} \biggr) \biggr]\cdot
+\mathrm{rect}\biggl( \frac{\eta-mT_{\mathrm{window}}-\eta_c}{T_{\mathrm{keep}}} \biggr)\cdot
 \mathrm{sinc}\biggl[ B_{\mathrm{az},m}\biggl( \eta-mT_{\mathrm{window}}-\eta_c \biggr) \biggr]\cdot
 \exp\biggl( -j\biggl[ \chi_{0,m}+\chi_{1,m}(\eta-\eta_{\mathrm{ref}})+\chi_{2,m}(\eta-\eta_{\mathrm{ref}})^2 \biggr] \biggr)}}
 $$
 
-其中
+#### 重排原理與實作對應
 
-$$ \mathrm{rect}\biggl( \frac{\eta-mT_{\mathrm{window}}-\eta_c}{T_{\mathrm{keep}}} \biggr) $$
-
-是第 $m$ 個 time replica 的 support window。
-- 這一步之後，replicas 已不是重疊在同一主窗口，而是被索引 $m$ 清楚分離。
+- 在 $I_{\mathrm{circ}}(\tau,\eta)$ 中，$\eta$ 仍是 folded time axis 上的座標；到 $I_8(\tau,\eta)$ 時，$\eta$ 必須重新解釋成 extended axis 上的座標。
+- mosaicking 的本質是先依 replica index 重新指定 extended-axis 座標，再做組裝。
+- 其中 $m$ 表示第 $m$ 個 mosaicked replica；$m$ 同時決定該 replica 在 extended axis 上的時間位移（以 $T_{\mathrm{window}}$ 為間隔）與 support 位置。
+- 在 code 實作上，可直接依照 extended time index 重排，將各 replica 的 $(\tau,\eta)$ sub-matrix 重新排列並組裝成較大的 matrix。
+- 這個 matrix assembly 能成立的原因是：每個 sub-matrix 對應的 $\eta$ 已先映射到 extended axis，而非沿用 folded 解釋。
 
 time-domain folding 與 wrap-around location 的完整說明可參考：
 - [azimuth_time_folding.md 第 6 節](./azimuth_time_folding.md#6-circular-convolution-and-wrap-around)
@@ -635,40 +699,76 @@ time-domain folding 與 wrap-around location 的完整說明可參考：
 
 ### 5.3. Deramping
 
-Deramping 的目標是移除主 replica 的 chirp curvature，讓主能量在 time-frequency 圖上拉直，以利固定時間窗 LPF。
+#### 起點：主 replica 的局部相位模型
 
-先把主項在 $\eta_c$ 附近寫成 reference chirp：
+- Deramping 的目標是消除主 replica 的 quadratic phase curvature，讓後續 time-domain LPF 可用固定 keep window 保留主能量。
+- 因此先取主 replica $m_0$，把 5.2 的相位多項式
+  $ \chi_{0,m}+\chi_{1,m}(\eta-\eta_{\mathrm{ref}})+\chi_{2,m}(\eta-\eta_{\mathrm{ref}})^2 $
+  在 $\eta_c$ 附近重寫成 reference chirp：
 
-$$ \phi_{\mathrm{main}}(\eta) = \phi_{0,\mathrm{main}}+\pi k_t(\eta-\eta_c)^2+2\pi f_{\eta_c}\eta $$
+$$
+\phi_{\mathrm{main}}(\eta)=\phi_{0,\mathrm{main}}+\pi k_t(\eta-\eta_c)^2+2\pi f_{\eta_c}\eta
+$$
 
-對應的 time-domain deramping filter 定義為
+#### 二次係數 $k_t$ 的來源
 
-$$ {\color{red}{H_{\mathrm{de},t}(\eta) = \exp\biggl( -j\pi k_t(\eta-\eta_c)^2 - j2\pi f_{\eta_c}\eta \biggr)}} $$
+- $k_t$ 不是新假設，而是主 replica 二次相位係數的重參數化，對應到 5.2 的主項 $m_0$：
 
-主項相位對消可寫成
+$$
+\chi_{2,\mathrm{main}}:=\chi_{2,m_0}
+$$
 
-$$ \exp\biggl( -j\phi_{\mathrm{main}}(\eta) \biggr)H_{\mathrm{de},t}(\eta) = \exp\biggl( -j\phi_{0,\mathrm{main}} \biggr) $$
+$$
+\pi k_t \equiv \chi_{2,\mathrm{main}}
+$$
 
-$$ {\color{red}{\phi_{\mathrm{after}}(\eta) = \phi_{0,\mathrm{main}}}} $$
+- 同理，線性項可對應成
 
-等價地看 instantaneous Doppler：
+$$
+2\pi f_{\eta_c}\;\text{對應主項局部線性 phase slope}
+$$
 
-$$ f_{\eta,\mathrm{old}}(\eta) = k_t(\eta-\eta_c)+f_{\eta_c} $$
+#### Deramping filter 為何是這個形式
 
-補償量為
+- 為了對消上式的 quadratic 與 linear phase，time-domain deramping filter 定義為
 
-$$ \Delta f_\eta(\eta) = -k_t(\eta-\eta_c)-f_{\eta_c} $$
+$$
+{\color{red}{H_{\mathrm{de},t}(\eta) = \exp\biggl( -j\pi k_t(\eta-\eta_c)^2 - j2\pi f_{\eta_c}\eta \biggr)}}
+$$
 
-因此
+#### Cancellation 與 Time-Frequency 拉直
 
-$$ {\color{red}{f_{\eta,\mathrm{new}}(\eta) = f_{\eta,\mathrm{old}}(\eta)+\Delta f_\eta(\eta) = 0}} $$
+主 replica 經過 deramping 後有
 
-也就是主項由斜率 chirp 變成常數頻率帶；這就是後續 LPF 可以只保留主帶的原因。
+$$
+\exp\biggl( -j\phi_{\mathrm{main}}(\eta) \biggr)H_{\mathrm{de},t}(\eta)=\exp\biggl( -j\phi_{0,\mathrm{main}} \biggr)
+$$
+
+$$
+{\color{red}{\phi_{\mathrm{after}}(\eta)=\phi_{0,\mathrm{main}}}}
+$$
+
+- 上式表示主 replica 的 quadratic term 與 linear term 均被對消，只剩常數相位。
+- 等價地看 instantaneous Doppler：
+
+$$
+f_{\eta,\mathrm{old}}(\eta)=k_t(\eta-\eta_c)+f_{\eta_c}
+$$
+
+$$
+\Delta f_\eta(\eta)=-k_t(\eta-\eta_c)-f_{\eta_c}
+$$
+
+$$
+{\color{red}{f_{\eta,\mathrm{new}}(\eta)=f_{\eta,\mathrm{old}}(\eta)+\Delta f_\eta(\eta)=0}}
+$$
+
+- 也就是主項由斜率 chirp 變成常數頻率帶；這就是後續 5.4 可以以固定時間視窗保留主帶的原因。
 
 若要看 frequency-domain 與 time-domain deramping 設計的完整對照，可直接看
 [freq_time_deramping.md](./freq_time_deramping.md)。
 
-time-domain deramped signal 可寫成
+#### Deramped 時域表達式
 
 $$
 I_9(\tau,\eta) = \sum_{m=-N_{t,\mathrm{neg}}}^{N_{t,\mathrm{pos}}} A_9\,
@@ -679,11 +779,32 @@ $$
 
 ### 5.4. Low Pass Filter
 
-time-domain keep window 定義為
+#### Time-Domain LPF 視窗
 
-$$ H_{\mathrm{LPF},t}(\eta) = \mathrm{rect}\biggl( \frac{\eta-\eta_{\mathrm{LPF}}}{T_{\mathrm{LPF}}} \biggr) $$
+time-domain keep window 為
 
-乘上 LPF 後
+$$
+H_{\mathrm{LPF},t}(\eta) = \mathrm{rect}\biggl( \frac{\eta-\eta_{\mathrm{LPF}}}{T_{\mathrm{LPF}}} \biggr)
+$$
+
+- 其中 $ \eta_{\mathrm{LPF}} $ 是 keep window 的中心時間， $ T_{\mathrm{LPF}} $ 是 keep window 的時間長度。
+
+#### FFT-based 實作與保留主項
+
+- 在 FFT-based time LPF 實作中，等價於在 slow-time samples 上套用固定 keep window。
+- 當視窗中心對準 deramped 主 replica 且 $ T_{\mathrm{LPF}} $ 選得足夠窄（相對 replica 間距 $ T_{\mathrm{window}} $），則主要保留 $ m=m_0 $（通常可取 $ m_0=0 $）附近能量， $ m\neq m_0 $ 項被抑制。
+
+$$
+\eta_{\mathrm{LPF}} \approx \eta_c
+$$
+
+$$
+T_{\mathrm{LPF}} \approx T_{\mathrm{keep}}
+$$
+
+因此 $ T_{\mathrm{LPF}} < T_{\mathrm{window}} $ 時，可避免同時納入相鄰 replicas。
+
+#### 完整輸出式（保留多 replica 表示）
 
 $$
 I_{10}(\tau,\eta) = \sum_{m=-N_{t,\mathrm{neg}}}^{N_{t,\mathrm{pos}}} A_{10}\,
@@ -693,15 +814,42 @@ I_{10}(\tau,\eta) = \sum_{m=-N_{t,\mathrm{neg}}}^{N_{t,\mathrm{pos}}} A_{10}\,
 \exp\biggl( -j\pi k_t(\eta-\eta_c)^2 - j2\pi f_{\eta_c}\eta \biggr)
 $$
 
-- 當 $\eta_{\mathrm{LPF}}$ 對準主項且 $T_{\mathrm{LPF}}$ 小於 replica 間距時，主要保留 $m=m_0$ 附近能量。
+#### 單主 replica 近似式
+
+當 LPF 主要只保留主帶時，可近似寫成
+
+$$
+I_{10}(\tau,\eta)\approx I_{9,m_0}(\tau,\eta)\,H_{\mathrm{LPF},t}(\eta)
+$$
+
+若 $ m_0=0 $ 且主項已在 5.3 被拉直，則可寫成
+
+$$
+I_{10}(\tau,\eta)\approx A_{10}\,
+\mathrm{sinc}\biggl[ B_r\biggl( \tau-\frac{2R_0}{c} \biggr) \biggr]\cdot
+\mathrm{rect}\biggl( \frac{\eta-\eta_{\mathrm{LPF}}}{T_{\mathrm{LPF}}} \biggr)\cdot
+\exp\biggl( -j\phi_{0,\mathrm{main}} \biggr)
+$$
+
+#### 物理意義
+
+- Deramping 先把主 replica 在 time-frequency 圖上的能量脊線拉直。
+- LPF 再以固定時間窗擷取這條主能量帶，達到「保主項、抑制旁瓣 replicas」的效果。
 
 ### 5.5. Reramping
 
-為了回到後續成像所需的 reference phase 座標，定義 reramping filter：
+#### 為什麼要 Reramping
 
-$$ H_{\mathrm{re},t}(\eta) = \exp\biggl( +j\pi k_t(\eta-\eta_c)^2 + j2\pi f_{\eta_c}\eta \biggr) $$
+- 5.4 的 LPF 是在 deramped 座標下完成主帶選取；為了回到後續成像所需的 reference phase model，需把主項 curvature 乘回去。
+- 因此 reramping 是 deramping 的共軛反操作，但只作用在 LPF 後保留的時間帶上。
 
-乘回後得到
+#### Time-Domain Reramping Filter
+
+$$
+H_{\mathrm{re},t}(\eta) = \exp\biggl( +j\pi k_t(\eta-\eta_c)^2 + j2\pi f_{\eta_c}\eta \biggr)
+$$
+
+#### 完整輸出式（保留多 replica 表示）
 
 $$
 I_{11}(\tau,\eta) = \sum_{m=-N_{t,\mathrm{neg}}}^{N_{t,\mathrm{pos}}} A_{11}\,
@@ -710,8 +858,31 @@ I_{11}(\tau,\eta) = \sum_{m=-N_{t,\mathrm{neg}}}^{N_{t,\mathrm{pos}}} A_{11}\,
 \exp\biggl( -j\biggl[ \chi_{0,m}+\chi_{1,m}(\eta-\eta_{\mathrm{ref}})+\chi_{2,m}(\eta-\eta_{\mathrm{ref}})^2 \biggr] \biggr)
 $$
 
-- 整體上，`deramping + LPF + reramping` 的作用可理解為：
-  先把主項拉直以便裁切，再把保留主帶送回目標相位模型。
+#### 單主 replica 近似式
+
+當 LPF 已主要保留主項 $ m_0 $（通常 $ m_0=0 $）時，可近似寫成
+
+$$
+I_{11}(\tau,\eta)\approx I_{10,m_0}(\tau,\eta)\,H_{\mathrm{re},t}(\eta)
+$$
+
+$$
+I_{11}(\tau,\eta)\approx A_{11}\,
+\mathrm{sinc}\biggl[ B_r\biggl( \tau-\frac{2R_0}{c} \biggr) \biggr]\cdot
+\mathrm{rect}\biggl( \frac{\eta-\eta_{\mathrm{LPF}}}{T_{\mathrm{LPF}}} \biggr)\cdot
+\exp\biggl( -j\biggl[ \chi_{0,m_0}+\chi_{1,m_0}(\eta-\eta_{\mathrm{ref}})+\chi_{2,m_0}(\eta-\eta_{\mathrm{ref}})^2 \biggr] \biggr)
+$$
+
+#### 物理意義
+
+- Deramping + LPF + Reramping 可理解為：先把主帶拉直以利固定視窗裁切，再把保留下來的主帶送回目標相位曲率座標。
+- 因為 LPF 已抑制多數非主 replicas，reramping 後主要保留的是主項的有效時域包絡，供最後聚焦使用。
+
+#### 小總結（到 $ I_{11} $ 為止）
+
+- 在「mosaicking $ \rightarrow $ deramping $ \rightarrow $ LPF $ \rightarrow $ reramping」完成後，可近似視為只剩主時間帶 $ m=m_0 $ 對應的有效訊號。
+- 目前式子中的 $ \mathrm{rect}\biggl( \frac{\eta-\eta_{\mathrm{LPF}}}{T_{\mathrm{LPF}}} \biggr) $ 代表最終保留的主時間視窗；其他 replicas 因不在 keep window 內而被抑制。
+- 目前主項 phase term 可理解為「常數項 + 線性項 + 被 reramping 乘回的目標二次曲率項」；它已回到後續聚焦可直接匹配的 phase 座標系。
 
 ## 6. Focused Image
 
@@ -722,6 +893,14 @@ $$
 \mathrm{sinc}\biggl[ B_r\biggl( \tau-\frac{2R_0}{c} \biggr) \biggr]\cdot
 \mathrm{sinc}\biggl[ B_{\mathrm{az,keep}}(\eta-\eta_c) \biggr]}}
 $$
+
+#### 6.1 Focused Image 是怎麼來的（總結）
+
+- 這個 $ I_{\mathrm{focus}} $ 的形成，核心上是「兩次解 wrap-around」後再取主項。
+- 第一次是 frequency-domain：在 $ S_2(\tau,f_\eta) $ 的 folded replicas 上做 $ S_2 \rightarrow S_3 \rightarrow S_4 \rightarrow S_5 \rightarrow S_6 $ ，用 mosaicking + deramping + LPF + reramping 把主頻帶拆出並回到 reference phase。
+- 第二次是 time-domain：在 $ s_7(\tau,\eta) $ 之後，處理 $ I_{\mathrm{circ}}(\tau,\eta)=\sum_m I_{\mathrm{lin}}(\tau,\eta-mT_{\mathrm{window}}) $ 的 time folding，經 $ I_8 \rightarrow I_9 \rightarrow I_{10} \rightarrow I_{11} $ 再次做 UFR，把主時間帶保留下來。
+- 因此最後的近似可寫成「只保留主 replica $ m=m_0 $」：range 向由 $ \mathrm{sinc}\bigl[ B_r(\tau-2R_0/c) \bigr] $ 決定，azimuth 向由 $ \mathrm{sinc}\bigl[ B_{\mathrm{az,keep}}(\eta-\eta_c) \bigr] $ 決定。
+- 判讀重點是：若前面的兩次 UFR 沒有把 folded replicas 壓到主帶，最終式子不會收斂成這個單一雙-sinc 形式，而會保留多個 $ m $ 項的疊加。
 
 ## Physical Meaning
 
