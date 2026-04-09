@@ -321,45 +321,71 @@ $$
 
 ### 3.2. Mosaicking
 
-After mosaicking onto the extended axis, the signal can be written as
+Mosaicking 的核心不是消除 replicas，而是把 `S_2(\tau,f_\eta)` 中原本 folded 在同一個基本頻帶內的 replicas，重新排到 extended azimuth-frequency axis 上。因此，mosaicking 對應的數學操作不是 filtering，而是 replica-dependent coordinate relabeling 與重新組裝。
 
-這一步真正表達 mosaicking 的 equation，就是下面的 $S_3(\tau,f_\eta)$。
-
-原因是：
-
-- $S_2$ 還是在原本 folded frequency axis 上看重疊的 replicas
-- 到了 $S_3$，每個 replica 已經改用 $m$ 編號，並被放到 extended axis 的對應位置
-- 式子中的
-  $$
-  \color{red}{
-  \mathrm{rect}\left(
-  \frac{f_\eta-m\cdot\mathrm{PRF}-f_{\eta_c}}{B_{\max}}
-  \right)}
-  $$
-  就是在表示第 $m$ 個 replica 佔據自己被重排後的頻帶
-
-所以最白話地講，$S_3$ 不再是 folded copies 疊在同一個主頻帶上，而是每個 replica 已經被拆開、排開，這就是 mosaicking。
-
-這裡之所以會出現
-
-- $\psi_{0,m}$：常數項
-- $\psi_{1,m}$：一階導數對應的線性項
-- $\psi_{2,m}$：二階導數對應的曲率項
-
-是因為 mosaicking 之後，我們對第 $m$ 個 replica 的原始 phase 不再保留完整 closed form，而是在 $f_{\mathrm{ref}}$ 附近以局部二次展開來表示。也就是說，若第 $m$ 個 replica 的 phase 記為 $\phi_m(f_\eta)$，則在主通帶附近用
+在連續表示中，mosaicked signal 可先寫成
 
 $$
-\phi_m(f_\eta)
-\approx
+{\color{red}{
+S_3(\tau,f_\eta) = \sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}} S_{3,m}(\tau,f_\eta)
+}}
+$$
+
+這裡的重點是，`S_2(\tau,f_\eta)` 中的 `f_\eta` 仍然是 folded frequency axis 上的座標；而到了 `S_3(\tau,f_\eta)`，`f_\eta` 已經要被重新解釋成 extended axis 上的座標。也就是說，mosaicking 真正做的事情，不只是把多個 replicas 分開，而是先依 replica index `m` 重新定義其對應的 frequency support，再把它們放回 extended axis 的正確位置。
+
+因此，第 `m` 個 mosaicked replica 可寫成
+
+$$
+S_{3,m}(\tau,f_\eta) =
+A_3\,
+\mathrm{sinc}\left[
+B_r\left(
+\tau-\frac{2R_0}{c\,D_m(f_\eta)}
+\right)
+\right] \cdot
+\mathrm{rect}\left(
+\frac{f_\eta-m\cdot\mathrm{PRF}-f_{\eta_c}}{B_{\max}}
+\right) \cdot
+\exp\left(
+-j\phi_m(f_\eta)
+\right)
+$$
+
+其中
+
+$$
+\phi_m(f_\eta) =
+\frac{4\pi R_0f_0}{c}D(f_\eta-m\cdot\mathrm{PRF},V_r)
++2\pi(f_\eta-m\cdot\mathrm{PRF})\eta_0
+$$
+
+上式中的
+
+$$
+{\color{red}{
+\mathrm{rect}\left(
+\frac{f_\eta-m\cdot\mathrm{PRF}-f_{\eta_c}}{B_{\max}}
+\right)
+}}
+$$
+
+明確表示第 `m` 個 replica 已經被放到其在 extended axis 上對應的 support region。這也是為什麼 `S_3(\tau,f_\eta)` 才是表達 mosaicking 的關鍵 signal：在 `S_2(\tau,f_\eta)` 中，多個 folded copies 還共用同一個 folded coordinate；在 `S_3(\tau,f_\eta)` 中，每個 replica 已經擁有自己的 support 與自己的索引 `m`。
+
+接著，為了讓後續 deramping filter 能直接作用在主 replica 的局部 chirp curvature 上，我們不再保留 `\phi_m(f_\eta)` 的完整 closed form，而是在 `f_{\mathrm{ref}}` 附近把它寫成局部二次形式：
+
+$$
+\phi_m(f_\eta) \approx
 \psi_{0,m}
 +\psi_{1,m}(f_\eta-f_{\mathrm{ref}})
 +\psi_{2,m}(f_\eta-f_{\mathrm{ref}})^2
 $$
 
-近似。這樣的寫法把每個 replica 的 phase 拆成 offset、線性 slope 與 quadratic curvature，方便後面直接定義 deramping filter 去補償主 replica 的曲率項。
+其中 `\psi_{0,m}` 是 phase offset，`\psi_{1,m}` 是局部線性 slope，而 `\psi_{2,m}` 是第 `m` 個 replica 的 local quadratic curvature。這一步之所以必要，是因為後面的 deramping 本質上就是消掉某個 replica 的 local quadratic phase curvature，因此必須先把每個 replica 的 phase 改寫成可以直接讀出 quadratic term 的形式。
+
+將這個局部 phase model 代回之後，mosaicked signal 的完整解析式可寫成
 
 $$
-\color{red}{
+{\color{red}{
 S_3(\tau,f_\eta) =
 \sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}}
 A_3\,
@@ -378,8 +404,10 @@ B_r\left(
 +\psi_{2,m}(f_\eta-f_{\mathrm{ref}})^2
 \right]
 \right)
-}
+}}
 $$
+
+在離散實作中，這件事可以直接對應為：把每個 replica 對應的 `(\tau,f_\eta)` sub-matrix，依照其 extended frequency support 重新排列並組裝成一個較大的 matrix。只要每個 sub-matrix 都真的對應一個明確的 replica index `m`，那麼這個離散的重排與組裝操作，就正是連續數學上形成 `S_3(\tau,f_\eta)` 的資料結構對應。換句話說，資料結構上能直接做 matrix assembly，成立的前提不是單純「把矩陣相加」，而是每個 replica 的 `f_\eta` 座標已經先被重新定義到 extended axis 上。
 
 更完整的 mosaicking 與 local phase model，可直接看：
 - [azimuth_freq_ufr.md](./azimuth_freq_ufr.md)
