@@ -229,12 +229,12 @@ $$
 
 $$
 S_2(\tau,f_\eta^{\mathrm{fold}})
-= \mathrm{PRF}\sum_{k=-\infty}^{\infty}S_{1,c}\!\biggl(\tau,f_\eta^{\mathrm{fold}}-k\cdot\mathrm{PRF}\biggr)
+= \mathrm{PRF}\sum_{k=-\infty}^{\infty}S_{1,c}\biggl(\tau,f_\eta^{\mathrm{fold}}-k\cdot\mathrm{PRF}\biggr)
 $$
 
 $$
 S_2^{(m)}(\tau,f_\eta^{\mathrm{fold}})
-:= \mathrm{PRF}\,S_{1,c}\!\biggl(\tau,f_\eta^{\mathrm{fold}}-m\cdot\mathrm{PRF}\biggr)
+:= \mathrm{PRF}\,S_{1,c}\biggl(\tau,f_\eta^{\mathrm{fold}}-m\cdot\mathrm{PRF}\biggr)
 $$
 
 2) 再把座標從 folded axis 重新解釋到 extended axis
@@ -245,7 +245,7 @@ $$
 
 $$
 \widetilde S_{3,m}(\tau,f_\eta^{\mathrm{ext}})
-:= S_2^{(m)}\!\biggl(\tau,f_\eta^{\mathrm{ext}}-m\cdot\mathrm{PRF}\biggr)
+:= S_2^{(m)}\biggl(\tau,f_\eta^{\mathrm{ext}}-m\cdot\mathrm{PRF}\biggr)
 $$
 
 3) 最後乘上第 $m$ 個 support mask 並對 $m$ 加總
@@ -493,7 +493,7 @@ $$
 #### 小總結（到 $S_6$ 為止）
 
 - 在「mosaicking $\rightarrow$ deramping $\rightarrow$ LPF $\rightarrow$ reramping」完成後，可近似視為只剩主頻帶 $m=0$（或一般記作 $m_0$）對應的有效頻譜。
-- 目前式子中的 $\mathrm{rect}\!\biggl(\frac{f_\eta-f_{\mathrm{LPF}}}{B_{\mathrm{LPF}}}\biggr)$ 代表最終保留的主頻帶視窗；其他 replicas 因不在 keep window 內而被抑制。
+- 目前式子中的 $\mathrm{rect}\biggl(\frac{f_\eta-f_{\mathrm{LPF}}}{B_{\mathrm{LPF}}}\biggr)$ 代表最終保留的主頻帶視窗；其他 replicas 因不在 keep window 內而被抑制。
 - 目前主項 phase term 可理解為「常數項 + 線性項 + 被 reramping 乘回的目標二次曲率項」；它已回到後續 azimuth compression 可直接匹配的 phase 座標系。
 
 ## 4. Azimuth Compression
@@ -528,12 +528,12 @@ $$
 
 對 $f_\eta$ 做 IFFT，可得到標準 RDA 型式的 azimuth sinc 壓縮結果：
 
-$$ s_7(\tau,\eta) \approx \mathcal{F}^{-1}_{f_\eta}\!\biggl\{S_{6,\mathrm{ac}}(\tau,f_\eta)\biggr\} $$
+$$ s_7(\tau,\eta) \approx \mathcal{F}^{-1}_{f_\eta}\biggl\{S_{6,\mathrm{ac}}(\tau,f_\eta)\biggr\} $$
 
 $$
 \mathcal{F}^{-1}_{f_\eta} \biggl\{
 \mathrm{rect}\biggl(\frac{f_\eta-f_{dc}}{F_a}\biggr)\exp(-j2\pi f_\eta\eta_c)
-\biggr\} = F_a\,\mathrm{sinc}\!\biggl[F_a(\eta-\eta_c)\biggr]\,
+\biggr\} = F_a\,\mathrm{sinc}\biggl[F_a(\eta-\eta_c)\biggr]\,
 \exp\biggl(j2\pi f_{dc}(\eta-\eta_c)\biggr)
 $$
 
@@ -562,13 +562,16 @@ $$
 $$ L_{\mathrm{lin}} = N_x + N_h - 1 $$
 
 但實作只用長度 $L$ 的 FFT（且 $L < L_{\mathrm{lin}}$ ），則 IFFT 得到的是 circular convolution：
+
 $$ y_{\mathrm{circ}}[n] = \sum_{r=-\infty}^{\infty}y_{\mathrm{lin}}[n+rL] $$
 
 這個式子的意思是：超出 $[0,L-1]$ 的線性卷積尾巴，會以週期 $L$ 折回到前面 index。  
 例如 $L = 8$ 時，原本在線性卷積 index $n = 9$ 的能量，會折回到 $n = 1$ （因為 $9 = 1 + 1\cdot 8$ ）。
 
 對應到 azimuth 軸，只要把離散 index 週期 $L$ 換成時間週期
+
 $$ T_{\mathrm{window}} = \frac{N_a}{\mathrm{PRF}} $$
+
 就得到 azimuth-time wrap-around 的同一件事。
 
 ![TOPS time expansion](./figures/time_expand.png)
@@ -579,7 +582,9 @@ $$ T_{\mathrm{window}} = \frac{N_a}{\mathrm{PRF}} $$
 但在 TOPS 中，平台前進的同時波束還在方位向掃描（steering），因此目標的等效觀測時間軸 $\eta'$ 會被拉長；也就是說，在相同平台飛行時間跨度 $\eta$ 下，訊號在成像端需要覆蓋更長的有效時間支撐。
 
 因此可寫成
+
 $$ T_{\eta',\mathrm{TOPS}} > T_{\eta,\mathrm{platform}} $$
+
 這正是後面 FFT 窗長不足時更容易產生 circular wrap-around 的幾何原因。
 
 time-domain wrap-around 的核心式子是
@@ -591,7 +596,9 @@ $$ {\color{red}{I_{\mathrm{circ}}(\eta) = \sum_{m=-\infty}^{\infty} I_{\mathrm{l
 - 超出主時間窗口的能量會以 $T_{\mathrm{window}}$ 週期折回，形成 azimuth-time folding。
 
 因此本節後續的 time-UFR 鏈
+
 $$ mosaicking \rightarrow deramping \rightarrow LPF \rightarrow reramping $$
+
 本質上就是把這個折回項重新拆開、對齊、裁切，再回到目標相位座標。
 
 若要看完整現象推導，可直接看
@@ -613,7 +620,9 @@ $$
 $$
 
 其中
+
 $$ \mathrm{rect}\biggl( \frac{\eta-mT_{\mathrm{window}}-\eta_c}{T_{\mathrm{keep}}} \biggr) $$
+
 是第 $m$ 個 time replica 的 support window。
 - 這一步之後，replicas 已不是重疊在同一主窗口，而是被索引 $m$ 清楚分離。
 
