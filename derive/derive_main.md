@@ -200,7 +200,7 @@ $$
 
 $$
 S_{1,c}(\tau,f_\eta;\omega_s) =
-F_{\eta}\left\{s_{1,\rm{cont}}(\tau,\eta)\right\}
+\mathcal{F}_{\eta}\bigl[s_{1,\mathrm{cont}}(\tau,\eta)\bigr]
 $$
 
 若把 $S_{1,c}$ 寫開，則
@@ -223,20 +223,20 @@ $$
 
 $$
 S_{2}(\tau,f_\eta) =
-\mathcal{F}_{\eta}\left\{
+\mathcal{F}_{\eta}\bigl[
 s_{1,\mathrm{cont}}(\tau,\eta) \cdot
 \sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)
-\right\}
+\bigr]
 $$
 
 $$
 S_{2}(\tau,f_\eta) =
-\mathcal{F}_{\eta}\left\{
+\mathcal{F}_{\eta}\bigl[
 s_{1,\mathrm{cont}}(\tau,\eta)
-\right\} *
-\mathcal{F}_{\eta}\left\{
+\bigr] *
+\mathcal{F}_{\eta}\bigl[
 \sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)
-\right\}
+\bigr]
 $$
 
 $$
