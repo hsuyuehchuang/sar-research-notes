@@ -529,7 +529,7 @@ $$
 對 $f_\eta$ 做 IFFT，可得到標準 RDA 型式的 azimuth sinc 壓縮結果：
 
 $$
-s_7(\tau,\eta) \approx \mathcal{F}^{-1}_{f_\eta}\biggl\{S_{6, ac}(\tau,f_\eta)\biggr\}
+s_7(\tau,\eta) \approx \mathcal{F}^{-1}_{f_\eta}\biggl[ S_{6,\mathrm{ac}}(\tau,f_\eta) \biggr]
 $$
 
 
