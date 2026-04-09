@@ -38,53 +38,20 @@
 - [Physical Meaning](#physical-meaning)
 - [Final Result](#final-result)
 
+## Problem Definition
+
+本文件要把 TOPS SAR 的方位向處理鏈完整寫成一條顯式數學主線，並且回答以下幾個問題：
+
+1. 如何以數學形式證明 azimuth frequency folding (aliasing) 的來源與其機制
+2. 如何以數學形式說明 mosaicking 所執行的重排操作
+3. 如何以數學形式證明 deramping 對主 replica phase curvature 的影響
+4. 如何以數學形式證明 azimuth time folding (aliasing) 的來源與其機制
+
 ## Summary
 
-- 這份文件把 TOPS SAR 的完整 azimuth chain 從 raw data 一路推到 focused image。
-- 這條主線必須分成 `range compression -> azimuth frequency UFR -> azimuth compression -> azimuth time UFR`，否則 folded spectrum、deramp-LPF、time wrap-around 會被混成同一件事。
-- 這裡的規則是：每一個 stage signal 都必須寫成自己的 fully expanded closed form，不能只用操作符代替。
+- 這份推導把 TOPS SAR 的完整訊號 從 raw data 一路推到 focused image。
+- 每一個 stage signal 都必須寫成自己的 fully expanded closed form，不能只用操作符代替。
 - 對應的主鏈訊號依序為 $s_0(\tau,\eta)$、$s_1(\tau,\eta)$、$S_2(\tau,f_\eta)$、$S_3(\tau,f_\eta)$、$S_4(\tau,f_\eta)$、$S_5(\tau,f_\eta)$、$S_6(\tau,f_\eta)$、$s_7(\tau,\eta)$、$I_8(\tau,\eta)$、$I_9(\tau,\eta)$、$I_{10}(\tau,\eta)$、$I_{11}(\tau,\eta)$ 與 $I_{\mathrm{focus}}(\tau,\eta)$。
-
-摘要中最重要的關鍵公式為
-
-$$
-S_6(\tau,f_\eta) \approx
-\sum_{m=-N_{s,\mathrm{neg}}}^{N_{s,\mathrm{pos}}}
-A_6\,
-\mathrm{sinc}\left[
-B_r\left(
-\tau-\frac{2R_0}{c\,D_m(f_\eta)}
-\right)
-\right] \cdot
-\mathrm{rect}\left(
-\frac{f_\eta-f_{\mathrm{LPF}}}{B_{\mathrm{LPF}}}
-\right) \cdot
-\mathrm{rect}\left(
-\frac{f_\eta-m\cdot\mathrm{PRF}-f_{\eta_c}}{B_{\max}}
-\right) \cdot
-\exp\left(
--j\left[
-\psi_{0,m}
-+\psi_{1,m}(f_\eta-f_{\mathrm{ref}})
-+\psi_{2,m}(f_\eta-f_{\mathrm{ref}})^2
-\right]
-\right)
-$$
-
-以及
-
-$$
-I_{\mathrm{focus}}(\tau,\eta) \approx
-A_f\,
-\mathrm{sinc}\left[
-B_r\left(
-\tau-\frac{2R_0}{c}
-\right)
-\right] \cdot
-\mathrm{sinc}\left[
-B_{\mathrm{az,keep}}(\eta-\eta_c)
-\right]
-$$
 
 ## Signal Definitions
 
@@ -101,22 +68,6 @@ $$
 - $I_{10}(\tau,\eta)$：time-domain LPF output
 - $I_{11}(\tau,\eta)$：time-domain reramped output
 - $I_{\mathrm{focus}}(\tau,\eta)$：focused image
-
-## Problem Definition
-
-本文件要把 TOPS SAR 的方位向處理鏈完整寫成一條顯式數學主線，並且回答三件事：
-
-1. raw data 經過哪幾個 stage 之後才會變成 focused image。
-2. 兩次 UFR 為什麼都必須經過 `mosaicking -> deramping -> LPF -> reramping`。
-3. 為什麼每個 stage 都必須單獨保留 fully expanded closed form。
-
-## Derivation Highlights
-
-- 先把 raw range chirp 壓縮成距離向 $\mathrm{sinc}$，得到 $s_1(\tau,\eta)$。
-- 再把 slow-time sampling 導致的 azimuth frequency folding 顯式寫成 $S_2(\tau,f_\eta)$。
-- 接著在 frequency-UFR 中把 folded replicas 攤開、展平、裁切、再補回 reference curvature，得到 $S_6(\tau,f_\eta)$。
-- 然後用 azimuth matched filter 把主 replica 聚焦成 $s_7(\tau,\eta)$。
-- 最後處理 finite-FFT 導致的 time-domain wrap-around，得到最終 $I_{\mathrm{focus}}(\tau,\eta)$。
 
 ## Symbols And Assumptions
 
@@ -139,15 +90,9 @@ $$
 - $T_{\mathrm{LPF}}$：time-UFR keep window
 - $B_{\mathrm{az,keep}}$：最終保留的 azimuth effective bandwidth
 
-假設如下：
-
-- range compression 已完成 standard matched filtering。
-- azimuth 頻域與時間域的 replica 都只在局部通帶內用二次 phase 近似。
-- 主 replica 的設計目標是被保留並回復成 reference phase law；其他 replicas 只作為干擾項處理。
-
 ## 1. Raw Data
 
-We start from the raw TOPS burst model:
+The received signal of TOPS SAR is:
 
 $$
 s_0(\tau,\eta) =
@@ -169,12 +114,12 @@ w_a(\eta;\omega_s) \cdot
 $$
 
 $\sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)$
-表示 slow-time 上等間隔的 Dirac comb，
-把原本連續的 slow-time 訊號，變成每隔 $T_p$ 取一次樣。
-
-<!-- 加這一項的目的，是讓你能嚴格地把 “folding 來自取樣” 這件事證明出來，而不是只靠口頭描述。 -->
+此式為 slow-time 上的 impulse train，將連續的 slow-time 訊號，以 $T_p$ 的時間間隔進行取樣。
+新增此項，是為了後續用數學證明 azimuth frequency folding 是由取樣及 azimuth FFT 所造成。
 
 ## 2. Range Compression
+
+range compression 的完整推導可直接參考 [range_compression.md](./range_compression.md)
 
 range matched filter 為
 
@@ -199,36 +144,66 @@ w_a(\eta;\omega_s) \cdot
 \exp\left(
 -j\frac{4\pi f_0R(\eta)}{c}
 \right) \cdot
-\sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)
-$$
-
-接下來對 $s_1(\tau,\eta)$ 在 azimuth 方向 $\eta$ 做 Fourier transform
-$$
 \color{red}{
-S_{1,c}(\tau,f_\eta;\omega_s) =
-\mathcal{F}_{\eta}\left\{s_1(\tau,\eta)\right\}
-}
+\sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)}
 $$
-
-這裡要特別注意：
-
-- $n$ 是 time domain 裡的 slow-time sample index，來自 $\eta=nT_p$
-- 做完 azimuth FFT 之後，$n$ 不再顯式出現
-- 它的效果會變成 frequency domain 中每隔 `PRF` 出現一次的 spectrum replicas
-
-所以後面改用 $k$ 來編號那些 folded copies。
-
-如果要看這件事的完整推導，可直接看：
-- [azimuth_freq_folding.md 第 4 節](./azimuth_freq_folding.md#4-continuous-azimuth-spectrum)
-- [azimuth_freq_folding.md 第 5 節](./azimuth_freq_folding.md#5-folded-spectrum-from-the-sampling-comb)
 
 ## 3. Azimuth Frequency Unfolding And Resampling (UFR)
 
-這一段主流程的前置現象推導是 [Azimuth Frequency Folding](./azimuth_freq_folding.md)。也就是先證明 folded spectrum 為什麼會出現，再進入 `mosaicking -> deramping -> LPF -> reramping` 的處理鏈。
+詳細推導在 [Azimuth Frequency Folding](./azimuth_freq_folding.md)。先證明為什麼會有 folded spectrum ，再進入 `mosaicking -> deramping -> LPF -> reramping` 的處理鏈。
 
 ### 3.1. Azimuth Frequency Folding (Explain)
 
-連續 azimuth spectrum 先寫成
+做完range compression的訊號可以改寫成
+
+$$
+\begin{aligned}
+s_1(\tau,\eta) =
+&\, A_1\,
+\mathrm{sinc}\left[
+B_r\left(
+\tau-\frac{2R(\eta)}{c}
+\right)
+\right] \cdot
+w_a(\eta;\omega_s) \cdot
+\exp\left(
+-j\frac{4\pi f_0R(\eta)}{c}
+\right) \cdot
+\color{red}{
+\sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)} \\
+&= s_{1,\mathrm{cont}}(\tau,\eta)\cdot
+\sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)
+\end{aligned}
+$$
+
+where
+
+$$
+s_{1,\mathrm{cont}}(\tau,\eta) =
+A_1\,
+\mathrm{sinc}\left[
+B_r\left(
+\tau-\frac{2R(\eta)}{c}
+\right)
+\right] \cdot
+w_a(\eta;\omega_s) \cdot
+\exp\left(
+-j\frac{4\pi f_0R(\eta)}{c}
+\right)
+$$
+
+也就是說，$s_1(\tau,\eta)$ 是把連續 slow-time 訊號 $s_{1,\mathrm{cont}}(\tau,\eta)$ 乘上一個 impulse train 之後得到的 sampled signal。
+
+先對連續訊號 $s_{1,\mathrm{cont}}(\tau,\eta)$ 在 azimuth 方向 $\eta$ 做 Fourier transform：
+
+$$
+\color{red}{
+S_{1,c}(\tau,f_\eta;\omega_s) =
+\mathcal{F}_{\eta}\left\{s_{1,\mathrm{cont}}(\tau,\eta)\right\}
+}
+$$
+
+若把 $S_{1,c}$ 寫開，則
 
 $$
 S_{1,c}(\tau,f_\eta;\omega_s) =
@@ -244,7 +219,37 @@ W_a(f_\eta;\omega_s) \cdot
 \right)
 $$
 
-This gives the folded azimuth-frequency signal
+接下來把 slow-time sampling 的效果帶進 frequency domain。由於 $s_1(\tau,\eta)$ 是 continuous signal 與 impulse train 的乘積，因此其 azimuth Fourier transform 可寫成
+
+$$
+\begin{aligned}
+S_{2}(\tau,f_\eta)
+= &\, \mathcal{F}_{\eta}\left\{
+s_{1,\mathrm{cont}}(\tau,\eta) \cdot
+\sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)
+\right\} \\
+= &\, \mathcal{F}_{\eta}\left\{
+s_{1,\mathrm{cont}}(\tau,\eta)
+\right\}
+*
+\mathcal{F}_{\eta}\left\{
+\sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)
+\right\} \\
+= &\, S_{1,c}(\tau,f_\eta;\omega_s)
+*
+\left[
+\mathrm{PRF}
+\sum_{k=-\infty}^{\infty}\delta(f_\eta-k\cdot\mathrm{PRF})
+\right] \\
+&= \mathrm{PRF}
+\sum_{k=-\infty}^{\infty}
+S_{1,c}(\tau,f_\eta-k\cdot\mathrm{PRF};\omega_s)
+\end{aligned}
+$$
+
+也就是說，$S_2$ 不是另一個獨立定義出來的訊號，而是把連續 azimuth spectrum $S_{1,c}$ 的所有 `PRF`-spaced replicas 全部加總之後得到的 folded azimuth-frequency signal。
+
+把上式中的 $S_{1,c}$ 完整展開之後，就得到
 
 $$
 S_2(\tau,f_\eta) =
@@ -262,17 +267,46 @@ W_a(f_\eta-k\cdot\mathrm{PRF};\omega_s) \cdot
 \right)
 $$
 
-這裡的 $k$ 不是 slow-time sample index，  
-而是取樣後在頻域中每隔 `PRF` 出現一次的 **replica index**。
+這裡要特別注意：
 
-這裡的 $k$ 就是 azimuth frequency folding 之後，第 $k$ 個 replica 的編號。
+- $n$ 是 time domain 裡的 slow-time sample index，來自 $\eta=nT_p$
+- 做完 azimuth FFT 之後，$n$ 不再顯式出現
+- 它的效果會變成 frequency domain 中每隔 `PRF` 出現一次的 spectrum replicas
+- 因此後面改用 $k$ 來編號那些 folded copies，而不是再用 $n$
+
+如果要看這件事的完整推導，可直接看：
+- [azimuth_freq_folding.md 第 4 節](./azimuth_freq_folding.md#4-continuous-azimuth-spectrum)
+- [azimuth_freq_folding.md 第 5 節](./azimuth_freq_folding.md#5-folded-spectrum-from-the-sampling-comb)
+
+
+這裡的 $k$ 不是 slow-time sample index，而是取樣後在頻域中每隔 `PRF` 出現一次的 **replica index**。也就是說，$k$ 就是 azimuth frequency folding 之後，第 $k$ 個 replica 的編號。
 
 所以
 $$
 \color{red}{
 f_\eta-k\cdot\mathrm{PRF}}
 $$
-就是把連續頻譜平移 `k * PRF`，得到第 $k$ 個 folded copy。
+就是把連續 azimuth spectrum 以 `PRF` 為間隔做平移後所得到的第 $k$ 個 spectral replica，也就是第 $k$ 個 folded copy。
+
+這些 folded copies 的來源，是 slow-time 上的離散取樣
+
+$$
+\sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)
+$$
+
+在做 azimuth FFT 之後，於 frequency domain 變成一個以 `PRF` 為間隔的 impulse train，因而使原本的連續 spectrum $S_{1,c}$ 被週期性複製。
+
+而 folding 可以從下面這個式子直接看出來：
+
+$$
+W_{\mathrm{fold}}(f_\eta;\omega_s) =
+\sum_{k=-\infty}^{\infty}
+W_a(f_\eta-k\cdot\mathrm{PRF};\omega_s)
+$$
+
+因為這個式子明確表示同一個連續頻譜 $W_a$ 被複製成許多個 `PRF`-spaced replicas；當這些 replicas 在同一基本頻帶內互相重疊時，就形成 azimuth frequency folding (aliasing)。
+
+另外，這裡之所以還能在後續 UFR 中把它還原，是因為 TOPS azimuth signal 本質上是 chirp-like signal，因此在 time 與 frequency 之間保有明確對應關係。也就是說，不同 replicas 雖然在 folded frequency axis 上彼此重疊，但它們仍然對應到不同的 chirp support / local phase law，所以後面才能透過 mosaicking、deramping、LPF 與 reramping，把這些 folded copies 再重新展開與分離。
 
 
 ### 3.2. Mosaicking
