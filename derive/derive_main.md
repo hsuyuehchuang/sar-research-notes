@@ -209,11 +209,106 @@ $$
 \biggl[ \mathrm{PRF}\sum_{k=-\infty}^{\infty}\delta(f_\eta-k\cdot\mathrm{PRF}) \biggr]}}
 $$
 
+- 離散取樣只負責在 azimuth frequency domain 中產生以 PRF 為間隔的 spectral replicas。
+- 真正使 TOPS 出現 azimuth frequency folding 的，是 beam steering 所造成的 Doppler centroid sweep；它使有效 azimuth spectrum 隨 $\omega_s$ 搬移並展寬。
+- 當此頻譜範圍超過單一 PRF baseband 時，sampling 產生的 replicas 便會在 folded axis 中重疊，形成實際的 frequency folding。
+
+
 - 而 folding 可以從下面這個式子直接看出來：
 
 $$ W_{\mathrm{fold}}(f_\eta;\omega_s) = \sum_{k=-\infty}^{\infty} W_a(f_\eta-k\cdot\mathrm{PRF};\omega_s) $$
 
-- 其中 $W_a(f_\eta;\omega_s) \approx \mathrm{sinc}^2\biggl[ \frac{L_a}{\lambda}\biggl( -\frac{\lambda}{2V_r}f_\eta - \omega_s\biggl( \eta_0-\frac{\lambda R_0}{2V_r^2}f_\eta \biggr) \biggr) \biggr]$ 若要看這一步的完整推導，可直接參考 [azimuth_freq_folding.md](./azimuth_freq_folding.md)。
+- 其中 
+
+$$
+W_a(f_\eta;\omega_s) \approx \mathrm{sinc}^2\biggl[ \frac{L_a}{\lambda}\biggl( -\frac{\lambda}{2V_r}f_\eta - \omega_s\biggl( \eta_0-\frac{\lambda R_0}{2V_r^2}f_\eta \biggr) \biggr) \biggr]
+$$ 
+
+將其 argument 整理為
+
+$$
+-\frac{\lambda}{2V_r}f_\eta-\omega_s\biggl(\eta_0-\frac{\lambda R_0}{2V_r^2}f_\eta\biggr)
+=
+\alpha(\omega_s)f_\eta-\omega_s\eta_0
+$$
+
+其中
+
+$$
+\alpha(\omega_s)
+=
+-\frac{\lambda}{2V_r}
++\omega_s\frac{\lambda R_0}{2V_r^2}
+$$
+
+故可寫成
+
+$$
+W_a(f_\eta;\omega_s)
+\approx
+\mathrm{sinc}^2\biggl[
+\frac{L_a}{\lambda}
+\bigl(
+\alpha(\omega_s)f_\eta-\omega_s\eta_0
+\bigr)
+\biggr]
+$$
+
+其主瓣中心由
+
+$$
+\alpha(\omega_s)f_{\eta,c}-\omega_s\eta_0=0
+\quad\Longrightarrow\quad
+f_{\eta,c}(\omega_s)=\frac{\omega_s\eta_0}{\alpha(\omega_s)}
+$$
+
+決定，而主瓣寬度尺度滿足
+
+$$
+\Delta f_\eta(\omega_s)\propto \frac{1}{|\alpha(\omega_s)|}
+$$
+
+由此可知，$W_a(f_\eta;\omega_s)$ 的頻譜中心 $f_{\eta,c}(\omega_s)$ 與頻寬 $\Delta f_\eta(\omega_s)$ 皆為 $\omega_s$ 的函數。
+
+另一方面，離散取樣後的 folded spectrum 為
+
+$$
+W_{\mathrm{fold}}(f_\eta;\omega_s)=\sum_{k=-\infty}^{\infty}W_a(f_\eta-k\cdot\mathrm{PRF};\omega_s)
+$$
+
+故第 $k$ 個 replica 的中心可寫為
+
+$$
+f_{\eta,c}^{(k)}(\omega_s)=f_{\eta,c}(\omega_s)+k\cdot\mathrm{PRF}
+$$
+
+而相鄰 replicas 的中心間距固定為
+
+$$
+f_{\eta,c}^{(k+1)}(\omega_s)-f_{\eta,c}^{(k)}(\omega_s)=\mathrm{PRF}
+$$
+
+因此，sampling 所決定的是 replicas 以 `PRF` 為週期重複出現；TOPS 掃描的影響則體現在 $\omega_s$，它會進一步改變各 replica 的中心位置與頻寬。
+
+當
+
+$$
+\Delta f_\eta(\omega_s)\gtrsim \mathrm{PRF}
+$$
+
+時，單一 replica 的有效頻帶已接近或超過相鄰 replica 的中心間距，因此
+
+$$
+W_a(f_\eta-k\cdot\mathrm{PRF};\omega_s)
+\quad\text{與}\quad
+W_a(f_\eta-(k+1)\cdot\mathrm{PRF};\omega_s)
+$$
+
+便會在 folded baseband 中發生 overlap；此即 azimuth frequency folding。
+
+若以 time-frequency 圖像理解，則 TOPS 掃描會使整段成像期間的總 azimuth bandwidth 顯著展寬；原本沿掃描方向延伸的頻率軌跡一旦超出單一 `PRF` 區間，便會因離散取樣造成的週期延拓而折回同一 folded baseband 內。
+
+若要看這一步的完整推導，可直接參考 [azimuth_freq_folding.md](./azimuth_freq_folding.md)。
 
 
 ### 3.2. Mosaicking
@@ -226,7 +321,7 @@ $$ W_{\mathrm{fold}}(f_\eta;\omega_s) = \sum_{k=-\infty}^{\infty} W_a(f_\eta-k\c
 
 #### Mosaicking 數學表示
 
-- 其中，$S_2 \rightarrow S_{3,m} \rightarrow S_3$ 的連接可明確寫成以下三步：
+- 其中， $S_2 \rightarrow S_{3,m} \rightarrow S_3$ 的連接可明確寫成以下三步：
 
 1) 先從 folded spectrum $S_2$ 取出第 $m$ 個 replica 項
 
@@ -442,7 +537,7 @@ $$
 #### FFT-based 實作
 
 - 在 FFT-based LPF 實作中，等價於在頻域 bins 上套用固定 keep window。
-- 當視窗中心對準 deramped 主 replica 且 $B_{\mathrm{LPF}}$ 選得足夠窄（相對 replica 間距 `PRF`），則主要保留 $m=m_0$（通常可取 $m_0=0$）附近能量，$m\neq m_0$ 項被抑制。
+- 當視窗中心對準 deramped 主 replica 且 $B_{\mathrm{LPF}}$ 選得足夠窄（相對 replica 間距 `PRF`），則主要保留 $m=m_0$（通常可取 $m_0=0$ ）附近能量， $m\neq m_0$ 項被抑制。
 
 $$
 f_{\mathrm{LPF}}\approx 0
