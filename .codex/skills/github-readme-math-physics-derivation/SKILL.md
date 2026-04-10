@@ -88,6 +88,25 @@ Practical rule:
 - never run a file-wide replacement intended for inline math unless you have first proven it cannot affect display math
 - if that proof is not trivial, do not use the replacement
 
+### 4. LaTeX-First Markdown Mode
+
+If the user explicitly says the Markdown is no longer intended to render well on GitHub, or says the main goal is later conversion to `.tex`:
+
+- switch from GitHub-stable math formatting to LaTeX-first math formatting
+- prefer raw LaTeX environments over plain `$$ ... $$` wrappers
+- use `align` as the default display-math environment for derivation steps
+- use `equation` only when the expression is genuinely a single-line standalone result
+- every display equation must keep numbering unless the user explicitly asks to suppress numbers
+- when a derivation spans multiple lines, prefer one numbered `align` block over several disconnected display blocks
+- if a single result should have one number but needs internal alignment, use `aligned` inside `equation`
+- do not rewrite a derivation into GitHub-friendly display math if that would make later `.tex` conversion harder
+
+Practical default in this mode:
+
+- single-line result: `\\begin{equation} ... \\end{equation}`
+- multi-line derivation: `\\begin{align} ... \\end{align}`
+- avoid writing future-LaTeX derivations as bare `$$ ... $$` unless the user explicitly wants that style
+
 ## Output Contract
 
 Default section order:
@@ -183,6 +202,13 @@ For figure-driven explanation notes whose primary purpose is to explain a sequen
 - when referring to a signal or symbol in prose, use plain language or backticked forms such as `s_1(eta)` or `k_a`, so the reader does not need to mentally re-parse inline LaTeX
 - exception for notebook front matter: in `Summary` and `Symbols And Assumptions`, prefer standard inline math such as `$s_1(\eta)$` and `$k_a$` when that makes the notation read more naturally
 
+For non-notebook Markdown notes in LaTeX-first mode:
+
+- inline math may still use `$...$` when needed
+- display math should prefer `equation` or `align`
+- numbered equations are the default
+- if the user later asks for `.tex` conversion, preserve these LaTeX environments directly
+
 Preferred visible structure, matching the reference file above:
 
 - Start with `**重點摘要**` when the note is long enough to benefit from a front-loaded summary.
@@ -239,6 +265,8 @@ Before claiming a derivation note is done, explicitly verify all of the followin
 - display-math delimiters `$$` are balanced
 - there are no corrupted delimiter fragments such as `` ` $ ` ``, `` $ ` ``, or half-converted math fences
 - there are no accidental prose replacements inside display equations
+- when the note is in LaTeX-first mode, every major display equation uses `equation`, `align`, or another intentional LaTeX environment
+- when the note is in LaTeX-first mode, numbered equations are preserved unless the user explicitly requested otherwise
 
 ## Core Writing Rules
 

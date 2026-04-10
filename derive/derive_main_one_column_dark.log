@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2022/dev/Debian) (preloaded format=xelatex 2026.1.31)  10 APR 2026 11:21
+This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2022/dev/Debian) (preloaded format=xelatex 2026.1.31)  10 APR 2026 14:30
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -8,8 +8,8 @@ LaTeX2e <2021-11-15> patch level 1
 L3 programming layer <2022-01-21>
 (/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2021/10/04 v1.4n Standard LaTeX document class
-(/usr/share/texlive/texmf-dist/tex/latex/base/size11.clo
-File: size11.clo 2021/10/04 v1.4n Standard LaTeX file (size option)
+(/usr/share/texlive/texmf-dist/tex/latex/base/size10.clo
+File: size10.clo 2021/10/04 v1.4n Standard LaTeX file (size option)
 )
 \c@part=\count181
 \c@section=\count182
@@ -531,12 +531,12 @@ LaTeX Font Info:    ... okay on input line 21.
 * \topmargin=-62.29494pt
 * \headheight=12.0pt
 * \headsep=25.0pt
-* \topskip=11.0pt
+* \topskip=10.0pt
 * \footskip=30.0pt
-* \marginparwidth=59.0pt
-* \marginparsep=10.0pt
+* \marginparwidth=65.0pt
+* \marginparsep=11.0pt
 * \columnsep=10.0pt
-* \skip\footins=10.0pt plus 4.0pt minus 2.0pt
+* \skip\footins=9.0pt plus 4.0pt minus 2.0pt
 * \hoffset=0.0pt
 * \voffset=0.0pt
 * \mag=1000
@@ -648,28 +648,19 @@ LaTeX Font Info:    Trying to load font information for U+msb on input line 175
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) [2] [3] [4] [5]
 [6] [7] [8]
-Overfull \hbox (33.93143pt too wide) in paragraph at lines 955--957
-[]\TU/NotoSerifCJKTC(0)/m/n/10.95 這 一 段 若 要 看 更 完 整 的 \TU/LatinModernRoman(0)/m
-/n/10.95 phase-model\TU/NotoSerifCJKTC(0)/m/n/10.95 、| \TU/LatinModernRoman(0)/
-m/n/10.95 deramping \TU/NotoSerifCJKTC(0)/m/n/10.95 與 \TU/LatinModernRoman(0)/m
-/n/10.95 LPF \TU/NotoSerifCJKTC(0)/m/n/10.95 銜 接 細 節，|  可 直 接 看 [][]\TU/LatinMo
-dernRoman(0)/m/n/10.95 azimuth_deramp_LPF.md[][]\TU/NotoSerifCJKTC(0)/m/n/10.95
- 。| 
+Overfull \hbox (7.4498pt too wide) in paragraph at lines 1075--1079
+[]\TU/LatinModernRoman(0)/m/n/10 LPF \TU/NotoSerifCJKTC(0)/m/n/10 的 完 整 理 想 模 型
+ 與 \TU/LatinModernRoman(0)/m/n/10 FFT-based \TU/NotoSerifCJKTC(0)/m/n/10 實 作，| 
+ 可 直 接 看 [][]\TU/LatinModernRoman(0)/m/n/10 azimuth_deramp_LPF.md \TU/NotoSerif
+CJKTC(0)/m/n/10 第 \TU/LatinModernRoman(0)/m/n/10 4 \TU/NotoSerifCJKTC(0)/m/n/10
+ 節[][] 與 [][]\TU/LatinModernRoman(0)/m/n/10 azimuth_deramp_LPF.md
  []
 
-[9] [10] [11] [12]
+[9] [10]
 File: ./figures/time_expand.png Graphic file (type bmp)
 <./figures/time_expand.png>
- [13] [14] [15] [16]
-Overfull \hbox (13.29312pt too wide) in paragraph at lines 1657--1660
-[]\TU/NotoSerifCJKTC(0)/m/n/10.95 若 要 看 \TU/LatinModernRoman(0)/m/n/10.95 frequ
-ency-domain \TU/NotoSerifCJKTC(0)/m/n/10.95 與 \TU/LatinModernRoman(0)/m/n/10.95
- time-domain deramping \TU/NotoSerifCJKTC(0)/m/n/10.95 設 計 的 完 整 對 照，|  可 直 接 看
- [][]\TU/LatinModernRoman(0)/m/n/10.95 freq_time_deramping.md[][]\TU/NotoSerifC
-JKTC(0)/m/n/10.95 。| 
- []
-
-[17] [18] [19] [20] (./derive_main_one_column_dark.aux)
+ [11] [12] [13] [14] [15] [16] [17] [18]
+(./derive_main_one_column_dark.aux)
 
 LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
@@ -678,12 +669,12 @@ nged.
 (rerunfilecheck)             Checksum: 14206C138E60FBCDA4AFFE56322E4AD8;4045.
  ) 
 Here is how much of TeX's memory you used:
- 15744 strings out of 477756
- 333307 string characters out of 5843518
- 685280 words of memory out of 5000000
- 36178 multiletter control sequences out of 15000+600000
- 475057 words of font info for 78 fonts, out of 8000000 for 9000
+ 15729 strings out of 477756
+ 332516 string characters out of 5843518
+ 688261 words of memory out of 5000000
+ 36168 multiletter control sequences out of 15000+600000
+ 472108 words of font info for 68 fonts, out of 8000000 for 9000
  264 hyphenation exceptions out of 8191
- 73i,13n,77p,398b,430s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 73i,13n,77p,398b,490s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on derive_main_one_column_dark.pdf (20 pages).
+Output written on derive_main_one_column_dark.pdf (18 pages).
