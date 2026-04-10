@@ -231,7 +231,7 @@ $$  -->
 
 $$
 k_{\mathrm{rot}}
-&=\frac{d[f_{\mathrm{rot}}(t)]}{dt}
+=\frac{d[f_{\mathrm{rot}}(t)]}{dt}
 =\frac{2v}{\lambda}\,\omega_{\mathrm{rot}}
 \simeq
 \frac{2v_p\omega_{\mathrm{rot}}}{\lambda}
@@ -671,7 +671,7 @@ $$ T_{\mathrm{window}} = \frac{N_a}{\mathrm{PRF}} $$
 
 就得到 azimuth-time wrap-around 的同一件事。
 
-![TOPS time expansion](./figures/time_expand.png)
+![TOPS time expansion](figures/time_expand.png)
 
 上圖可用來理解為什麼 TOPS 會更容易出現 time folding：  
 在 stripmap 中，天線主波束基本上跟著平台前進，目標被照亮的 slow-time 可近似視為平台飛行時間座標 $\eta$ 的局部區段，常寫成「 $\eta \leftrightarrow \eta'$ 幾乎同尺度」。
