@@ -1,0 +1,99 @@
+%\documentclass[journal]{IEEEtran}
+%\documentclass {article}
+\documentclass[journal,onecolumn]{IEEEtran}
+
+% \usepackage{xeCJK}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{amsmath}
+\usepackage{fontspec} 
+\usepackage{subcaption} 
+\usepackage{soul} % Provides the \hl command
+\usepackage{xcolor} % Provides color definitions
+\usepackage{xeCJK} % Provides support for CJK languages, including Traditional Chinese
+
+\begin{document}
+
+\title{Title}
+
+\author{H.-Y. Chuang}
+
+\maketitle
+\markboth{hsuyueh.chuang}{}
+
+Update Date: 2026-01-30
+
+\section{Section}
+
+Content
+
+Example equation can be represented as:
+\begin{eqnarray}
+&&\hspace{-0.3in} a + b = c
+\nonumber 
+\end{eqnarray}
+
+Example figure can not show.
+Due to if the figure files are missing, the compilation will fail.
+% \begin{figure}[ht]
+% \centering
+% \centering
+% \includegraphics[width=0.3\linewidth]{SAR_CM_a1.png}
+% \caption{Flight path of a platform carrying a SAR radar that points at a look angle 
+% $\theta_{\ell}$ to the beam center point $(x_c, 0, 0)$.}
+% \label{fig_a12}
+% \end{figure}
+
+% \begin{figure}[ht]
+%   \centering
+%   \begin{subfigure}{0.4\textwidth}
+%     \centering
+%     \includegraphics[width=\linewidth]{SAR_basic_flow_interpo.png}
+%     \caption{Range cell migration correction (RCMC) in range time domain, $(\tau, f_{\eta})$-domain}
+%     \label{fig_flow_interpo}
+%   \end{subfigure}
+%   \begin{subfigure}{0.5\textwidth}
+%     \centering
+%     \includegraphics[width=\linewidth]{SAR_basic_flow_filter.png}
+%     \caption{Range cell migration correction (RCMC) in range frequency domain, $(f_{\tau}, f_{\eta})$-domain}
+%   \end{subfigure}
+%   \hspace{0.5cm}
+%   \caption{Flow-chart of the range Doppler algorithm (RDA) for SAR imaging in \cite{cw}.}
+%   \label{fig_flow}
+% \end{figure}
+  
+The parameters of simulation are listed in Table. \ref{ex_table}.
+
+Example of highlighted text: \hl{This text is highlighted.}
+Example of textcolor: {\color{red} This text is red.}
+
+\begin{table}[h]
+\centering
+\caption{Example Table} \label{tab:title} 
+\begin{tabular}{|p{100pt}|p{45pt}|p{65pt}|} 
+\hline
+parameter                 & symbol                      & magnitude           \\ \hline
+carrier frequency         & $f_0$                       & 9.6 GHz             \\ \hline
+range sampling rate       & $F_r$                       & 240 MHz              \\ \hline
+range samples             & $N_r$                       & 1,024                 \\ \hline
+azimuth sampling rate     & $F_a$                       & 4,500 Hz              \\ \hline
+azimuth samples           & $N_a$                       & 1,024                 \\ \hline
+look angle                & $\theta_\ell $              & $20^\circ$          \\ \hline
+squint angle              & $\theta_s$                  & $0^\circ$           \\ \hline
+\end{tabular}
+\label{ex_table}
+\end{table}
+
+
+\begin{thebibliography}{99}
+
+\bibitem{ck}
+P.-C. Chen and J.-F. Kiang,
+``Example reference,''
+{\em Progress In Electromagnetics Research M}, vol. 53, pp. 41-52, Jan. 20xx.
+
+\end{thebibliography}
+
+% \section*{Appendix}
+
+\end{document}

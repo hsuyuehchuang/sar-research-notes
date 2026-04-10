@@ -115,13 +115,21 @@ $$
 
 ## 2. Range Compression
 
-此段落完整推導可參考 [range_compression.md](./range_compression.md)
+完整版本可參考 [range_compression.md](./range_compression.md)。這裡只保留主線：define the range compression filter as $h_r(\tau)$，by taking the convolution with this filter to complete range compression, the signal becomes $s_1(\tau,\eta)$.
 
-Range matched filter 為
+$$
+s_0(\tau,\eta)\propto
+\mathrm{rect}\biggl(\frac{\tau-\frac{2R(\eta)}{c}}{T_r}\biggr)
+\exp\biggl[+j\pi K_r\biggl(\tau-\frac{2R(\eta)}{c}\biggr)^2\biggr]
+$$
 
-$$ h_r(\tau) = \exp\biggl( -j\pi K_r\tau^2 \biggr) $$
+$$
+h_r(\tau)=\exp\bigl(-j\pi K_r\tau^2\bigr)
+$$
 
-After range compression, we obtain
+$$
+s_1(\tau,\eta)=s_0(\tau,\eta)*_\tau h_r(\tau)
+$$
 
 $$
 s_1(\tau,\eta) = A_1\,
@@ -136,14 +144,7 @@ $$
 
 ### 3.1. Azimuth Frequency Folding (Explain)
 
-#### 做完range compression的訊號可表示成
-
-$$
-s_1(\tau,\eta) = A_1\,
-\mathrm{sinc}\biggl[ B_r\biggl( \tau-\frac{2R(\eta)}{c} \biggr) \biggr]\cdot w_a(\eta;\omega_s)\cdot
-\exp\biggl( -j\frac{4\pi f_0R(\eta)}{c} \biggr)\cdot
-{\color{red}{\sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)}}
-$$
+$s_1(\tau,\eta)$ 改寫成
 
 $$ s_1(\tau,\eta) = s_{1,\mathrm{cont}}(\tau,\eta)\cdot \sum_{n=-\infty}^{\infty}\delta(\eta-nT_p) $$
 
@@ -156,35 +157,29 @@ $$ s_1(\tau,\eta) = s_{1,\mathrm{cont}}(\tau,\eta)\cdot \sum_{n=-\infty}^{\infty
 
 - 先對連續訊號 $s_{1,\mathrm{cont}}(\tau,\eta)$ 在 azimuth 方向做 Fourier transform：
 
-$$ S_{1,c}(\tau,f_\eta;\omega_s) = \mathcal{F}_{\eta}\biggl[ s_{1,\mathrm{cont}}(\tau,\eta) \biggr] $$
-
-$$
+$$ 
+S_{1,c}(\tau,f_\eta;\omega_s) = \mathcal{F}_{\eta}\biggl[ s_{1,\mathrm{cont}}(\tau,\eta) 
+\biggr]
 = A_2\,
 \mathrm{sinc}\biggl[ B_r\biggl( \tau-\frac{2R_0}{cD(f_\eta,V_r)} \biggr) \biggr]\cdot W_a(f_\eta;\omega_s)\cdot
 \exp\biggl[-j\phi_{az}(f_\eta)\biggr]
 $$
 
-- 其中， $\phi_{az}(f_\eta) = \frac{4\pi R_0f_0}{c}D(f_\eta,V_r)+2\pi f_\eta\eta_0$
-
-- 其中， $W_a(f_\eta;\omega_s) = \mathcal{F}_{\eta}\biggl[ w_a(\eta;\omega_s) \biggr]$ 互為 Fourier pair
+其中， $W_a(f_\eta;\omega_s) = \mathcal{F}_{\eta}\biggl[ w_a(\eta;\omega_s) \biggr]$ 互為 Fourier pair， $\phi_{az}(f_\eta) = \frac{4\pi R_0f_0}{c}D(f_\eta,V_r)+2\pi f_\eta\eta_0$  
 
 - 下一步再將 slow-time sampling 的效果帶進 frequency domain。由於 $s_1(\tau,\eta)$ 是 continuous signal 與 impulse train 的乘積，因此其 azimuth Fourier transform 可逐步寫成
 
-$$ S_{2}(\tau,f_\eta) = \mathcal{F}_{\eta}\biggl[ s_{1,\mathrm{cont}}(\tau,\eta)\cdot \sum_{n=-\infty}^{\infty}\delta(\eta-nT_p) \biggr] $$
+$$
+\begin{aligned}
+S_{2}(\tau,f_\eta)
+&= \mathcal{F}_{\eta}\biggl[ s_{1,\mathrm{cont}}(\tau,\eta)\cdot \sum_{n=-\infty}^{\infty}\delta(\eta-nT_p) \biggr] \\
+&= \mathcal{F}_{\eta}\biggl[ s_{1,\mathrm{cont}}(\tau,\eta) \biggr]\ast \mathcal{F}_{\eta}\biggl[ \sum_{n=-\infty}^{\infty}\delta(\eta-nT_p) \biggr] \\
+&= S_{1,c}(\tau,f_\eta;\omega_s)\ast \biggl[ \mathrm{PRF}\sum_{k=-\infty}^{\infty}\delta(f_\eta-k\cdot\mathrm{PRF}) \biggr] \\
+&= \mathrm{PRF}\sum_{k=-\infty}^{\infty} S_{1,c}(\tau,f_\eta-k\cdot\mathrm{PRF};\omega_s)
+\end{aligned}
+$$
 
-$$ = \mathcal{F}_{\eta}\biggl[ s_{1,\mathrm{cont}}(\tau,\eta) \biggr]\ast \mathcal{F}_{\eta}\biggl[ \sum_{n=-\infty}^{\infty}\delta(\eta-nT_p) \biggr] $$
-
-$$ = S_{1,c}(\tau,f_\eta;\omega_s)\ast \biggl[ \mathrm{PRF}\sum_{k=-\infty}^{\infty}\delta(f_\eta-k\cdot\mathrm{PRF}) \biggr] $$
-
-$$ = \mathrm{PRF}\sum_{k=-\infty}^{\infty} S_{1,c}(\tau,f_\eta-k\cdot\mathrm{PRF};\omega_s) $$
-
-- $S_{2}(\tau,f_\eta)$ 是以 `PRF` 為間隔展開並加總之後得到的 folded azimuth-frequency spectrum.
-
-- 其中，第 $k$ 個 replica 的 azimuth phase 寫成
-
-$$ \phi_k(f_\eta) = \frac{4\pi R_0f_0}{c}D(f_\eta-k\cdot\mathrm{PRF},V_r) + 2\pi(f_\eta-k\cdot\mathrm{PRF})\eta_0 $$
-
-- 下一步把上式中的 $S_{1,c}$ 完整展開之後，可寫成
+完整展開之後，可寫成
 
 $$
 S_2(\tau,f_\eta) = \mathrm{PRF}\sum_{k=-\infty}^{\infty} A_2\,
@@ -192,125 +187,99 @@ S_2(\tau,f_\eta) = \mathrm{PRF}\sum_{k=-\infty}^{\infty} A_2\,
 W_a(f_\eta-k\cdot\mathrm{PRF};\omega_s)\cdot \exp\biggl[-j\phi_k(f_\eta)\biggr]
 $$
 
-- $n$ 是 slow-time sample index，滿足 $\eta=nT_p$ ，做完 azimuth FFT 之後， $n$ 不再顯式出現；其取樣效果改以頻域中每隔 `PRF` 出現的 spectral replicas表示。
-- 因此後續以 $k$ 表示第 $k$ 個 folded spectral replica 
-- $f_\eta-k\cdot\mathrm{PRF}$ 表示連續 azimuth spectrum 以 `PRF` 為間隔做平移後所得到的第 $k$ 個 spectral replica，也就是第 $k$ 個 folded copy。
+
+其中，第 $k$ 個 replica 的 azimuth phase 寫成 $\phi_k(f_\eta) = \frac{4\pi R_0f_0}{c}D(f_\eta-k\cdot\mathrm{PRF},V_r) + 2\pi(f_\eta-k\cdot\mathrm{PRF})\eta_0$ 
+
+- $n$ 是 slow-time sample index，滿足 $\eta=nT_p$ ，做完 azimuth FFT 之後， $n$ 不再顯式出現；其取樣效果改以頻域中每隔 $\mathrm{PRF}$ 出現的 spectral replicas表示。因此後續以 $k$ 表示第 $k$ 個 folded spectral replica 
+- $S_{2}(\tau,f_\eta)$ 是以 $\mathrm{PRF}$ 為間隔展開並加總之後得到的 folded azimuth-frequency spectrum.
+- $f_\eta-k\cdot\mathrm{PRF}$ 表示連續 azimuth spectrum 以 $\mathrm{PRF}$ 為間隔做平移後所得到的第 $k$ 個 spectral replica，也就是第 $k$ 個 folded copy。
 
 
 #### Azimuth folded spectrum 的來源
 
-- 這些 folded copies 的來源，是 slow-time 上的離散取樣 $\sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)$ 在做 azimuth FFT 之後，於 frequency domain 變成一個以 `PRF` 為間隔的 impulse train，因而使原本的連續 spectrum $S_{1,c}$ 被週期性複製。
-- 這裡的 folded spectrum 並不是一個完全無法追溯來源的頻譜混疊，因為 TOPS azimuth signal 本質上是 chirp；對 chirp 而言，時間與瞬時頻率之間具有明確的對應關係。
-- 也就是說，在有效成像區間內，某一個 azimuth time $\eta$ 會對應到某一段主要的 Doppler frequency，而反過來，觀察到某一個 folded Doppler 分量時，也可以依據這個 time-frequency mapping 去推回它原本屬於哪一段連續 azimuth spectrum。
-- 因此後面的 un-folding / mosaicking 並不是憑空把頻譜「拆開」，而是利用 chirp 本身的時間-頻率對應，把被 `PRF` 週期性搬移後的 spectral replicas 重新對回其原始位置。
+- 這些 folded copies 的來源，是 slow-time 上的離散取樣 $\sum_{n=-\infty}^{\infty}\delta(\eta-nT_p)$ 在做 azimuth FFT 之後，於 frequency domain 變成一個以 $\mathrm{PRF}$ 為間隔的 impulse train，因而使原本的連續 spectrum $S_{1,c}$ 被週期性複製。
+- 而它對應的數學式為：
 
 $$
-{\color{red}{\mathcal{F}_{\eta}\biggl[ \sum_{n=-\infty}^{\infty}\delta(\eta-nT_p) \biggr] = 
-\biggl[ \mathrm{PRF}\sum_{k=-\infty}^{\infty}\delta(f_\eta-k\cdot\mathrm{PRF}) \biggr]}}
+\mathcal{F}_{\eta}\biggl[ \sum_{n=-\infty}^{\infty}\delta(\eta-nT_p) \biggr] = 
+\biggl[ \mathrm{PRF}\sum_{k=-\infty}^{\infty}\delta(f_\eta-k\cdot\mathrm{PRF}) \biggr]
 $$
+
+$$
+W_{\mathrm{fold}}(f_\eta;\omega_s) = \sum_{k=-\infty}^{\infty} W_a(f_\eta-k\cdot\mathrm{PRF};\omega_s)
+$$
+
+<!-- 其中 
+
+$$
+W_a(f_\eta;\omega_s) \approx \mathrm{sinc}^2\biggl[ \frac{L_a}{\lambda}\biggl( -\frac{\lambda}{2V_r}f_\eta - \omega_s\biggl( \eta_0-\frac{\lambda R_0}{2V_r^2}f_\eta \biggr) \biggr) \biggr]
+$$  -->
+
+#### Folded spectrum 可以還原
+
+- 這裡的 folded spectrum 並不是一個完全無法追溯來源的頻譜混疊，因為 TOPS azimuth signal 本質上是 chirp；對 chirp 而言，時間與瞬時頻率之間具有明確的對應關係。
+- 也就是說，在有效成像區間內，某一個 azimuth time $\eta$ 會對應到某一段主要的 Doppler frequency，而反過來，觀察到某一個 folded Doppler 分量時，也可以依據這個 time-frequency mapping 去推回它原本屬於哪一段連續 azimuth spectrum。
+- 因此後面的 un-folding / mosaicking 並不是憑空把頻譜「拆開」，而是利用 chirp 本身的時間-頻率對應，把被 $\mathrm{PRF}$ 週期性搬移後的 spectral replicas 重新對回其原始位置。
+
+#### TOPS Beam steering
 
 - 離散取樣只負責在 azimuth frequency domain 中產生以 PRF 為間隔的 spectral replicas。
 - 真正使 TOPS 出現 azimuth frequency folding 的，是 beam steering 所造成的 Doppler centroid sweep；它使有效 azimuth spectrum 隨 $\omega_s$ 搬移並展寬。
 - 當此頻譜範圍超過單一 PRF baseband 時，sampling 產生的 replicas 便會在 folded axis 中重疊，形成實際的 frequency folding。
 
-
-- 而 folding 可以從下面這個式子直接看出來：
-
-$$ W_{\mathrm{fold}}(f_\eta;\omega_s) = \sum_{k=-\infty}^{\infty} W_a(f_\eta-k\cdot\mathrm{PRF};\omega_s) $$
-
-- 其中 
+可使用下列關係式說明 TOPS 為何使 azimuth frequency folding 加劇：
 
 $$
-W_a(f_\eta;\omega_s) \approx \mathrm{sinc}^2\biggl[ \frac{L_a}{\lambda}\biggl( -\frac{\lambda}{2V_r}f_\eta - \omega_s\biggl( \eta_0-\frac{\lambda R_0}{2V_r^2}f_\eta \biggr) \biggr) \biggr]
-$$ 
-
-將其 argument 整理為
-
-$$
--\frac{\lambda}{2V_r}f_\eta-\omega_s\biggl(\eta_0-\frac{\lambda R_0}{2V_r^2}f_\eta\biggr) = \alpha(\omega_s)f_\eta-\omega_s\eta_0
-$$
-
-其中
-
-$$
-\alpha(\omega_s) =
--\frac{\lambda}{2V_r}
-+\omega_s\frac{\lambda R_0}{2V_r^2}
+\begin{aligned}
+k_{\mathrm{rot}}
+&=
+\frac{d[f_{\mathrm{rot}}(t)]}{dt}
+=
+\frac{2v}{\lambda}\,\omega_{\mathrm{rot}}
+\simeq
+\frac{2v_p\omega_{\mathrm{rot}}}{\lambda}
+\end{aligned}
 $$
 
-故可寫成
+- $f_{\mathrm{rot}}(t)$ ：beam steering 單獨造成的額外 Doppler frequency，也就是 antenna beam 旋轉時引入的 Doppler 項
+- $\omega_{\mathrm{rot}}$ ：antenna beam 的旋轉角速度，也就是 beam steering rate，單位通常是 $\mathrm{rad/s}$
+- $k_{\mathrm{rot}}$ ：由 beam steering 造成的 Doppler rate，也就是 $f_{\mathrm{rot}}(t)$ 對時間的斜率；它表示 Doppler centroid 在 aperture 內掃動得多快
 
 $$
-W_a(f_\eta;\omega_s)
-\approx
-\mathrm{sinc}^2\biggl[
-\frac{L_a}{\lambda}
-\bigl(
-\alpha(\omega_s)f_\eta-\omega_s\eta_0
-\bigr)
-\biggr]
+f_D(\eta)=f_{\mathrm{DC}}+k_{\mathrm{rot}}\eta
 $$
 
-其主瓣中心由
-
 $$
-\alpha(\omega_s)f_{\eta,c}-\omega_s\eta_0=0
-\quad\Longrightarrow\quad
-f_{\eta,c}(\omega_s)=\frac{\omega_s\eta_0}{\alpha(\omega_s)}
-$$
-
-決定，而主瓣寬度尺度滿足
-
-$$
-\Delta f_\eta(\omega_s)\propto \frac{1}{|\alpha(\omega_s)|}
+B_{\mathrm{steer}}
+\triangleq
+\max_{\eta}f_D(\eta)-\min_{\eta}f_D(\eta)
+=|k_{\mathrm{rot}}|\,T_{\mathrm{ap}}
 $$
 
-由此可知， $W_a(f_\eta;\omega_s)$ 的頻譜中心 $f_{\eta,c}(\omega_s)$ 與頻寬 $\Delta f_\eta(\omega_s)$ 皆為 $\omega_s$ 的函數。
-
-另一方面，離散取樣後的 folded spectrum 為
-
 $$
-W_{\mathrm{fold}}(f_\eta;\omega_s)=\sum_{k=-\infty}^{\infty}W_a(f_\eta-k\cdot\mathrm{PRF};\omega_s)
+W_{\mathrm{fold}}(f_\eta)
+=\sum_{m=-\infty}^{\infty}
+W_a\left(f_\eta-m\,\mathrm{PRF}\right)
 $$
 
-故第 $k$ 個 replica 的中心可寫為
-
 $$
-f_{\eta,c}^{(k)}(\omega_s)=f_{\eta,c}(\omega_s)+k\cdot\mathrm{PRF}
-$$
-
-而相鄰 replicas 的中心間距固定為
-
-$$
-f_{\eta,c}^{(k+1)}(\omega_s)-f_{\eta,c}^{(k)}(\omega_s)=\mathrm{PRF}
+N_{\mathrm{wrap}}
+\sim
+\frac{B_{\mathrm{steer}}}{\mathrm{PRF}}
+=\frac{|k_{\mathrm{rot}}|\,T_{\mathrm{ap}}}{\mathrm{PRF}}
 $$
 
-因此，sampling 所決定的是 replicas 以 `PRF` 為週期重複出現；TOPS 掃描的影響則體現在 $\omega_s$，它會進一步改變各 replica 的中心位置與頻寬。
-
-當
-
 $$
-\Delta f_\eta(\omega_s)\gtrsim \mathrm{PRF}
-$$
-
-時，單一 replica 的有效頻帶已接近或超過相鄰 replica 的中心間距，因此
-
-$$
-W_a(f_\eta-k\cdot\mathrm{PRF};\omega_s)
-\quad\text{與}\quad
-W_a(f_\eta-(k+1)\cdot\mathrm{PRF};\omega_s)
+|k_{\mathrm{rot}}|\,T_{\mathrm{ap}}\uparrow
+\;\Longrightarrow\;
+N_{\mathrm{wrap}}\uparrow
+\;\Longrightarrow\;
+\text{frequency folding becomes more severe}
 $$
 
-便會在 folded baseband 中發生 overlap；此即 azimuth frequency folding。
-
-若以 time-frequency 圖像理解，則 TOPS 掃描會使整段成像期間的總 azimuth bandwidth 顯著展寬；原本沿掃描方向延伸的頻率軌跡一旦超出單一 `PRF` 區間，便會因離散取樣造成的週期延拓而折回同一 folded baseband 內。
-
-若要看這一步的完整推導，可直接參考 [azimuth_freq_folding.md](./azimuth_freq_folding.md)。
-
+也就是說，TOPS 並沒有改變 folding 的機制；真正改變的是 beam steering 使 Doppler centroid 在 aperture 內掃過更大的頻帶。當這個額外頻寬相對於 $\mathrm{PRF}$ 變大時，被折回同一 folded baseband 的 replicas 數目也會增加，因此看起來就像「繞更多圈」。 
 
 ### 3.2. Mosaicking
-
-此段落完整推導可參考 ： [azimuth_freq_ufr.md](./azimuth_freq_ufr.md)
 
 #### Mosaicking 的核心概念
 
@@ -385,7 +354,7 @@ $$
 #### 重排原理與實作對應
 
 - 在 $S_2(\tau,f_\eta)$ 中， $f_\eta$ 仍是 folded frequency axis 上的座標；到 $S_3(\tau,f_\eta)$ 時，$f_\eta$ 必須重新解釋成 extended axis 上的座標。
-- 其中 $m$ 表示第 $m$ 個 mosaicked replica；$m$ 同時決定該 replica 在 extended axis 上的頻率位移（以 `PRF` 為間隔）與 mask 位置。
+- 其中 $m$ 表示第 $m$ 個 mosaicked replica；$m$ 同時決定該 replica 在 extended axis 上的頻率位移（以 $\mathrm{PRF}$ 為間隔）與 mask 位置。
 
 - 在 code 實作上，可直接依照 extended frequency index 重排，將各 replica 的 $(\tau,f_\eta)$ sub-matrix 重新排列並組裝成較大的 matrix。
 - 也就是在 data structure 上，直接把各 replica 對應的 sub-matrix 依 extended-axis 的位置做 tile / 拼接，疊到較大的頻域矩陣中即可。
@@ -534,7 +503,7 @@ $$
 #### FFT-based 實作
 
 - 在 FFT-based LPF 實作中，等價於在頻域 bins 上套用固定 keep window。
-- 當視窗中心對準 deramped 主 replica 且 $B_{\mathrm{LPF}}$ 選得足夠窄（相對 replica 間距 `PRF`），則主要保留 $m=m_0$（通常可取 $m_0=0$ ）附近能量， $m\neq m_0$ 項被抑制。
+- 當視窗中心對準 deramped 主 replica 且 $B_{\mathrm{LPF}}$ 選得足夠窄（相對 replica 間距 $\mathrm{PRF}$），則主要保留 $m=m_0$（通常可取 $m_0=0$ ）附近能量， $m\neq m_0$ 項被抑制。
 
 $$
 f_{\mathrm{LPF}}\approx 0
@@ -544,7 +513,7 @@ $$
 B_{\mathrm{LPF}}\approx B_{\mathrm{doppler}}
 $$
 
-- 因此 $B_{\mathrm{LPF}}<\mathrm{PRF}$，可避免同時納入相鄰 replicas（間距約為 `PRF`）。
+- 因此 $B_{\mathrm{LPF}}<\mathrm{PRF}$，可避免同時納入相鄰 replicas（間距約為 $\mathrm{PRF}$）。
 
 #### 完整輸出式（保留 replica 表示）
 
@@ -627,7 +596,7 @@ $$
 
 ## 4. Azimuth Compression
 
-這一步的輸入承接 3.5 的 `S_6(tau,f_eta)`。3.2–3.5 的核心任務是把 folded replicas 解開並以 LPF 保留主頻帶，因此到這裡可直接採用 **`m=0` 主頻帶**（不再寫 replica summation）。
+這一步的輸入承接 3.5 的 $S_6(\tau,f_\eta)$。3.2–3.5 的核心任務是把 folded replicas 解開並以 LPF 保留主頻帶，因此到這裡可直接採用 **$m=0$ 主頻帶**（不再寫 replica summation）。
 
 本節只保留 azimuth compression filter $H_{\mathrm{ac}}$ ；不另外展開 $H_{\mathrm{SRC}}$ 、 $H_{\mathrm{RCMC}}$ 。
 
@@ -706,7 +675,9 @@ $$ T_{\mathrm{window}} = \frac{N_a}{\mathrm{PRF}} $$
 
 就得到 azimuth-time wrap-around 的同一件事。
 
-![TOPS time expansion](./figures/time_expand.png)
+<p align="center">
+  <img src="./figures/time_expand.png" alt="TOPS time expansion" width="80%">
+</p>
 
 上圖可用來理解為什麼 TOPS 會更容易出現 time folding：  
 在 stripmap 中，天線主波束基本上跟著平台前進，目標被照亮的 slow-time 可近似視為平台飛行時間座標 $\eta$ 的局部區段，常寫成「 $\eta \leftrightarrow \eta'$ 幾乎同尺度」。
