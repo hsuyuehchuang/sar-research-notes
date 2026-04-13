@@ -24,5 +24,5 @@ s_\mathrm{test}(\tau,\eta)
 \end{aligned}
 $$
 
-
-$a+b$, $a+b$ , $ a+b $ , $a+b$
+<!-- $$ can not exist space inside, should exist space outside  -->
+$a+b$, $a+b$ , $ a+b $ ,$a+b$
