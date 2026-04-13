@@ -1,5 +1,6 @@
 test
 
+<!-- bigg left/right only () and []. {} will cause error -->
 $$
 \begin{align}
 s_\mathrm{test}(\tau,\eta) 
@@ -10,6 +11,9 @@ s_\mathrm{test}(\tau,\eta)
 \end{align}
 $$
 
+<!-- align show the number of equations
+aligned do not show the number of equations
+in github.md, two version can not be seen -->
 $$
 \begin{aligned}
 s_\mathrm{test}(\tau,\eta) 
@@ -19,3 +23,6 @@ s_\mathrm{test}(\tau,\eta)
 \\ 
 \end{aligned}
 $$
+
+
+$a+b$, $a+b$ , $ a+b $ , $a+b$
