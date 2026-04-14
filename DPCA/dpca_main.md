@@ -70,7 +70,7 @@ where $v_p$ is the platform velocity and $\mathrm{PRF}$ is the pulse repetition 
 
 If DPCA provides $N$ effective phase centers and the geometric condition is properly matched, the effective sampling spacing becomes
 
-$$
+$$ 
 \Delta y_{\mathrm{eff}} \approx \frac{v_p}{N \cdot \mathrm{PRF}} \approx \frac{v_p}{\mathrm{PRF}_{\mathrm{eff}}}
 $$
 
