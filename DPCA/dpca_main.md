@@ -49,8 +49,11 @@
         - Use one TX and multiple RX to create multiple phase centers.
         - The condition of baseline $d = 2v_p T$ is required for the SIMO mode to achieve the desired effective sampling.
 
-![DPCA Ping-Pong Mode](./figure/dpca-ping-pong.png)
-![DPCA SIMO Mode](./figure/dpca-simo.png)
+
+<img src="./figure/dpca-ping-pong.png" alt="DPCA Ping-Pong Mode" width="750" />
+<img src="./figure/dpca-simo.png" alt="DPCA SIMO Mode" width="750" />
+<!-- ![DPCA Ping-Pong Mode](./figure/dpca-ping-pong.png)
+![DPCA SIMO Mode](./figure/dpca-simo.png) -->
 
 - Once the effective sampling condition is satisfied, the effective PRF is doubled, which can improve the azimuth resolution without reducing the swath width.
 - **For example, with two phase centers, the effective PRF doubles.**
