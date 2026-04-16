@@ -1,6 +1,6 @@
 {
   "input": {
-    "obj_path": "/home/hsuyueh.chuang/Desktop/vscode/github/sar_research_note/tree-model-generation/Arbaro/test.obj"
+    "obj_path": "/home/hsuyueh.chuang/Desktop/vscode/github/sar_research_note/tree-model-generation/input/test.obj"
   },
   "output": {
     "output_dir": "/home/hsuyueh.chuang/Desktop/vscode/github/sar_research_note/tree-model-generation/output",

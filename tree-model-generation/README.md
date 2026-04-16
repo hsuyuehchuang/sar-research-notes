@@ -213,7 +213,7 @@ $$
 
 #### 5.5. Air-leaf-branch mixture
 
-- 若 voxel 同時包含 air, leaves, 與 woody material，則背景介質從 air 改成 air-leaf mixture $\epsilon_{a\ell}$，其有效介電常數可寫成
+- 若 voxel 同時包含 air, leaves, 與 woody material，則背景介質從 air 改成 air-leaf mixture $\epsilon_{a\ell}$ ，其有效介電常數可寫成
 
 $$
 \epsilon_{eff}
@@ -227,8 +227,8 @@ $$
 
 - 其中 $V_w$ 是 woody volume fraction。
 - 在目前程式中，這個式子會依 voxel 類型代入不同參數：
-    - branch voxel: $\epsilon_w = \epsilon_{w,b}$，$V_w = V_{b}$
-    - trunk voxel: $\epsilon_w = \epsilon_{w,t}$，$V_w = V_{t}$
+    - branch voxel: $\epsilon_w = \epsilon_{w,b}$ ， $V_w = V_{b}$
+    - trunk voxel: $\epsilon_w = \epsilon_{w,t}$ ， $V_w = V_{t}$
 - 也就是說，目前程式不是把 trunk 和 branch 視為完全相同的 woody voxel，而是分別以不同的 moisture content 與 volume fraction 建模。
 
 #### 5.6. Why two dielectric outputs are generated
@@ -245,13 +245,13 @@ $$
 
 - 可比較：`with leaves` 與 `without leaves` 使用同一個 voxel lattice
 - 可重現：主要參數都集中在 JSON config 中管理
-- 可擴充：後續可把固定的 $V_\ell$、$V_b$、$V_t$ 替換成 voxel-wise density model，而不必重寫整個 pipeline
+- 可擴充：後續可把固定的 $V_\ell$ 、 $V_b$ 、 $V_t$ 替換成 voxel-wise density model，而不必重寫整個 pipeline
 
 #### 5.7. Suggested next refinement
 
 - 若未來要讓 dielectric model 更接近實際森林場景，優先建議的改進順序是：
     - 先把固定的 $V_\ell$ 改成 voxel-wise leaf density
-    - 再把固定的 $V_b$、$V_t$ 改成 branch / trunk geometry based density
+    - 再把固定的 $V_b$ 、 $V_t$ 改成 branch / trunk geometry based density
     - 最後再加入 frequency sweep 與 parameter calibration
 
 ### 6. Parameter table
@@ -263,19 +263,19 @@ $$
 | canopy height | $H_c$ | 21 m | 15 m | 21 m |
 | trunk diameter | $D_t$ | 33 cm | 25 cm | 33 cm |
 | DC of trunk | $\epsilon_w$ | $29.47 - j 9.39$ | $17.48 - j 5.92$ | $8.27 - j 2.83$ |
-| wood moisture const. | $M_g$ | 0.7 g/m$^3$ | 0.5 g/m$^3$ | 0.2 g/m$^3$ |
+| wood moisture const. | $M_g$ | $0.7\ \mathrm{g}/\mathrm{m}^3$ | $0.5\ \mathrm{g}/\mathrm{m}^3$ | $0.2\ \mathrm{g}/\mathrm{m}^3$ |
 | radius of branch | $r_b$ | 0.03 m | 0.03 m | 0.03 m |
 | length of branch | $\ell_b$ | 0.5 m | 0.5 m | 0.5 m |
-| density of branch | $n_b$ | 20 /m$^3$ | 20 /m$^3$ | 20 /m$^3$ |
+| density of branch | $n_b$ | $20\ \mathrm{m}^{-3}$ | $20\ \mathrm{m}^{-3}$ | $20\ \mathrm{m}^{-3}$ |
 | volume fraction of branches | $V_b$ | 0.23 | 0.23 | 0.23 |
 | DC of leaf | $\epsilon_{\ell}$ | $15.33 - j 5.26$ | $13 - j 6.38$ | no leaf |
 | avg. leaf thickness | $t_\ell$ | 0.03 cm | 0.03 cm | no leaf |
 | leaf area index | $LAI$ | [0, 5.78] | [0, 2.59] | [0, 2.59] |
 | volume fraction of leaves | $V_\ell$ | [0, 0.0173] | [0, 0.0132] | [0, 0.0132] |
-| effective DC of air&leaf | $\epsilon_{a\ell}$ | $\epsilon_{a\ell}' : [1, 1.13]$, $\epsilon_{a\ell}'' : [0, 0.06]$ | $\epsilon_{a\ell}' : [1, 1.13]$, $\epsilon_{a\ell}'' : [0, 0.05]$ | $\epsilon_{a\ell}' : [1, 1.13]$, $\epsilon_{a\ell}'' : [0, 0.05]$ |
+| effective DC of air&leaf | $\epsilon_{a\ell}$ | $\epsilon_{a\ell}' : [1, 1.13]$ , $\epsilon_{a\ell}'' : [0, 0.06]$ | $\epsilon_{a\ell}' : [1, 1.13]$ , $\epsilon_{a\ell}'' : [0, 0.05]$ | $\epsilon_{a\ell}' : [1, 1.13]$ , $\epsilon_{a\ell}'' : [0, 0.05]$ |
 | effective DC of air&leaf&branch | $\epsilon_{eff}$ | $\epsilon_{eff} : [1, 29.49]$ | $\epsilon_{eff} : [1, 17.48]$ | $\epsilon_{eff} : [1, 8.27]$ |
 | DC of ground | $\epsilon_g$ | 4 | 4 | 4 |
-| voxel size | $h^3$ | $0.5^3$ m$^3$ | $0.5^3$ m$^3$ | $0.5^3$ m$^3$ |
+| voxel size | $h^3$ | $0.5^3\ \mathrm{m}^3$ | $0.5^3\ \mathrm{m}^3$ | $0.5^3\ \mathrm{m}^3$ |
 
 DC: dielectric constant
 
