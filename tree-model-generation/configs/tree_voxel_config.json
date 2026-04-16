@@ -1,0 +1,41 @@
+{
+  "input": {
+    "obj_path": "/home/hsuyueh.chuang/Desktop/vscode/github/sar_research_note/tree-model-generation/Arbaro/test.obj"
+  },
+  "output": {
+    "output_dir": "/home/hsuyueh.chuang/Desktop/vscode/github/sar_research_note/tree-model-generation/output",
+    "with_leaves_voxel_file_name": "with_leaves_voxel.npy",
+    "without_leaves_voxel_file_name": "without_leaves_voxel.npy",
+    "save_npy": true
+  },
+  "voxel": {
+    "pitch": 0.1 
+  },
+  "display": {
+    "show_original_mesh": true,
+    "show_leaf_grid": false,
+    "show_branch_grid": false
+  },
+  "grouping": {
+    "leaves_keywords": ["leaves"],
+    "trunk_keywords": ["trunk"],
+    "branches_keywords": ["stem", "stems", "branch", "branches"]
+  },
+  "dielectric": {
+    "enabled": true,
+    "frequency_ghz": 1.25,
+    "epsilon_air": 1.0,
+    "epsilon_leaf_real": 15.33,
+    "epsilon_leaf_imag": 5.26,
+    "sigma": 1.27,
+    "leaf_volume_fraction": 0.01,
+    "branch_volume_fraction": 0.7,
+    "trunk_volume_fraction": 1.0,
+    "branch_moisture_content": 0.5,
+    "trunk_moisture_content": 0.5,
+    "show_dielectric": true
+  },
+  "future": {
+    "notes": "Reserve this section for later options such as save_mat, export_metadata, branch_level_split, fill_voxel, or density_smoothing."
+  }
+}
