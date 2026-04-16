@@ -143,17 +143,13 @@ $$
 - 其實部為
 
 $$
-\epsilon_{a\ell}' 
-= \frac{1 + \frac{2V_\ell}{3}(\epsilon_{\ell}' - 1)}
-{1 + \frac{V_\ell}{3}\left(\frac{\epsilon_{\ell}'}{|\epsilon_{\ell}|^2} - 1\right)}
+\epsilon_{a\ell}' = \frac{1 + \frac{2V_\ell}{3}(\epsilon_{\ell}' - 1)}{1 + \frac{V_\ell}{3}\biggl(\frac{\epsilon_{\ell}'}{|\epsilon_{\ell}|^2} - 1\biggr)}
 $$
 
 - 其虛部為
 
 $$
-\epsilon_{a\ell}'' =
-\frac{ \frac{V_\ell}{3}\epsilon_{\ell}'' \left(2 + \frac{\epsilon_{a\ell}'}{|\epsilon_{\ell}|^2}\right) }
-{ 1 + \frac{V_\ell}{3}\left(\frac{\epsilon_{\ell}'}{|\epsilon_{\ell}|^2} - 1 \right) }
+\epsilon_{a\ell}'' = \frac{\frac{V_\ell}{3}\epsilon_{\ell}'' \biggl(2 + \frac{\epsilon_{a\ell}'}{|\epsilon_{\ell}|^2}\biggr)}{1 + \frac{V_\ell}{3}\biggl(\frac{\epsilon_{\ell}'}{|\epsilon_{\ell}|^2} - 1 \biggr)}
 $$
 
 - 其中 $V_\ell$ 是 leaf volume fraction，用來描述該 voxel 內葉片佔據的體積比例。
@@ -182,9 +178,7 @@ $$
 - trunk 與 branches 的介電常數以 wood dielectric constant 建模
 
 $$
-\epsilon_w = \epsilon_r
-+ v_{fw}\left(4.9 + \frac{75}{1 + j f_c/18} + \frac{j18\sigma}{f_c}\right)
-+ v_{bw}\left(2.9 + \frac{55}{\sqrt{j f_c/0.18}}\right)
+\epsilon_w = \epsilon_r + v_{fw}\biggl(4.9 + \frac{75}{1 + j f_c/18} + \frac{j18\sigma}{f_c}\biggr) + v_{bw}\biggl(2.9 + \frac{55}{\sqrt{j f_c/0.18}}\biggr)
 $$
 
 - 其中
@@ -213,22 +207,16 @@ $$
 
 #### 5.5. Air-leaf-branch mixture
 
-- 若 voxel 同時包含 air, leaves, 與 woody material，則背景介質從 air 改成 air-leaf mixture $\epsilon_{a\ell}$ ，其有效介電常數可寫成
+- 若 voxel 同時包含 air, leaves, 與 woody material，則背景介質從 air 改成 air-leaf mixture $\epsilon_{a\ell}$，其有效介電常數可寫成
 
 $$
-\epsilon_{eff}
-= \epsilon_{a\ell}
-+ \frac{
-(\epsilon_w - \epsilon_{a\ell})(\epsilon_w + 5\epsilon_{a\ell})V_w
-}{
-3(\epsilon_w + \epsilon_{a\ell}) - 2(\epsilon_w - \epsilon_{a\ell})V_w
-}
+\epsilon_{eff} = \epsilon_{a\ell} + \frac{(\epsilon_w - \epsilon_{a\ell})(\epsilon_w + 5\epsilon_{a\ell})V_w}{3(\epsilon_w + \epsilon_{a\ell}) - 2(\epsilon_w - \epsilon_{a\ell})V_w}
 $$
 
 - 其中 $V_w$ 是 woody volume fraction。
 - 在目前程式中，這個式子會依 voxel 類型代入不同參數：
-    - branch voxel: $\epsilon_w = \epsilon_{w,b}$ ， $V_w = V_{b}$
-    - trunk voxel: $\epsilon_w = \epsilon_{w,t}$ ， $V_w = V_{t}$
+    - branch voxel: $\epsilon_w = \epsilon_{w,b}$，$V_w = V_{b}$
+    - trunk voxel: $\epsilon_w = \epsilon_{w,t}$，$V_w = V_{t}$
 - 也就是說，目前程式不是把 trunk 和 branch 視為完全相同的 woody voxel，而是分別以不同的 moisture content 與 volume fraction 建模。
 
 #### 5.6. Why two dielectric outputs are generated
@@ -245,13 +233,13 @@ $$
 
 - 可比較：`with leaves` 與 `without leaves` 使用同一個 voxel lattice
 - 可重現：主要參數都集中在 JSON config 中管理
-- 可擴充：後續可把固定的 $V_\ell$ 、 $V_b$ 、 $V_t$ 替換成 voxel-wise density model，而不必重寫整個 pipeline
+- 可擴充：後續可把固定的 $V_\ell$、$V_b$、$V_t$ 替換成 voxel-wise density model，而不必重寫整個 pipeline
 
 #### 5.7. Suggested next refinement
 
 - 若未來要讓 dielectric model 更接近實際森林場景，優先建議的改進順序是：
     - 先把固定的 $V_\ell$ 改成 voxel-wise leaf density
-    - 再把固定的 $V_b$ 、 $V_t$ 改成 branch / trunk geometry based density
+    - 再把固定的 $V_b$、$V_t$ 改成 branch / trunk geometry based density
     - 最後再加入 frequency sweep 與 parameter calibration
 
 ### 6. Parameter table
