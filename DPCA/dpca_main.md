@@ -2,25 +2,24 @@
 
 ## Outline
 
+- [Summary](#summary)
 - [1. DPCA Concept and Motivation](#1-dpca-concept-and-motivation)
-  - [1.1. Why DPCA](#11-why-dpca-is-introduced-in-sar-imaging)
-  - [1.2. Displaced Phase Center and Effective PRF](#12-displaced-phase-center-and-effective-along-track-sampling)
-  - [1.3. Imaging Enhancement](#13-equivalent-prf-and-imaging-enhancement)
+  - [1.1. Why Displacement Phase Center Antenna (DPCA)](#11-why-displacement-phase-center-antenna-dpca)
+  - [1.2. Displaced Phase Center and Effective PRF](#12-displaced-phase-center-and-effective-prf)
+  - [1.3. Imaging Enhancement](#13-imaging-enhancement)
 - [2. Geometric Conditions](#2-geometric-conditions)
-  - [2.1. Geometric Condition](#21-geometric-condition-between-platform-motion-and-phase-centers)
+  - [2.1. Geometric Condition](#21-geometric-condition)
   - [2.2. Mismatched Spacing Condition](#22-mismatched-spacing-condition)
 - [3. Conclusions and Trade-offs](#3-conclusions-and-trade-offs)
-  - [3.1. Trade-off between Resolution, NESZ](#31-resolution-nesz-and-panel-trade-off)
-  - [3.2. Summary](#32-engineering-design-summary)
-  - [3.3. Pros and Cons](#33-dpca-pros-and-cons)
+  - [3.1. Trade-off between Resolution, NESZ](#31-trade-off-between-resolution-nesz)
+  - [3.2. DPCA-based GMTI and its trade-offs](#32-dpca-based-gmti-and-its-trade-offs)
 - [4. Follow-up Topics](#4-follow-up-topics)
 
 ## Summary
 
 - 為了達成HRWS成像
 - DPCA用以增加方位向取樣率（等效PRF），可以讓方位解析度變好並且不會減少swath width
-- Rx gain的能量變差
-- 因為每個resolution cell內可累積的能量下降，SNR變低，NESZ變大
+- Rx gain的收到的能量下降，導致NESZ變大
 - DPCA的trade-off是用NESZ換azimuth resolution
 
 ## 1. DPCA Concept and Motivation
@@ -29,7 +28,6 @@
 
 - **High-resolution (azimuth resolution) and wide-swath (HRWS) are contradictions** with the conventional single-channel spaceborne SAR systems.
 - Higher PRF is needed for high-resolution, but it reduces the (unambiguous) swath width.
-- DPCA has been successfully applied in the advanced SAR systmes.
 - DPCA improves azimuth sampling without requiring the true PRF to increase by the same factor, so the swath-width penalty can be relaxed.
 
 | Goal | Requires | Costs / Limits |
@@ -44,17 +42,20 @@
     - Phase center is the effective transmit/receive center of the antenna aperture.
 - Two main DPCA configurations are:
     - **Ping-pong mode**: 
+        - <img src="./figure/dpca-ping-pong.png" alt="DPCA Ping-Pong Mode" width="700" />
         - The aft-antenna collects the data from the same points as the fore-antenna with a time delay.
         - The condition of baseline $d = v_p T$ is required for the ping-pong mode to achieve the desired effective sampling.
+        - 實際上 $v_p$ 是固定的， $T=\mathrm{PRI}= 1 / \mathrm{PRF}$ 雖然可調整，但是也會受限 nadir return, TX eclipse等因素，所以 PRI 的調整空間有限，為了要有DPCA這個功能，要符合上述的condition, PRI的調整空間就更有限了。
+        - 兩個 TX 都會發射，兩個 RX 都會接收，不然Gain會掉更多。
+        - 實際上TX發射之後，RX1, RX2都會收訊號但是，上圖phase center 2的訊號丟掉不要，下圖phase center 1的訊號丟掉不要。(TX1, TX2 都會發射，RX1, RX2 都會接收嗎？)
+        - 目前SAR採用ping-pong mode
+        - Simulation: 在 $\eta=0$ 的時候，phase center 1接收的訊號，跟 $\eta=T$ 的時候，phase center 2接收的訊號，是來自同一個地物點的回波。 但是 phase 會不一樣，因為 TX phase center 不同， 會差一個 frequency offset。可以用作模擬？
+        - TerraSAR 是用 ping-pong mode, 一半primary antenna，一半 redundant antenna
+
     - **SIMO mode**: 
+        - <img src="./figure/dpca-simo.png" alt="DPCA SIMO Mode" width="800" />
         - Use one TX and multiple RX to create multiple phase centers.
         - The condition of baseline $d = 2v_p T$ is required for the SIMO mode to achieve the desired effective sampling.
-
-
-<img src="./figure/dpca-ping-pong.png" alt="DPCA Ping-Pong Mode" width="750" />
-<img src="./figure/dpca-simo.png" alt="DPCA SIMO Mode" width="750" />
-<!-- ![DPCA Ping-Pong Mode](./figure/dpca-ping-pong.png)
-![DPCA SIMO Mode](./figure/dpca-simo.png) -->
 
 - Once the effective sampling condition is satisfied, the effective PRF is doubled, which can improve the azimuth resolution without reducing the swath width.
 - **For example, with two phase centers, the effective PRF doubles.**
@@ -126,6 +127,17 @@ $$
     - 其數值越低表示雷達系統靈敏度越高，越能分辨低反射率的目標，成像品質越好。
     - 後向散射係數（ $\sigma^0$ Backscattering Coefficient）是量化目標物將雷達波束反射回雷達接收器的能力之指標。它代表單位面積的反射率，通常以分貝（dB）表示。
 
+- A commonly used NESZ model can be written as:
+
+$$
+\mathrm{NESZ}=\frac{
+4\cdot(4\pi)^3 R^3 V_s \sin\psi \cdot L_{atm}
+\cdot B\!\left(G_{rx}\cdot N_{cell,r}\cdot kT_K\cdot N_F + N_Q\right)}
+{0.886\cdot G_{rx}\cdot N_{cell,t}\cdot N_{cell,r}\cdot P_t\cdot G_t\cdot G_r\cdot \lambda^3\cdot c\cdot T_c\cdot PRF}
+$$
+
+- where $R$ is slant range, $V_s$ is platform velocity, $\psi$ is incidence angle, $L_{atm}$ is atmospheric loss, $B$ is receiver bandwidth, $G_{rx}$ is receiver gain, $N_{cell,t}$/$N_{cell,r}$ are Tx/Rx channel counts, $k$ is Boltzmann constant, $T_K$ is system temperature, $N_F$ is noise factor, $N_Q$ is quantization noise term, $P_t$ is transmit power, $G_t$/$G_r$ are Tx/Rx antenna gains, $\lambda$ is wavelength, $c$ is light speed, and $T_c$ is coherent integration time.
+
 - Relation between NESZ and SNR: 
 
 $$
@@ -147,43 +159,15 @@ $$
 
 - 這裡的 trade-off 是：**用 NESZ 換 azimuth resolution**。
 
-### 3.2. Summary
+### 3.2. DPCA-based GMTI and its trade-offs
 
-- From an engineering viewpoint, DPCA should be understood as a system-level trade-off.
-
-- DPCA is beneficial when:
-    - HRWS imaging requires better azimuth sampling without proportionally increasing the true PRF.
-
-- The critical condition is:
-    - the phase-center geometry must match the platform motion and PRI.
-
-- The main cost is:
-    - higher hardware complexity
-    - calibration burden
-    - multichannel processing complexity
-
-- The main risk is:
-    - degraded image quality if reconstruction quality or channel consistency is poor.
-
-- The main trade-off in DPCA-based SAR imaging is between azimuth resolution improvement and NESZ degradation.
-
-### 3.3. Pros and Cons
-
-| Pros | Cons |
-|---|---|
-| Improves effective azimuth sampling | Increases hardware complexity |
-| Helps relax the HRWS conflict between resolution and swath width | Requires channel calibration and multichannel processing |
-| Can improve azimuth resolution without proportionally increasing the true PRF | Imaging benefit becomes weaker under geometry mismatch or channel inconsistency |
-
-
-### 3.4 DPCA-based GMTI and its trade-offs
-
-- TBC
+- TBC (用三句話講完)
 
 ## 4. Follow-up Topics
 
-- DPCA-based GMTI (Ground Moving Target Indication) and its trade-offs.
-- If the channel consistency is poor, the reconstructed azimuth signal is degraded and the expected DPCA benefit becomes weaker.
+- Derive of the conditions of two modes.
+- How to simulate DPCA?
+- How to simulate DPCA with mismatched condition?
 
 | 衛星公司 | 衛星/星系名稱 | 實現機制 | 備註與商用產品應用 |
 | :--- | :--- | :--- | :--- |
