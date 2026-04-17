@@ -1,0 +1,232 @@
+\documentclass[journal,onecolumn]{IEEEtran}
+
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{fontspec}
+\usepackage{subcaption}
+\usepackage{soul}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{caption}
+\sethlcolor{yellow}
+\setmainfont{TeX Gyre Termes}
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  columns=fullflexible,
+  frame=single
+}
+\hypersetup{pdftitle={RDA for SAR Imaging}}
+\begin{document}
+
+\title{RDA for SAR Imaging}
+\author{H.-Y. Chuang, E-mail: hsuyueh.chuang@tronfuture.com.}
+\maketitle
+\markboth{hsuyueh.chuang}{}
+
+Update Date: 2026-04-17
+
+\section*{Outline}
+\begin{itemize}
+  \item 1. Summary
+  \item 2. Physical Meaning and Key Mathematics
+  \item 3. Core Processing Flow
+  \begin{itemize}
+    \item 3.1. Range Compression
+    \item 3.2. Azimuth FFT
+    \item 3.3. RCMC
+    \item 3.4. Azimuth Compression
+  \end{itemize}
+  \item 4. Main Risks of Using RDA
+  \item 5. Algorithm Decision Support
+  \item 6. Parameters Still Needed
+\end{itemize}
+\section{Summary}
+\begin{itemize}
+  \item \textbf{RDA (Range-Doppler Algorithm)} is one of the most classical frequency-domain SAR focusing algorithms.
+  \item Its core idea is to move the signal into the \textbf{range-Doppler domain}, correct range migration there, and then complete azimuth focusing.
+  \item The main chain is \textbf{range compression -> azimuth FFT -> RCMC -> azimuth compression}.
+  \item RDA is a strong baseline for low-squint and moderate-complexity systems, but its approximation error becomes more visible in high-resolution and large-squint regimes.
+\end{itemize}
+\section{Physical Meaning and Key Mathematics}
+RDA mainly solves two coupled problems:
+
+\begin{itemize}
+  \item the target echo migrates across range cells during aperture time
+  \item the azimuth phase history must be coherently compressed
+\end{itemize}
+For a point target with closest slant range $R_0$, the slant-range history is
+
+\begin{align}
+R(\eta)=\sqrt{R_0^2+V_r^2\eta^2} \approx R_0+\frac{V_r^2\eta^2}{2R_0}.
+\end{align}
+This produces a quadratic azimuth phase history:
+
+\begin{align}
+\phi(\eta)\approx -\frac{4\pi}{\lambda}R_0 -\frac{2\pi V_r^2}{\lambda R_0}\eta^2.
+\end{align}
+The corresponding instantaneous Doppler frequency is
+
+\begin{align}
+f_\eta=\frac{1}{2\pi}\frac{d\phi(\eta)}{d\eta} =-\frac{2V_r^2}{\lambda R_0}\eta.
+\end{align}
+This is the key approximation behind RDA: under low-squint conditions, azimuth time $\eta$ and Doppler frequency $f_\eta$ can be mapped to each other. If the migration term
+
+\begin{align}
+\Delta R(\eta)=\frac{V_r^2\eta^2}{2R_0}
+\end{align}
+is rewritten in Doppler coordinates, the range migration becomes
+
+\begin{align}
+\Delta R(f_\eta)=\frac{\lambda^2R_0}{8V_r^2}f_\eta^2.
+\end{align}
+\textbf{Physical meaning:} inside the same Doppler bin, the signal experiences the same migration amount, so RCMC can be applied consistently in the range-Doppler domain before azimuth compression.
+
+The stage-signal view is:
+
+\begin{table}[H]
+\centering
+\caption{Stage-signal view}
+\label{tab:stage-signal-view}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.307\linewidth}>{\raggedright\arraybackslash}p{0.307\linewidth}>{\raggedright\arraybackslash}p{0.307\linewidth}}
+\toprule
+Stage & Signal & Main meaning \\
+\midrule
+Input & $s_0(\tau,\eta)$ & Raw received echo \\
+After range compression & $s_1(\tau,\eta)$ & Range-focused but still azimuth-defocused \\
+After RCMC & $S_{\mathrm{rcmc}}(\tau,f_\eta)$ & Migration-corrected range-Doppler signal \\
+After azimuth compression & $I_{\mathrm{focus}}(\tau,\eta)$ & Final focused image \\
+\bottomrule
+\end{tabular}
+\end{table}
+\section{Core Processing Flow}
+\begin{lstlisting}
+flowchart TD
+    A["Input signal<br/>s0(tau, eta)"] --> B["Range compression"]
+    B --> C["Azimuth FFT"]
+    C --> D["RCMC"]
+    D --> E["Azimuth compression"]
+    E --> F["Focused image"]
+\end{lstlisting}
+If your current Markdown viewer still does not render this Mermaid block, the issue is likely the viewer, not the note itself. GitHub supports Mermaid, but some local Markdown previews do not.
+
+\subsection{Range Compression}
+Range compression applies the range matched filter and collapses the transmitted chirp in fast time. Its input is the raw echo $s_0(\tau,\eta)$, and its output is the range-compressed signal $s_1(\tau,\eta)$. This step is necessary because later Doppler-domain processing assumes the range response is already localized.
+
+\begin{align}
+s_1(\tau,\eta)\propto \mathrm{sinc}\biggl[ B_r \biggl( \tau-\frac{2R(\eta)}{c} \biggr) \biggr] \exp \biggl[ -j\frac{4\pi f_0R(\eta)}{c} \biggr].
+\end{align}
+\subsection{Azimuth FFT}
+Azimuth FFT converts the slow-time signal into azimuth frequency and produces the range-Doppler representation. Its input is $s_1(\tau,\eta)$, and its output is $S_1(\tau,f_\eta)$. This step is necessary because migration correction and azimuth phase compensation are easier to organize in Doppler coordinates.
+
+\subsection{RCMC}
+RCMC shifts each Doppler bin by the corresponding migration amount so that the target no longer walks across range cells. Its input is $S_1(\tau,f_\eta)$, and its output is $S_{\mathrm{rcmc}}(\tau,f_\eta)$. This step is necessary because azimuth compression will misfocus the target if migration is not corrected first.
+
+\begin{align}
+S_{\mathrm{rcmc}}(\tau,f_\eta)\approx S_1\biggl(\tau+\Delta\tau_{\mathrm{rcmc}}(f_\eta),f_\eta\biggr).
+\end{align}
+\subsection{Azimuth Compression}
+Azimuth compression applies the azimuth matched filter that removes the residual quadratic phase history. Its input is $S_{\mathrm{rcmc}}(\tau,f_\eta)$, and its output is the focused image $I_{\mathrm{focus}}(\tau,\eta)$. This step is necessary because SAR azimuth resolution comes from coherent synthetic-aperture integration, not from range compression alone.
+
+\begin{equation}
+I_{\mathrm{focus}}(\tau,\eta)= \mathcal{F}^{-1}_{f_\eta} \left\{ S_{\mathrm{rcmc}}(\tau,f_\eta)H_{\mathrm{az}}(f_\eta) \right\}.
+\end{equation}
+\section{Main Risks of Using RDA}
+\subsection{Risk: Ignoring SRC causes defocus in high-resolution regimes}
+\textbf{Risk:} Basic RDA assumes range and azimuth can be separated cleanly, but this becomes weaker when bandwidth grows or squint becomes larger. Directly using basic RDA can produce visible edge defocus. \textbf{Recommended alternative:} add secondary range compression (SRC) or move to CSA.
+
+\subsection{Risk: RCMC interpolation becomes a precision and performance bottleneck}
+\textbf{Risk:} RCMC requires interpolation across range cells, and interpolation quality directly affects sidelobes, artifacts, and memory-access cost. In hardware-oriented flows, this step often becomes the most painful implementation bottleneck. \textbf{Recommended alternative:} if throughput and regular memory access dominate, prefer CSA because it avoids explicit interpolation.
+
+\subsection{Risk: Motion compensation is harder under non-ideal platform trajectories}
+\textbf{Risk:} RDA is derived under relatively ideal motion assumptions, so strong nonlinear platform motion is harder to absorb precisely in the frequency domain. Residual phase error then appears as blur and imperfect focusing. \textbf{Recommended alternative:} if trajectory irregularity is severe, prefer BPA or another time-domain method.
+
+\section{Algorithm Decision Support}
+\subsection{RDA vs CSA vs BPA}
+\begin{quote}
+\textbf{Algorithm}: \textbf{RDA}\\
+\textbf{Complexity}: $O(N^2 \log N)$\\
+\textbf{Advantages}: Clear structure, easy baseline implementation, good teaching value\\
+\textbf{Disadvantages}: Needs RCMC interpolation, weaker in large-squint or high-resolution regimes\\
+\end{quote}
+\begin{quote}
+\textbf{Algorithm}: \textbf{CSA}\\
+\textbf{Complexity}: $O(N^2 \log N)$\\
+\textbf{Advantages}: No explicit interpolation, better hardware friendliness, handles stronger coupling better\\
+\textbf{Disadvantages}: More complex mathematics, more sensitive to model assumptions\\
+\end{quote}
+\begin{quote}
+\textbf{Algorithm}: \textbf{BPA}\\
+\textbf{Complexity}: $O(N^3)$\\
+\textbf{Advantages}: Highest geometric fidelity, naturally handles complex motion\\
+\textbf{Disadvantages}: Very expensive computationally, difficult for real-time systems\\
+\end{quote}
+\subsection{What Each Choice Sacrifices}
+\begin{table}[H]
+\centering
+\caption{What Each Choice Sacrifices}
+\label{tab:what-each-choice-sacrifices}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.307\linewidth}>{\raggedright\arraybackslash}p{0.307\linewidth}>{\raggedright\arraybackslash}p{0.307\linewidth}}
+\toprule
+Choice & Main gain & Main sacrifice \\
+\midrule
+Choose \textbf{RDA} & Simpler staged implementation & Lower accuracy margin in stressed geometries \\
+Choose \textbf{CSA} & Better frequency-domain efficiency & Harder derivation and debugging \\
+Choose \textbf{BPA} & Best geometric robustness & Much higher compute cost \\
+\bottomrule
+\end{tabular}
+\end{table}
+\subsection{Current Technical Position}
+\begin{quote}
+\textbf{Algorithm}: RDA\\
+\textbf{Domain}: Frequency-domain staged focusing\\
+\textbf{Main strength}: Foundational baseline and easy interpretability\\
+\textbf{Main limitation}: Approximation and interpolation sensitivity\\
+\textbf{Typical role today}: Baseline processor and teaching reference\\
+\end{quote}
+\begin{quote}
+\textbf{Algorithm}: CSA\\
+\textbf{Domain}: Frequency-domain focusing\\
+\textbf{Main strength}: Better coupling handling without explicit interpolation\\
+\textbf{Main limitation}: Higher mathematical complexity\\
+\textbf{Typical role today}: Practical upgrade over RDA in many systems\\
+\end{quote}
+\begin{quote}
+\textbf{Algorithm}: Omega-K\\
+\textbf{Domain}: Wavenumber-domain focusing\\
+\textbf{Main strength}: Better treatment of broader coupling structure\\
+\textbf{Main limitation}: More involved implementation\\
+\textbf{Typical role today}: Higher-fidelity frequency-domain alternative\\
+\end{quote}
+\begin{quote}
+\textbf{Algorithm}: BPA\\
+\textbf{Domain}: Time-domain image formation\\
+\textbf{Main strength}: Best motion and geometry flexibility\\
+\textbf{Main limitation}: Heavy compute burden\\
+\textbf{Typical role today}: Difficult-geometry or reference-quality solution\\
+\end{quote}
+\section{Parameters Still Needed}
+If the goal is to choose an implementation direction rather than only study the algorithm, the key missing parameters are:
+
+\begin{itemize}
+  \item highest required range resolution
+  \item highest required azimuth resolution
+  \item squint-angle range
+  \item how ideal or non-ideal the platform trajectory is
+  \item whether the target implementation is CPU, CUDA, FPGA, AIE, or another accelerator
+  \item whether the target is an educational simulator, offline image former, or near-real-time system
+\end{itemize}
+The two most important questions are:
+
+\begin{itemize}
+  \item What is your highest required resolution?
+  \item What squint-angle range do you need to support?
+\end{itemize}
+
+\end{document}
