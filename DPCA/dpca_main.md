@@ -19,8 +19,8 @@
 
 - 為了達成HRWS成像
 - DPCA用以增加方位向取樣率（等效PRF），可以讓方位解析度變好並且不會減少swath width
-- 但是因為每個resolution cell內可累積的能量下降，SNR變低，NESZ變大
-- 所以DPCA的trade-off是用NESZ換azimuth resolution
+- 因為每個resolution cell內可累積的能量下降，SNR變低，NESZ變大
+- DPCA的trade-off是用NESZ換azimuth resolution
 
 ## 1. DPCA Concept and Motivation
 
@@ -139,10 +139,10 @@ $$
 $$
 
 - The result of higher effective PRF:
-  - 每個 resolution cell 內可累積的能量下降，或等效處理增益下降
-  - SNR 變低
+  - 更大的 Doppler bandwidth $B_a$，可以獲得更細的 azimuth resolution $\delta_a$。
+  - 但每個 resolution cell 內可累積的能量下降，意味著該 cell 反彈回雷達的總能量變少。
+  - SNR 變低、變差
   - NESZ 變大、變差
-  - azimuth resolution 變好
 
 - 這裡的 trade-off 是：**用 NESZ 換 azimuth resolution**。
 
@@ -174,7 +174,27 @@ $$
 | Helps relax the HRWS conflict between resolution and swath width | Requires channel calibration and multichannel processing |
 | Can improve azimuth resolution without proportionally increasing the true PRF | Imaging benefit becomes weaker under geometry mismatch or channel inconsistency |
 
+
+### 3.4 DPCA-based GMTI and its trade-offs
+
+- TBC
+
 ## 4. Follow-up Topics
 
 - DPCA-based GMTI (Ground Moving Target Indication) and its trade-offs.
 - If the channel consistency is poor, the reconstructed azimuth signal is degraded and the expected DPCA benefit becomes weaker.
+
+| 衛星公司 | 衛星/星系名稱 | 實現機制 | 備註與商用產品應用 |
+| :--- | :--- | :--- | :--- |
+| MDA | RADARSAT-2, RCM | 真實多通道 (MODEX) | 可執行標準的 DPCA 與 ATI 演算法，專為 GMTI 設計。 |
+| Airbus | TerraSAR-X, PAZ | 真實多通道 (DRA) | 具備高精確度的 DPCA 測速能力，能有效對消靜態地物雜波。 |
+| Capella Space | Capella Constellation | 單天線 Sub-aperture<br>(頻譜分割 Spectral Splitting) | 產品為 CSI，利用聚束模式切分不同都卜勒頻寬來標定移動目標。 |
+| ICEYE | ICEYE Constellation | 單天線 Sub-aperture<br>(長駐留時間 Long-dwell 處理) | 類似 Video SAR，透過多幀次孔徑影像觀察大型移動目標（如船隻航跡）。 |
+
+- **實現機制 (硬體 DPCA vs 軟體 Sub-aperture)**：硬體機制通常具有真實的多個接收通道；而軟體機制多基於單一天線，透過信號處理（如切分都卜勒頻譜或長時間觀測）來模擬或形成次孔徑。
+- **MODEX**：一種真實多通道操作模式，接收時將天線物理上分為前後兩半部 (Fore/Aft)。
+- **DRA (Dual Receive Antenna)**：雙接收天線模式，透過切分天線接收訊號。
+- **GMTI (Ground Moving Target Indication)**：地面移動目標指示，用於偵測地面上的運動目標。
+- **ATI (Along-Track Interferometry)**：沿軌干涉技術，常用於測速與動態目標偵測。
+- **CSI (Colorized Sub-aperture Image)**：彩色次孔徑影像，將不同都卜勒頻寬的次孔徑影像映射至不同顏色通道合成，用以凸顯/標定移動目標。
+- **Video SAR**：以高幀率連續生成 SAR 影像，形成類似影片的動態觀測效果，適合監測移動目標。
