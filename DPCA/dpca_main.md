@@ -19,6 +19,7 @@
 
 - 為了達成HRWS成像
 - DPCA用以增加方位向取樣率（等效PRF），可以讓方位解析度變好並且不會減少swath width
+- Rx gain的能量變差
 - 因為每個resolution cell內可累積的能量下降，SNR變低，NESZ變大
 - DPCA的trade-off是用NESZ換azimuth resolution
 
