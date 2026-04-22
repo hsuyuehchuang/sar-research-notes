@@ -163,8 +163,21 @@ $$
 
 - TBC (用三句話講完)
 
+### 3.3. DPCA-based point target simulation
+
+Q:「我以為是我做完DPCA，RDA成像resolution比原來小一半」：
+A: 這是錯的。做完 DPCA，影像是用來顯示「動態目標」的，解析度取決於原來的頻寬與孔徑，不會因為「相減」這個動作而讓解析度變細
+
+Q: 然後沒滿足 $d=v_p T$ 的dpca的成像結果會比原來好，但沒有好到，for example resolution小一半？
+A :這也是錯的。在 DPCA 中沒滿足條件，下場是「影像充滿了沒有消乾淨的殘影雜訊」，導致你找不到移動目標
+
+如果你想模擬的是「解析度提升」： 你不應該做 DPCA（相減），而是應該模擬「MIMO-SAR 方位角多通道重建」。此時你要刻意設計延遲或不同的發射模式，讓每個通道的等效相位中心（EPC）均勻錯開（避免重疊），然後用頻譜重建演算法把它們合在一起，證明解析度獲得了提升？？？
+
+若要模擬多通道信號重建以達到解析度提升（即高解析度寬測繪帶，HRWS 成像），您需要模擬 MIMO-SAR（多發多收合成孔徑雷達） 的空間採樣與信號拼接過程。？？？
+
 ## 4. Follow-up Topics
 
+- DPCA paper survey
 - Derive of the conditions of two modes.
 - How to simulate DPCA?
 - How to simulate DPCA with mismatched condition?
